@@ -1,0 +1,17 @@
+* { box-sizing: border-box; -moz-box-sizing: border-box; }
+html, body { margin: 0; padding:0; }
+
+#phonebook { background: silver; }
+#phonebook .entry { background: white; background: linear-gradient(white,gainsboro); padding: 0.25em; }
+#phonebook .entry .pic { height: 3em; width: 3em; display: inline-block; background-size:cover; background-position: top center;
+    vertical-align: middle; background-repeat: no-repeat; border-radius: 0.25em; }
+#phonebook .entry .sip, #phonebook .entry .name { padding: 0.5em; display: inline-block; vertical-align: middle; width: 15em; }
+
+#panel { background: black; background: linear-gradient(rgb(80,80,80), black); color: white; padding: 0.25em; width: 100%; border-bottom: 2px solid teal; }
+
+#phonebook .entry a { background: green; background: linear-gradient(lightgreen, seagreen); border-radius: 0.5em;
+    border: 1px solid darkgreen; padding: 0.4em; box-shadow: 0 0 0.25em gray; text-decoration: none;
+    color: white; width: 15em; text-align: center; display: inline-block; }
+
+#phonebook .entry a:hover { color: black; }
+#phonebook .entry a:active { background: linear-gradient(seagreen, lightgreen); box-shadow: none; }
