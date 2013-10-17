@@ -1,17 +1,16 @@
 /**
  * Created by tobias on 10/8/13.
  */
-App = {
-	Core: {
-		Service: {},
-		Framework:{}
-	},
+Test = {
 	Model: {
-		Interfaces:{},
 		Domain:{
 			Phonebook:{},
 			Channel:{}
 		}
 	},
-	Controller:{}
+	Controller:{},
+	Service:{},
+	Core: {
+		Framework: {}
+	}
 };

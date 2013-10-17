@@ -2,7 +2,7 @@
  * Created by tobias on 10/12/13.
  */
 var Domain = App.Model.Domain;
-var Service = App.Model.Service;
+var Service = App.Core.Service;
 var Channel = Domain.Channel;
 var Interfaces = App.Model.Interfaces;
 

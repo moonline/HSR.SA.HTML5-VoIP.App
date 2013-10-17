@@ -1,7 +1,7 @@
 /**
  * Created by tobias on 10/12/13.
  */
-var Service = App.Model.Service;
+var Service = App.Core.Service;
 
 Service.ArrayService = {};
 

@@ -4,7 +4,6 @@
 var Domain = App.Model.Domain;
 var Channel = Domain.Channel;
 
-// TODO move QUnit from global to App.Lib.QUnit
 asyncTest("ChannelWebSocket echo test", function() {
 	var channel = new Channel.ChannelWebSocket();
 	channel.configuration.server = "ws://echo.websocket.org";

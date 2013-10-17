@@ -3,7 +3,7 @@
  */
 var Domain = App.Model.Domain;
 var Interfaces = App.Model.Interfaces;
-var Phonebook = App.Model.Domain.Phonebook;
+var Phonebook = Domain.Phonebook;
 
 
 Phonebook.PhonebookJson = function(jsonData) {
