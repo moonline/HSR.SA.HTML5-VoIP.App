@@ -6,26 +6,35 @@
 
     <script src="Namespaces.js" ></script>
 
-    <script src="Application/PhonebookController.js" ></script>
+    <script src="Core/Lib/AdapterJS/Adapter.js" ></script>
+    <script src="Core/Lib/JQuery/jQuery.2.0.3.js" ></script>
+    <script src="Core/Service/ArrayService.js" ></script>
+    <script src="Core/Service/Log.js" ></script>
 
-    <script src="Model/Interfaces/PhonebookInterface.js" ></script>
+    <script src="Application/PhoneController.js" ></script>
 
-    <script src="Model/Domain/PhonebookManager.js" ></script>
-    <script src="Model/Domain/PhonebookEntry.js" ></script>
-    <script src="Model/Domain/Phonebook/PhonebookJson.js" ></script>
+    <script src="Model/Domain/Connection.js" ></script>
+    <script src="Model/Domain/Host.js" ></script>
+    <script src="Model/Domain/Connection.js" ></script>
+    <script src="Model/Domain/Channel/ChannelXHR.js" ></script>
 
     <script src="main.js" ></script>
 
     <link href="Resources/Styles/listView.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-    <div id="panel">
-        <form id="import">
-            <input type="file" id="importFile" />
-        </form>
+    <div id="panel" class="pannels">
+        <div class="controlls" id="constrolls">
+            <form>
+                <input type="button" name="call" id="call" value="✆ call" />
+            </form>
+        </div>
     </div>
-    <div id="phonebook">
-
+    <div class="content">
+        <div id="phone">
+            <video id="localVideo"  autoplay="true"></video>
+            <video id="remoteVideo"  autoplay="true"></video>
+        </div>
     </div>
 </body>
 </html>

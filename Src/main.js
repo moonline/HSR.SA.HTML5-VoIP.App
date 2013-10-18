@@ -7,6 +7,6 @@
 var Controller = App.Controller;
 
 window.onload = function() {
-	var controller = new Controller.PhonebookController();
-	controller.list();
-}
+	var controller = new Controller.PhoneController();
+	controller.callAction();
+};
