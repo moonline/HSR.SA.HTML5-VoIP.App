@@ -1,0 +1,6 @@
+{
+	"lastName": "Caller name",
+	"firstName": "Caller firstname",
+	"photo": "base64 image string",
+	"sip": "yourSipId@sipHost.tld"
+}

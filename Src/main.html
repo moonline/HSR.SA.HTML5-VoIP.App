@@ -8,6 +8,9 @@
 
     <script src="Core/Lib/AdapterJS/Adapter.js" ></script>
     <script src="Core/Lib/JQuery/jQuery.2.0.3.js" ></script>
+    <script src="Core/Lib/EmberJS/handlebars.js" ></script>
+    <script src="Core/Lib/EmberJS/ember.js" ></script>
+
     <script src="Core/Service/ArrayService.js" ></script>
     <script src="Core/Service/Log.js" ></script>
 
@@ -20,21 +23,32 @@
 
     <script src="main.js" ></script>
 
-    <link href="Resources/Styles/listView.css" rel="stylesheet" type="text/css" />
+    <link href="Resources/Styles/browserReset.css" rel="stylesheet" type="text/css" />
+    <link href="Resources/Styles/appStyle.css" rel="stylesheet" type="text/css" />
+	<link href="Resources/Styles/callView.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-    <div id="panel" class="pannels">
-        <div class="controlls" id="constrolls">
-            <form>
-                <input type="button" name="call" id="call" value="✆ call" />
-            </form>
-        </div>
-    </div>
-    <div class="content">
-        <div id="phone">
-            <video id="localVideo"  autoplay="true"></video>
-            <video id="remoteVideo"  autoplay="true"></video>
-        </div>
-    </div>
+	<div class="page" id="page">
+		<header>
+			<h1>JS VoIP App</h1>
+			<nav>
+				<div>
+					<a class="active" href="">take a call</a>
+					<a href="">phonebook</a>
+				</div>
+			</nav>
+		</header>
+		<div class="content">
+			<div class="controlls" id="constrolls">
+				<form>
+					<input type="button" name="call" id="call" value="✆ call" />
+				</form>
+			</div>
+			<div id="phone">
+				<video id="localVideo"  autoplay="true"></video>
+				<video id="remoteVideo"  autoplay="true"></video>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

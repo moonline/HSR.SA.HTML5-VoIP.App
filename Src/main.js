@@ -4,9 +4,7 @@
 'use strict'; // use JS strict mode
 
 
-var Controller = App.Controller;
-
 window.onload = function() {
 	var controller = new Controller.PhoneController();
 	controller.callAction();
-};
+}
