@@ -6,5 +6,5 @@
 
 window.onload = function() {
 	var controller = new Controller.PhoneController();
-	controller.callAction();
+	//controller.callAction();
 }

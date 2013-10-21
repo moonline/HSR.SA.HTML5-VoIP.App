@@ -13,7 +13,17 @@ var Service = App.Core.Service;
  * @constructor
  */
 Domain.Host = function(videoFrame, hostReadyCallback) {
-	this.constraints = { audio: true, video: true };
+	this.constraints = {
+		video: {
+			mandatory: {
+				maxHeight: 120,
+				maxWidth: 160
+			},
+			optional: []
+		},
+		audio: true
+	};
+
 	this.videoFrame = videoFrame;
 	this.localstream = null;
 
@@ -23,7 +33,7 @@ Domain.Host = function(videoFrame, hostReadyCallback) {
 			hostReadyCallback();
 		}.bind(this),
 		function(error){
-			Service.Log.log(Service.Log.logTypes.Error, 'Host', error);
+			Service.Log.log(Service.Log.logTypes.Error, 'Host', error.toString()+': {'+Service.ArrayService.listToString(error)+'}');
 		}
 	);
 };

@@ -21,3 +21,18 @@ Service.ArrayService.listContains = function(list, needle) {
 	});
 	return contains;
 }
+
+
+/**
+ * creates a string with the properties and their values
+ *
+ * @param list:  array or object
+ * @returns {string}
+ */
+Service.ArrayService.listToString = function(list) {
+	var representation = '';
+	for(var index in list) {
+		representation += index+': '+list[index]+', '
+	};
+	return representation;
+}

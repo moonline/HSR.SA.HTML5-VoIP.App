@@ -4,7 +4,7 @@
 var Domain = App.Model.Domain;
 
 
-Domain.PhonebookEntry = function(sip, name, photo) {
+Domain.AddressbookEntry = function(sip, name, photo) {
 	this.sip = sip;
 	this.name = name;
 	this.photo = photo;

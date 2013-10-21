@@ -3,11 +3,11 @@
  */
 var Controller = App.Controller;
 var Domain = App.Model.Domain;
-var Phonebook = Domain.Phonebook;
+var Addressbook = Domain.Phonebook;
 
-Controller.PhonebookController = function() {
+Controller.AddressbookController = function() {
 	//var phonebookManager = new Domain.PhonebookManager();
-	//phonebookManager.add(new Phonebook.PhonebookJson());
+	//phonebookManager.add(new Addressbook.PhonebookJson());
 
 	this.list = function() {
 		document.querySelector('#importFile').addEventListener('change', function(event) {
@@ -27,19 +27,19 @@ Controller.PhonebookController = function() {
 		}, false);
 	}
 
-	var renderEntryList = function(phonebookData) {
-		var jsonPhonebook = new Phonebook.PhonebookJson(phonebookData);
+	var renderEntryList = function(addressbookData) {
+		var jsonAddressbook = new Addressbook.AddressbookJson(addressbookData);
 
-		var phonebookElement = document.querySelector('#phonebook');
-		var panel = document.querySelector('#panel');
+		var addressbookElement = document.querySelector('#addressbook .content');
+		var panel = document.querySelector('#addressbook .panel');
 
 		var entryCounter = document.createElement('span');
 		entryCounter.setAttribute('class','numberOfEntries');
-		entryCounter.innerHTML = jsonPhonebook.count()+' Entries';
+		entryCounter.innerHTML = jsonAddressbook.count()+' Entries';
 
 		panel.appendChild(entryCounter);
 
-		jsonPhonebook.getEntries().forEach(function(bookEntry, i) {
+		jsonAddressbook.getEntries().forEach(function(bookEntry, i) {
 
 			var entry = document.createElement('div');
 			entry.setAttribute('class','entry');
@@ -67,7 +67,7 @@ Controller.PhonebookController = function() {
 			entry.appendChild(name);
 			entry.appendChild(sip);
 
-			phonebookElement.appendChild(entry);
+			addressbookElement.appendChild(entry);
 		});
 	}
 }

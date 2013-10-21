@@ -9,7 +9,7 @@ App = {
 	Model: {
 		Interfaces:{},
 		Domain:{
-			Phonebook:{},
+			Addressbook:{},
 			Channel:{}
 		}
 	},

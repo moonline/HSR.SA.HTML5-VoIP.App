@@ -3,11 +3,11 @@
  */
 var Domain = App.Model.Domain;
 var Interfaces = App.Model.Interfaces;
-var Phonebook = Domain.Phonebook;
+var Addressbook = Domain.Addressbook;
 
 
-Phonebook.PhonebookJson = function(jsonData) {
-	this.prototype = new Interfaces.PhonebookInterface();
+Addressbook.AddressbookJson = function(jsonData) {
+	this.implementInterface = 'AddressbookInterface';
 	var data = new Array();
 
 	var initialize = (function() {
@@ -15,12 +15,12 @@ Phonebook.PhonebookJson = function(jsonData) {
 		if(typeof jsonData === 'object') {
 			inputData = jsonData;
 		} else {
-			inputData = JSON.parse(prompt('Please insert phonebook data in JSON Style with fields "sip", "name", "photo"'));
+			inputData = JSON.parse(prompt('Please insert addressbook data in JSON Style with fields "sip", "name", "photo"'));
 		}
 
 		inputData.forEach(function(dataRow, i) {
 			if(dataRow.hasOwnProperty('sip') && dataRow.hasOwnProperty('name')) {
-				var entry = new Domain.PhonebookEntry(dataRow.sip, dataRow.name, dataRow.photo);
+				var entry = new Domain.AddressbookEntry(dataRow.sip, dataRow.name, dataRow.photo);
 				data.push(entry);
 			}
 		});
