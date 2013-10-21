@@ -1,12 +1,13 @@
-#phonebook { background: silver; }
-#phonebook .entry { background: white; background: linear-gradient(white,gainsboro); padding: 0.25em; }
-#phonebook .entry .pic { height: 3em; width: 3em; display: inline-block; background-size:cover; background-position: top center;
+#addressbook { background: silver; }
+#addressbook .entry { background: white; background: linear-gradient(white,gainsboro); padding: 0.25em; display: width: 100%; }
+#addressbook .entry .pic { height: 3em; width: 3em; display: inline-block; background-size:cover; background-position: top center;
     vertical-align: middle; background-repeat: no-repeat; border-radius: 0.25em; }
-#phonebook .entry .sip, #phonebook .entry .name { padding: 0.5em; display: inline-block; vertical-align: middle; width: 15em; }
+#addressbook .entry .sip, #addressbook .entry .name { padding: 0.5em; display: inline-block; vertical-align: middle; width: 10em; }
 
-#phonebook .entry a { background: green; background: linear-gradient(lightgreen, seagreen); border-radius: 0.5em;
+
+#addressbook .entry a { background: green; background: linear-gradient(lightgreen, seagreen); border-radius: 0.5em;
     border: 1px solid darkgreen; padding: 0.4em; box-shadow: 0 0 0.25em gray; text-decoration: none;
     color: white; width: 15em; text-align: center; display: inline-block; }
 
-#phonebook .entry a:hover { color: black; }
-#phonebook .entry a:active { background: linear-gradient(seagreen, lightgreen); box-shadow: none; }
+#addressbook .entry a:hover { color: black; }
+#addressbook .entry a:active { background: linear-gradient(seagreen, lightgreen); box-shadow: none; }

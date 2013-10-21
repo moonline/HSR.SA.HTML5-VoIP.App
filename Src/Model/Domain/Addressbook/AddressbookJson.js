@@ -28,8 +28,18 @@ Addressbook.AddressbookJson = function(jsonData) {
 
 	this.getEntries = function() {
 		return data;
-	}
+	};
 	this.count = function() {
 		return data.length;
-	}
-}
+	};
+	this.store = function() {
+		var addressbook = {
+			addressbookType: 'AddressbookJson',
+			entries: []
+		};
+		data.forEach(function(entry) {
+			addressbook.entries.push(entry.store());
+		});
+		return addressbook;
+	};
+};

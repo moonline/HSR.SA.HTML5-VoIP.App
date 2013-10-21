@@ -13,19 +13,29 @@
 
     <script src="Core/Service/ArrayService.js" ></script>
     <script src="Core/Service/Log.js" ></script>
+	<script src="Core/Framework/Interface.js" ></script>
 
     <script src="Application/PhoneController.js" ></script>
+	<script src="Application/AddressbookController.js" ></script>
 
     <script src="Model/Domain/Connection.js" ></script>
     <script src="Model/Domain/Host.js" ></script>
     <script src="Model/Domain/Connection.js" ></script>
     <script src="Model/Domain/Channel/ChannelXHR.js" ></script>
+	<script src="Model/Domain/Addressbook/AddressbookJson.js" ></script>
+	<script src="Model/Domain/AddressbookEntry.js" ></script>
+	<script src="Model/Domain/AddressbookManager.js" ></script>
+	<script src="Model/Domain/Addressbook.js" ></script>
+
+
+	<script src="Model/Interfaces/AddressbookInterface.js" ></script>
 
     <script src="main.js" ></script>
 
     <link href="Resources/Styles/browserReset.css" rel="stylesheet" type="text/css" />
     <link href="Resources/Styles/appStyle.css" rel="stylesheet" type="text/css" />
 	<link href="Resources/Styles/callView.css" rel="stylesheet" type="text/css" />
+	<link href="Resources/Styles/listView.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 	<div class="page" id="page">
@@ -54,10 +64,13 @@
 			</div>
 			<div id="addressbook">
 				<div class="panel">
-					<h2>Address book</h2>
+					<!--<h2>Address book</h2>-->
 					<form id="import">
 						<input type="file" id="importFile" />
 					</form>
+				</div>
+				<div class="content">
+
 				</div>
 			</div>
 		</div>

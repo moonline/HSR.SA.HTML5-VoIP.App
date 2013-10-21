@@ -5,6 +5,8 @@
 
 
 window.onload = function() {
-	var controller = new Controller.PhoneController();
+	//var controller = new Controller.PhoneController();
 	//controller.callAction();
+	var addressbookController = new Controller.AddressbookController();
+	addressbookController.list();
 }
