@@ -57,7 +57,7 @@ Domain.Connection = function(localstream, channel, videoFrame, receiver) {
 					"receiver": this.receiver,
 					"message": JSON.stringify({
 						type: sdpOffer.type,
-						sdP: sdpOffer.sdp,
+						sdp: sdpOffer.sdp,
 						sender: App.Configuration.nick
 					})
 				};
@@ -109,8 +109,8 @@ Domain.Connection = function(localstream, channel, videoFrame, receiver) {
 				};
 				this.channel.send(message);
 			}.bind(this),
-			function(error) { Service.Log.log(Service.Log.logTypes.Error, 'Connection', error);
-		});
+			function(error) { Service.Log.log(Service.Log.logTypes.Error, 'Connection', error); }
+		);
 	}.bind(this);
 
 	/**
