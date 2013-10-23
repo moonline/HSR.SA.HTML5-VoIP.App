@@ -13,7 +13,7 @@ var Service = App.Core.Service;
  * @param videoFrame: dom element to attach the mediastream
  * @constructor
  */
-Domain.Connection = function(localstream, channel, videoFrame, receiver) {
+Domain.Connection = function(localstream, channel, videoFrame, receiver, streamReady) {
 	this.localstream = localstream;
 	this.channel = channel;
 	this.videoFrame = videoFrame;
@@ -49,6 +49,7 @@ Domain.Connection = function(localstream, channel, videoFrame, receiver) {
 			this.state = Domain.Connection.states.connected;
 			Service.Log.log(Service.Log.logTypes.Info, 'Connection', 'stream added to p2p connection, attach remote stream');
 			attachMediaStream(this.videoFrame,event.stream);
+			streamReady();
 		}.bind(this);
 
 		this.peerConnection.createOffer(function(sdpOffer) {
@@ -97,6 +98,7 @@ Domain.Connection = function(localstream, channel, videoFrame, receiver) {
 			this.state = Domain.Connection.states.connected;
 			Service.Log.log(Service.Log.logTypes.Info, 'Connection', 'stream added to p2p connection, attach remote stream');
 			attachMediaStream(this.videoFrame,event.stream);
+			streamReady();
 		}.bind(this);
 
 		this.peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
@@ -122,6 +124,21 @@ Domain.Connection = function(localstream, channel, videoFrame, receiver) {
 		Service.Log.log(Service.Log.logTypes.Info, 'Connection', 'caller receive answer');
 		this.peerConnection.setRemoteDescription(new RTCSessionDescription(sdpAnswer));
 	}.bind(this);
+
+	this.hangUp = function(notifyClient) {
+		this.localstream.stop();
+		if(notifyClient) {
+			this.channel.send({
+				"receiver": this.receiver,
+				"message": JSON.stringify({"type": "bye"})
+			});
+		}
+		try {
+			this.peerConnection.close();
+		} catch (error) { Service.Log.log(Service.Log.logTypes.Error, 'Connection', error); }
+		this.pc = null;
+		this.state = Domain.Connection.states.stopped;
+	}.bind(this);
 };
 
-Domain.Connection.states = states = { off: 0, running: 1, connected: 2, stopped: 3 };
+Domain.Connection.states = { off: 0, running: 1, connected: 2, stopped: 3 };

@@ -11,7 +11,6 @@ Controller.PhoneController = function() {
 	// Todo: fix 'this' problem
 	var self = this;
 
-	this.callButton = document.getElementById('call');
 	this.localVideoFrame = document.getElementById('localVideo');
 	this.remoteVideoFrame = document.getElementById('remoteVideo');
 
@@ -25,7 +24,7 @@ Controller.PhoneController = function() {
 			if (message.type === 'offer') {
 				// Callee creates PeerConnection
 				//console.log(this);
-				if (!self.channel.type !== 'caller' && (typeof(self.connection) === 'undefined' || self.connection.state === Domain.Connection.states.off)) {
+				if (!self.channel.type !== 'caller' && (!self.connection || self.connection.state === Domain.Connection.states.off)) {
 					var accept = confirm(message.sender+' want\'s to call you. Receive?');
 					if(accept) {
 						self.receiveCall(message);
@@ -36,6 +35,10 @@ Controller.PhoneController = function() {
 			} else if (message.type === 'candidate' && self.connection.state > Domain.Connection.states.off) {
 				var candidate = new RTCIceCandidate({sdpMLineIndex:message.label, candidate:message.candidate});
 				self.connection.peerConnection.addIceCandidate(candidate);
+			} else if (message.type === 'bye' && self.connection && self.connection.state > Domain.Connection.states.off) {
+				self.connection.hangUp(false);
+				self.hangUp();
+				self.connection = null;
 			}
 		}
 	};
@@ -44,7 +47,9 @@ Controller.PhoneController = function() {
 
 	this.receiveCall = function(message) {
 		this.host.startLocalMedia(function() {
-			self.connection = new Domain.Connection(self.host.localstream,self.channel, self.remoteVideoFrame, null);
+			self.connection = new Domain.Connection(self.host.localstream,self.channel, self.remoteVideoFrame, null, function() {
+				document.getElementById('hangUp').removeAttribute('disable');
+			});
 			self.connection.calleeCreateAnswer(message);
 		}.bind(this));
 	};
@@ -55,9 +60,9 @@ Controller.PhoneController = function() {
 	this.call = function(receiver) {
 		this.channel.type = 'caller';
 		this.host.startLocalMedia(function() {
-			self.connection = new Domain.Connection(self.host.localstream,self.channel, self.remoteVideoFrame, receiver);
-			//this.connection = this.connections[0];
-
+			self.connection = new Domain.Connection(self.host.localstream,self.channel, self.remoteVideoFrame, receiver, function() {
+				document.getElementById('hangUp').removeAttribute('disable');
+			});
 			self.connection.callerCreateOffer();
 		}.bind(this));
 	}.bind(this);
@@ -70,4 +75,28 @@ Controller.PhoneController = function() {
 			}
 		}.bind(this)
 	}, 'startCall');
+
+	document.querySelector('.fullScreen').onclick = function() {
+		var element = document.getElementById('remoteVideo');
+		if (element.requestFullscreen) {
+			element.requestFullscreen();
+		} else if (element.mozRequestFullScreen) {
+			element.mozRequestFullScreen();
+		} else if (element.webkitRequestFullscreen) {
+			element.webkitRequestFullscreen();
+		}
+	};
+
+	document.getElementById('hangUp').onclick = function(event) {
+		if(!event.target.hasAttribute('disable')) {
+			this.connection.hangUp(true);
+			this.hangUp();
+		}
+	}.bind(this);
+
+	this.hangUp = function() {
+		this.localVideoFrame.pause(); this.localVideoFrame.src = '';
+		this.remoteVideoFrame.pause(); this.remoteVideoFrame.src = '';
+		document.getElementById('hangUp').setAttribute('disable', 'disable');
+	}.bind(this);
 };
