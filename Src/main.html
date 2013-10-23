@@ -6,6 +6,8 @@
 
     <script src="Namespaces.js" ></script>
 
+	<script src="../Configuration/appConfiguration.js" ></script>
+
     <script src="Core/Lib/AdapterJS/Adapter.js" ></script>
     <script src="Core/Lib/JQuery/jQuery.2.0.3.js" ></script>
     <script src="Core/Lib/EmberJS/handlebars.js" ></script>
@@ -26,6 +28,7 @@
 	<script src="Model/Domain/AddressbookEntry.js" ></script>
 	<script src="Model/Domain/AddressbookManager.js" ></script>
 	<script src="Model/Domain/Addressbook.js" ></script>
+	<script src="Model/Domain/EventManager.js" ></script>
 
 
 	<script src="Model/Interfaces/AddressbookInterface.js" ></script>
@@ -38,42 +41,57 @@
 	<link href="Resources/Styles/listView.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-	<div class="page" id="page">
-		<header>
-			<h1>
-				<img id="logo" src="../Src/Resources/Img/icon-js-voip.png" />
-				JS VoIP App
-			</h1>
-			<!--<nav>
-				<div>
-					<a class="active" href="">take a call</a>
-					<a href="">phonebook</a>
+	<div class="page box layout" id="page">
+		<header class="box north">
+			<div class="box content">
+				<div class="box east">
+					<h1>
+						<img id="logo" src="../Src/Resources/Img/icon-js-voip.png" />
+						JS VoIP App
+					</h1>
 				</div>
-			</nav>-->
-		</header>
-		<div class="content" id="content">
-			<div id="phone">
-				<div class="controlls panel" id="constrolls">
-					<form>
-						<input type="button" name="call" id="call" value="✆ call" />
-					</form>
-				</div>
+				<div class="box west userInfo">
+					<span id="user">
 
-				<video id="localVideo"  autoplay="true" controls="controls"></video>
-				<video id="remoteVideo"  autoplay="true" controls="controls"></video>
+					</span>
+				</div>
 			</div>
-			<div id="addressbook">
-				<div class="panel">
-					<!--<h2>Address book</h2>-->
-					<form id="import">
-						<input type="file" id="importFile" />
-					</form>
+		</header>
+		<div class="content box middle" id="content">
+			<div class="box content">
+				<div class="box center" id="phone">
+					<div class="box content">
+						<div class="controlls panel box north" id="constrolls">
+							<!--<form>
+								<input type="button" name="call" id="call" value="✆ call" />
+							</form>-->
+						</div>
+						<div class="box middle">
+							<video id="localVideo"  autoplay="true" controls="controls"></video>
+							<video id="remoteVideo"  autoplay="true" controls="controls"></video>
+						</div>
+					</div>
 				</div>
-				<div class="content">
+				<div class="box west" id="addressbook">
+					<div class="box content">
+						<nav class="box north panel">
 
+						</nav>
+						<div class="addressbookContent box middle">
+
+						</div>
+						<div class="actions box south panel">
+							<form id="import">
+								<input type="file" id="importFile" />
+							</form>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
+		<footer class="box south">
+
+		</footer>
 	</div>
 </body>
 </html>

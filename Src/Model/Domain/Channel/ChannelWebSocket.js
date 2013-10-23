@@ -8,7 +8,9 @@ var Interfaces = App.Model.Interfaces;
 
 
 Channel.ChannelWebSocket = function() {
+	// Todo fix 'this' problem
 	var self = this;
+
 	var channel;
 	var listeners = [];
 	var state;

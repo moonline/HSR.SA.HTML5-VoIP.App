@@ -30,7 +30,8 @@ Channel.ChannelXHR.prototype = {
 		var response = '';
 
 		$.ajax({ type: "GET",
-			url: this.configuration.server+'?getMessage&receiverType='+this.type,
+			// Todo fix problem with 'var Configuration = App.Configuration;
+			url: this.configuration.server+'?getMessage&receiverType='+App.Configuration.nick,
 			async: false,
 			success : function(text) {
 				response = text;
@@ -87,12 +88,11 @@ Channel.ChannelXHR.prototype = {
 	/**
 	 * send a message
 	 *
-	 * @param message: plain text message
+	 * @param message: a message like { "receiver": "frank", "message": "theMessage" }
 	 */
 	send: function(message) {
-		var recType = (this.type === 'callee') ? 'caller' : 'callee';
-		Service.Log.log(Service.Log.logTypes.Info, 'ChannelXHR', 'send message: '+message);
-		$.post(this.configuration.server+"?setMessage&receiverType="+recType, { message: message });
+		Service.Log.log(Service.Log.logTypes.Info, 'ChannelXHR', 'send message: '+message.message+' to '+message.receiver);
+		$.post(this.configuration.server+"?setMessage&receiverType="+message.receiver, { message: message.message });
 	},
 
 	/**

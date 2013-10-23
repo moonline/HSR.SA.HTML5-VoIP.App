@@ -5,8 +5,11 @@
 
 
 window.onload = function() {
-	//var controller = new Controller.PhoneController();
-	//controller.callAction();
+	App.Configuration.nick = prompt('Please insert your nick name');
+	document.getElementById('user').innerHTML = App.Configuration.nick;
+
 	var addressbookController = new Controller.AddressbookController();
 	addressbookController.list();
-}
+
+	var phoneController = new Controller.PhoneController();
+};

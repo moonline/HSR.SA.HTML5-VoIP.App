@@ -13,5 +13,6 @@ App = {
 			Channel:{}
 		}
 	},
-	Controller:{}
+	Controller:{},
+	Configuration: {}
 };

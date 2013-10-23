@@ -1,4 +1,4 @@
-{
+App.Configuration = {
 	"lastName": "Caller name",
 	"firstName": "Caller firstname",
 	"photo": "base64 image string",

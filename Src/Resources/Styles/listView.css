@@ -1,13 +1,26 @@
 #addressbook { background: silver; }
-#addressbook .entry { background: white; background: linear-gradient(white,gainsboro); padding: 0.25em; display: width: 100%; }
+#addressbook .entry { background: white; background: linear-gradient(white,gainsboro); padding: 0.25em; width: 100%; }
+#addressbook .entry span { padding: 0.5em; display: inline-block; vertical-align: middle; }
 #addressbook .entry .pic { height: 3em; width: 3em; display: inline-block; background-size:cover; background-position: top center;
     vertical-align: middle; background-repeat: no-repeat; border-radius: 0.25em; }
-#addressbook .entry .sip, #addressbook .entry .name { padding: 0.5em; display: inline-block; vertical-align: middle; width: 10em; }
+#addressbook .entry .name { width: 10em; }
 
 
-#addressbook .entry a { background: green; background: linear-gradient(lightgreen, seagreen); border-radius: 0.5em;
-    border: 1px solid darkgreen; padding: 0.4em; box-shadow: 0 0 0.25em gray; text-decoration: none;
-    color: white; width: 15em; text-align: center; display: inline-block; }
+#addressbook .entry .callButton { background: green; background: linear-gradient(lightgreen, seagreen); border-radius: 0.5em;
+    border: 1px solid darkgreen; padding: 0.4em; box-shadow: 0 0 0.25em gray;
+    color: white; width: 5em; text-align: center; display: inline-block; margin: 0 0.5em; }
+#addressbook .entry .callButton:hover { cursor: pointer; color: black; }
+#addressbook .entry a { text-decoration: none; color: white; }
 
 #addressbook .entry a:hover { color: black; }
 #addressbook .entry a:active { background: linear-gradient(seagreen, lightgreen); box-shadow: none; }
+
+#addressbook .addressbookSlide { height: 100%; width: 40%; display: none; overflow-y: scroll; }
+#addressbook .addressbookSlide.active { display: block; width: 100%; height: 15em; overflow-x: hidden; overflow-y: scroll; }
+
+#addressbook nav { padding: 0; padding-top: 0.25em; border-bottom: 0.2em teal solid; }
+#addressbook nav span { margin: 0.25em; margin-bottom: 0; background: black; border-radius: 0.5em 0.5em 0 0;
+	padding: 0.25em; display: inline-block; box-shadow: 0 0 0.25em silver; cursor: pointer; }
+#addressbook nav span.active { background: teal; background: linear-gradient(darkcyan, teal); }
+
+#addressbook .addressbookContent { height: 100%; }

@@ -13,13 +13,12 @@ var Service = App.Core.Service;
  * @param videoFrame: dom element to attach the mediastream
  * @constructor
  */
-Domain.Connection = function(localstream, channel, videoFrame) {
+Domain.Connection = function(localstream, channel, videoFrame, receiver) {
 	this.localstream = localstream;
 	this.channel = channel;
 	this.videoFrame = videoFrame;
-
+	this.receiver = receiver;
 	this.state = Domain.Connection.states.off;
-
 	this.peerConnection = null;
 	this.config = null;
 
@@ -36,7 +35,11 @@ Domain.Connection = function(localstream, channel, videoFrame) {
 
 		this.peerConnection.onicecandidate = function(event) {
 			if (event.candidate) {
-				this.channel.send(JSON.stringify(event.candidate));
+				var message = {
+					"receiver": this.receiver,
+					"message": JSON.stringify(event.candidate)
+				};
+				this.channel.send(message);
 			} else {
 				Service.Log.log(Service.Log.logTypes.Info, 'Connection', "End of candidates");
 			}
@@ -50,7 +53,15 @@ Domain.Connection = function(localstream, channel, videoFrame) {
 
 		this.peerConnection.createOffer(function(sdpOffer) {
 				this.peerConnection.setLocalDescription(sdpOffer);
-				this.channel.send(JSON.stringify(sdpOffer));
+				var message = {
+					"receiver": this.receiver,
+					"message": JSON.stringify({
+						type: sdpOffer.type,
+						sdP: sdpOffer.sdp,
+						sender: App.Configuration.nick
+					})
+				};
+				this.channel.send(message);
 			}.bind(this),
 			function(error) { Service.Log.log(Service.Log.logTypes.Error, 'Connection', error);
 		});
@@ -62,6 +73,8 @@ Domain.Connection = function(localstream, channel, videoFrame) {
 	 * @param offer: session description answer
 	 */
 	this.calleeCreateAnswer = function(offer) {
+		this.receiver = offer.sender;
+
 		Service.Log.log(Service.Log.logTypes.Info, 'Connection', 'callee create answer');
 		this.state = Domain.Connection.states.running;
 
@@ -70,7 +83,11 @@ Domain.Connection = function(localstream, channel, videoFrame) {
 
 		this.peerConnection.onicecandidate = function(event) {
 			if (event.candidate) {
-				this.channel.send(JSON.stringify(event.candidate));
+				var message = {
+					"receiver": this.receiver,
+					"message": JSON.stringify(event.candidate)
+				};
+				this.channel.send(message);
 			} else {
 				Service.Log.log(Service.Log.logTypes.Info, 'Connection', 'End of candidates.');
 			}
@@ -86,7 +103,11 @@ Domain.Connection = function(localstream, channel, videoFrame) {
 
 		this.peerConnection.createAnswer(function(sdpAnswer) {
 				this.peerConnection.setLocalDescription(sdpAnswer);
-				this.channel.send(JSON.stringify(sdpAnswer));
+				var message = {
+					"receiver": this.receiver,
+					"message": JSON.stringify(sdpAnswer)
+				};
+				this.channel.send(message);
 			}.bind(this),
 			function(error) { Service.Log.log(Service.Log.logTypes.Error, 'Connection', error);
 		});
