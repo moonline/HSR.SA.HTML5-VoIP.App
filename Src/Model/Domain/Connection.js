@@ -124,7 +124,11 @@ Domain.Connection = function(localstream, channel, videoFrame, receiver, streamR
 	 */
 	this.callerReceiveAnswer = function(sdpAnswer) {
 		Service.Log.log(Service.Log.logTypes.Info, 'Connection', 'caller receive answer');
-		this.peerConnection.setRemoteDescription(new RTCSessionDescription(sdpAnswer));
+		if(this.peerConnection) {
+			this.peerConnection.setRemoteDescription(new RTCSessionDescription(sdpAnswer));
+		} else {
+			this.hangUp();
+		}
 	}.bind(this);
 
 	this.hangUp = function(notifyClient) {

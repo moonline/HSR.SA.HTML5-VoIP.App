@@ -36,7 +36,7 @@ Controller.PhoneController = function() {
 			} else if (message.type === 'candidate' && self.connection.state > Domain.Connection.states.off) {
 				var candidate = new RTCIceCandidate({sdpMLineIndex:message.label, candidate:message.candidate});
 				self.connection.peerConnection.addIceCandidate(candidate);
-			} else if (message.type === 'bye' && self.connection && self.connection.state > Domain.Connection.states.off) {
+			} else if (message.type === 'bye') {
 				self.connection.hangUp(false);
 				self.hangUp();
 			}
@@ -73,7 +73,7 @@ Controller.PhoneController = function() {
 	this.timeOutIfConnectionNotEtablished = function() {
 		setTimeout(function() {
 			if(this.connection.state < Domain.Connection.states.connected) {
-				self.connection.hangUp(false);
+				self.connection.hangUp(true);
 				self.hangUp();
 				alert('could no connection etablish.');
 			}
@@ -108,6 +108,7 @@ Controller.PhoneController = function() {
 	}.bind(this);
 
 	this.hangUp = function() {
+		console.log('hang up');
 		this.localVideoFrame.pause(); this.localVideoFrame.src = '';
 		this.remoteVideoFrame.pause(); this.remoteVideoFrame.src = '';
 		document.getElementById('hangUp').setAttribute('disable', 'disable');

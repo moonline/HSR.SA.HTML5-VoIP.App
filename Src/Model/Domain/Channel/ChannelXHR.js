@@ -24,9 +24,9 @@ Channel.ChannelXHR = function(webServer) {
 
 Channel.ChannelXHR.prototype = {
 	/**
-	 * fetch message from server
+	 * receive
 	 */
-	receiveMessage: function() {
+	receive: function() {
 		var response = '';
 
 		$.ajax({ type: "GET",
@@ -37,6 +37,13 @@ Channel.ChannelXHR.prototype = {
 				response = text;
 			}
 		});
+		return response;
+	},
+	/**
+	 * fetch message from server
+	 */
+	receiveMessage: function() {
+		var response = this.receive();
 		if(response != "0") {
 			Service.Log.log(Service.Log.logTypes.Info, 'ChannelXHR', 'receive message: '+response);
 			this.notify(response);
@@ -69,11 +76,25 @@ Channel.ChannelXHR.prototype = {
 	},
 
 	/**
+	 * empty channel
+	 */
+	emptyChannel: function() {
+		var channelEmpty = false;
+		while(!channelEmpty) {
+			var response = this.receive();
+			if(response == "0") {
+				channelEmpty = true;
+			}
+		}
+	},
+
+	/**
 	 * open the channel connection
 	 */
 	start: function() {
 		this.state = Domain.Channel.states.connected;
 		Service.Log.log(Service.Log.logTypes.Info, 'ChannelXHR', 'start receiving loop');
+		this.emptyChannel();
 		this.receiveLoop();
 	},
 
