@@ -15,8 +15,8 @@ var Interfaces = App.Model.Interfaces;
  */
 Channel.ChannelXHR = function(webServer) {
 	this.listeners = [];
-	this.state = 'waiting';
-	this.type = 'callee';
+	this.state = Domain.Channel.states.waiting;
+	this.type = Domain.Channel.types.callee;
 	this.configuration = {
 		server: webServer
 	};
@@ -47,7 +47,7 @@ Channel.ChannelXHR.prototype = {
 	 * call receiveMessage from time to time
 	 */
 	receiveLoop: function() {
-		if(this.state === 'connected' || this.state === 'waiting') {
+		if(this.state === Domain.Channel.states.connected || this.state === Domain.Channel.states.waiting) {
 			this.receiveMessage();
 			setTimeout(function() { this.receiveLoop(); }.bind(this),1000);
 		} else {
@@ -72,7 +72,7 @@ Channel.ChannelXHR.prototype = {
 	 * open the channel connection
 	 */
 	start: function() {
-		this.state = 'connected';
+		this.state = Domain.Channel.states.connected;
 		Service.Log.log(Service.Log.logTypes.Info, 'ChannelXHR', 'start receiving loop');
 		this.receiveLoop();
 	},
@@ -81,7 +81,7 @@ Channel.ChannelXHR.prototype = {
 	 * close the channel connection and remove all listeners
 	 */
 	stop: function() {
-		this.state = 'disconnected';
+		this.state = Domain.Channel.states.disconnected;
 		listeners = [];
 	},
 

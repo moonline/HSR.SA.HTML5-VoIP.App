@@ -3,5 +3,8 @@ App.Configuration = {
 	"firstName": "Caller firstname",
 	"photo": "base64 image string",
 	"sip": "yourSipId@sipHost.tld",
-	"stunService": ""
-}
+	"stunService": "",
+	"connection" : {
+		"connectTimeout": 30 // sec
+	}
+};

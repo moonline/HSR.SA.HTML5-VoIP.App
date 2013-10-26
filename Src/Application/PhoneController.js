@@ -5,6 +5,7 @@ var Controller = App.Controller;
 var Domain = App.Model.Domain;
 var Channel = Domain.Channel;
 var Service = App.Core.Service;
+var Configuration = App.Configuration;
 
 
 Controller.PhoneController = function() {
@@ -24,7 +25,7 @@ Controller.PhoneController = function() {
 			if (message.type === 'offer') {
 				// Callee creates PeerConnection
 				//console.log(this);
-				if (!self.channel.type !== 'caller' && (!self.connection || self.connection.state === Domain.Connection.states.off)) {
+				if (!self.channel.type !== Domain.Channel.types.caller && (!self.connection || self.connection.state === Domain.Connection.states.off || self.connection.state === Domain.Connection.states.stopped)) {
 					var accept = confirm(message.sender+' want\'s to call you. Receive?');
 					if(accept) {
 						self.receiveCall(message);
@@ -38,7 +39,6 @@ Controller.PhoneController = function() {
 			} else if (message.type === 'bye' && self.connection && self.connection.state > Domain.Connection.states.off) {
 				self.connection.hangUp(false);
 				self.hangUp();
-				self.connection = null;
 			}
 		}
 	};
@@ -58,13 +58,26 @@ Controller.PhoneController = function() {
 	 * call action
 	 */
 	this.call = function(receiver) {
-		this.channel.type = 'caller';
 		this.host.startLocalMedia(function() {
 			self.connection = new Domain.Connection(self.host.localstream,self.channel, self.remoteVideoFrame, receiver, function() {
 				document.getElementById('hangUp').removeAttribute('disable');
 			});
 			self.connection.callerCreateOffer();
 		}.bind(this));
+		this.timeOutIfConnectionNotEtablished();
+	}.bind(this);
+
+	/**
+	 * wait for some seconds, if connection is not etablished, hang up and clean up
+	 */
+	this.timeOutIfConnectionNotEtablished = function() {
+		setTimeout(function() {
+			if(this.connection.state < Domain.Connection.states.connected) {
+				self.connection.hangUp(false);
+				self.hangUp();
+				alert('could no connection etablish.');
+			}
+		}.bind(this),1000*Configuration.connection.connectTimeout);
 	}.bind(this);
 
 	Domain.EventManager.addListener({

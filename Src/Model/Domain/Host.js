@@ -41,8 +41,4 @@ Domain.Host = function(videoFrame) {
 };
 
 Domain.Host.prototype = {
-	call: function() {},
-	hangUp: function() {},
-	answer: function() {},
-	receiveCall: function() {}
 };

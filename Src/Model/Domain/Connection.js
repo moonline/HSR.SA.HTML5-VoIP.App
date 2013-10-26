@@ -28,6 +28,8 @@ Domain.Connection = function(localstream, channel, videoFrame, receiver, streamR
 	 */
 	this.callerCreateOffer= function() {
 		Service.Log.log(Service.Log.logTypes.Info, 'Connection', 'caller create offer');
+
+		this.channel.type = Domain.Channel.types.caller;
 		this.state = Domain.Connection.states.running;
 
 		this.peerConnection = new RTCPeerConnection(this.config);
@@ -136,7 +138,8 @@ Domain.Connection = function(localstream, channel, videoFrame, receiver, streamR
 		try {
 			this.peerConnection.close();
 		} catch (error) { Service.Log.log(Service.Log.logTypes.Error, 'Connection', error); }
-		this.pc = null;
+		this.channel.type = Domain.Channel.types.callee;
+		this.peerConnection = null;
 		this.state = Domain.Connection.states.stopped;
 	}.bind(this);
 };
