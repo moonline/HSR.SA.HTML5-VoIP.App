@@ -1,4 +1,7 @@
-#localVideo { width: 10em; height: auto; }
+#localVideo { width: 10em; height: auto;
+	position: absolute; z-index: 100; box-shadow: 0 0 1em black; margin: 0.5em; border: 0.25em solid black; border-radius: 0.25em;
+	-moz-transform: scaleX(-1); -o-transform: scaleX(-1); -webkit-transform: scaleX(-1); transform: scaleX(-1); filter: FlipH; -ms-filter: "FlipH";
+}
 
 
 /** content */
@@ -8,7 +11,8 @@
 #phone { width: 60%; }
 #addressbook { width: 40%; background: silver; padding: 0; }
 
-video { background: black; }
+video { background: black; background: black; }
+.callWindow { text-align: center; }
 
 .fullScreen { display: inline-block; cursor: pointer; }
 
@@ -36,4 +40,4 @@ input[type="button"][disable="disable"], .button[disable="disable"] { background
 input[type="button"].error, .button.error { background: red; background: linear-gradient(red,maroon); border: 1px solid maroon; }
 
 input.hangUp { background: red; background: linear-gradient(red, maroon); }
-input.hangUp:hover { background: maroon; background: linear-gradient(brown, rgb(100,0,0)); }
+input.hangUp:hover { background: maroon; background: linear-gradient(brown, rgb(100,0,0)); border-color: rgb(40,0,0); }
