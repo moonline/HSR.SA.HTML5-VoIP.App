@@ -14,6 +14,9 @@ var Interfaces = App.Model.Interfaces;
  * @constructor
  */
 Channel.ChannelXHR = function(webServer) {
+	// Todo fix problem with 'var Configuration = App.Configuration;
+	this.nick = App.Configuration.nick;
+
 	this.listeners = [];
 	this.state = Domain.Channel.states.waiting;
 	this.type = Domain.Channel.types.callee;
@@ -26,12 +29,11 @@ Channel.ChannelXHR.prototype = {
 	/**
 	 * receive
 	 */
-	receive: function() {
+	receive: function(receiver) {
 		var response = '';
 
 		$.ajax({ type: "GET",
-			// Todo fix problem with 'var Configuration = App.Configuration;
-			url: this.configuration.server+'?getMessage&receiverType='+App.Configuration.nick,
+			url: this.configuration.server+'?getMessage&receiverType='+this.nick,
 			async: false,
 			success : function(text) {
 				response = text;

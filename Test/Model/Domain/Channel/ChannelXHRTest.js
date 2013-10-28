@@ -6,12 +6,13 @@ var Channel = Domain.Channel;
 
 asyncTest("ChannelXHR echo test", function() {
 	var channel = new Channel.ChannelXHR("http://colvarim.ch/service/messageQueue/messageQueue.php");
+	channel.nick = 'testUser';
 	channel.start();
 
 	// caller
-	channel.type = 'caller';
+	channel.type = Domain.Channel.types.caller;
 	var message = "Hello XHR-World.";
-	channel.send(message);
+	channel.send({ message: message, receiver: 'testUser'});
 
 	// callee
 	var listener = {
@@ -22,7 +23,7 @@ asyncTest("ChannelXHR echo test", function() {
 		}
 	};
 	channel.addReceiveListener(listener);
-	channel.type = 'callee';
+	channel.type = Domain.Channel.types.callee;
 
 	setTimeout(function() { channel.stop(); }, 3000);
 });

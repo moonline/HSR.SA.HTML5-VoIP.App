@@ -20,7 +20,10 @@ Controller.AddressbookController = function() {
 				var reader = new FileReader();
 				reader.onload = function(e) {
 					var contents = e.target.result;
-					addressbookManager.add(new Domain.Addressbook(JSON.parse(contents)));
+					var book = new Domain.Addressbook(JSON.parse(contents));
+					book.load = function() { return this.entries; }.bind(book);
+					console.log(JSON.stringify(book));
+					addressbookManager.add(book);
 					renderEntryList(addressbookManager);
 				};
 				reader.readAsText(file);

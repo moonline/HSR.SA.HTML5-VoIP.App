@@ -19,6 +19,7 @@ Domain.AddressbookManager = function() {
 			}
 		}.bind(this));
 	}.bind(this);
+
 	this.add = function(addressbook) {
 		Interfaces.AddressbookInterface.implementedBy(addressbook);
 		this.addressbooks.push(addressbook);

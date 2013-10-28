@@ -8,6 +8,7 @@ var Interfaces = App.Model.Interfaces;
 
 
 Channel.ChannelWebSocket = function() {
+	this.implementInterface = 'ChannelInterface';
 	// Todo fix 'this' problem
 	var self = this;
 
@@ -16,7 +17,6 @@ Channel.ChannelWebSocket = function() {
 	var state;
 	var waiters = []
 
-	this.prototype = new Interfaces.ChannelInterface();
 	this.requiredFields = [ 'sip', 'name' ];
 	this.configuration = {
 		server: ''

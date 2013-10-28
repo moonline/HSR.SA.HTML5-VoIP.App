@@ -10,8 +10,12 @@ var Domain = App.Model.Domain;
  * @constructor
  */
 Domain.Addressbook = function(entries) {
+	this.load = function() {
+		return this.entries;
+	};
 	this.entries = entries;
 };
+
 Domain.Addressbook.prototype = {
 	implementInterface: 'AddressbookInterface',
 	getEntries: function() {
@@ -21,3 +25,5 @@ Domain.Addressbook.prototype = {
 		return this.entries.length;
 	}
 };
+
+Domain.Addressbook.dataSourceTypes = { file: 0, webservice: 1};
