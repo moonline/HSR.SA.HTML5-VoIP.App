@@ -27,8 +27,9 @@ test("AddressbookVcard test", function() {
 	addressbook.addEntry(entry2);
 
 	var entries = addressbook.getEntries();
-	strictEqual(entries[0]['IMPP']['value'][0], '564895214@corephone.com', "sip");
-	strictEqual(entries[0]['N']['value'][1]+' '+entries[0]['N']['value'][0], 'Hilary Swank', "name");
+	strictEqual(entries[0]['IMPP']['value'][0], '564895214@corephone.com', "impp sip field");
+	strictEqual(entries[0]['N']['value'][1]+' '+entries[0]['N']['value'][0], 'Hilary Swank', "name field");
 	console.log(entries[1]);
-	strictEqual(entries[1]['FN']['value'][0], "Max Mustermann", "full name");
+	strictEqual(entries[1]['FN']['value'][0], "Max Mustermann", "full name field");
+	strictEqual(entries[1]['URL']['value'][0], "http://de.wikipedia.org/", "url field ':' skip");
 });

@@ -43,7 +43,7 @@ Addressbook.AddressbookVcard.prototype = {
 				if(line != '' && line != "BEGIN:VCARD" && line != "END:VCARD") {
 				var lineEntry;
 
-				var fieldParts = line.split(':');
+				var fieldParts = line.splitOnce(':');
 				var fieldHeader = fieldParts[0];
 				var headerParts = fieldHeader.split(';');
 				var fieldName = headerParts[0];
