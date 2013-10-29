@@ -11,6 +11,7 @@ Test = {
 	Controller:{},
 	Service:{},
 	Core: {
-		Framework: {}
+		Framework: {},
+		Service: {}
 	}
 };

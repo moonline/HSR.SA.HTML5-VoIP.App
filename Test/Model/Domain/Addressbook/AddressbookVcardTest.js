@@ -21,6 +21,7 @@ END:VCARD"
 
 var Addressbook = App.Model.Domain.Addressbook;
 
+module("Addressbook Tests");
 test("AddressbookVcard test", function() {
 	var addressbook = new Addressbook.AddressbookVcard();
 	addressbook.addEntry(entry1);
@@ -29,7 +30,6 @@ test("AddressbookVcard test", function() {
 	var entries = addressbook.getEntries();
 	strictEqual(entries[0]['IMPP']['value'][0], '564895214@corephone.com', "impp sip field");
 	strictEqual(entries[0]['N']['value'][1]+' '+entries[0]['N']['value'][0], 'Hilary Swank', "name field");
-	console.log(entries[1]);
 	strictEqual(entries[1]['FN']['value'][0], "Max Mustermann", "full name field");
 	strictEqual(entries[1]['URL']['value'][0], "http://de.wikipedia.org/", "url field ':' skip");
 });

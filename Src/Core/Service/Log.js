@@ -23,7 +23,13 @@ Service.Log = {
 	 */
 	log:function(logType, causer, message) {
 		if(Service.Log.logLevel <= logType) {
-			console.log(causer+': '+message);
+			if(logType === Service.Log.logTypes.Info) {
+				console.info(causer+': '+message);
+			} else if (logType === Service.Log.logTypes.Error) {
+				console.warn(causer+': '+message);
+			} else {
+				console.log(causer+': '+message);
+			}
 		}
 	}
 };

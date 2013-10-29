@@ -4,6 +4,7 @@
 var Domain = App.Model.Domain;
 var Channel = Domain.Channel;
 
+module("Channel Tests");
 asyncTest("ChannelWebSocket echo test", function() {
 	var channel = new Channel.ChannelWebSocket();
 	channel.configuration.server = "ws://echo.websocket.org";

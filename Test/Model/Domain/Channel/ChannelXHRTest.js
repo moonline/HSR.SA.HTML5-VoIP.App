@@ -4,6 +4,7 @@
 var Domain = App.Model.Domain;
 var Channel = Domain.Channel;
 
+module("Channel Tests");
 asyncTest("ChannelXHR echo test", function() {
 	var channel = new Channel.ChannelXHR("http://colvarim.ch/service/messageQueue/messageQueue.php");
 	channel.nick = 'testUser';
