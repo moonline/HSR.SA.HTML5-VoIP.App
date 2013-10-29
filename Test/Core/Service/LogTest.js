@@ -4,7 +4,7 @@
 
 var Service = App.Core.Service;
 
-module('"Log Tests');
+module('Log Tests');
 test("Log Test", function() {
 	(function(){
 		Service.Log.logLevel = App.Core.Service.Log.logLevels.All;

@@ -14,6 +14,7 @@ var Service = App.Core.Service;
  * @constructor
  */
 Domain.Connection = function(localstream, channel, videoFrame, receiver, streamReady) {
+	// Todo: How to test? -> Refactor?
 	this.localstream = localstream;
 	this.channel = channel;
 	this.videoFrame = videoFrame;
