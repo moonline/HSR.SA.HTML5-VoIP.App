@@ -19,11 +19,11 @@ Controller.AddressbookController = function() {
 			if (file) {
 				var reader = new FileReader();
 				reader.onload = function(e) {
-					var contents = e.target.result;
-					var book = new Domain.Addressbook(JSON.parse(contents));
-					book.load = function() { return this.entries; }.bind(book);
-					console.log(JSON.stringify(book));
-					addressbookManager.add(book);
+					var addressbook = new Addressbook.AddressbookJson();
+					addressbook.load(JSON.parse(e.target.result));
+
+					addressbookManager.add(addressbook);
+
 					renderEntryList(addressbookManager);
 				};
 				reader.readAsText(file);

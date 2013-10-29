@@ -11,9 +11,12 @@ Addressbook.AddressbookVcard = function() {
 	this.type = 'AddressbookVcard';
 	this.data = new Array();
 	this.dataSourceTypes = Domain.Addressbook.dataSourceTypes.file;
-	this.fieldMapping = { // field in csv: field in addressbook
-		'tel' : 'sip'
-	}
+
+	this.fieldMapping = {
+		"N": ['lastName','firstName'],
+		"X-SIP": 'sip',
+		"PHOTO": 'photo'
+	};
 };
 
 Addressbook.AddressbookVcard.prototype = {
@@ -36,13 +39,12 @@ Addressbook.AddressbookVcard.prototype = {
 	 * @param string:vcardContent
 	 */
 	addEntry: function(vcardContent) {
-		var entry = new Array();
+		var mapping = this.fieldMapping;
+		var entry = new Domain.AddressbookEntry();
 
 		var lines = vcardContent.split('\n')
 		lines.forEach(function(line){
-				if(line != '' && line != "BEGIN:VCARD" && line != "END:VCARD") {
-				var lineEntry;
-
+			if(line != '' && line != "BEGIN:VCARD" && line != "END:VCARD") {
 				var fieldParts = line.splitOnce(':');
 				var fieldHeader = fieldParts[0];
 				var headerParts = fieldHeader.split(';');
@@ -56,12 +58,30 @@ Addressbook.AddressbookVcard.prototype = {
 				});*/
 				var fieldContent = fieldParts[1];
 				var values = fieldContent.split(';');
+				values.trimElements();
 
-				entry[fieldName] = { properties: {}, value: values };
+				//entry[fieldName] = { properties: {}, value: values };
+				if(mapping.hasOwnProperty(fieldName)) {
+					if(mapping[fieldName] instanceof Array) {
+						mapping[fieldName].forEach(function(targetField, index) {
+							if(values[index]) {
+								entry[targetField] = values[index];
+							}
+						});
+					} else {
+						var newKey = mapping[fieldName];
+						entry[newKey] = values[0];
+					}
+				}
 			}
 		});
+		if(!entry.name && entry.firstName && entry.lastName) {
+			entry.name = entry.firstName+' '+entry.lastName;
+		}
 
-		this.data.push(entry);
+		if(Object.keys(entry).length > 0) {
+			this.data.push(entry);
+		}
 	},
 
 	getEntries: function() {

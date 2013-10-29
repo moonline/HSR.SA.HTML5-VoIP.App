@@ -6,40 +6,39 @@ var Interfaces = App.Model.Interfaces;
 var Addressbook = Domain.Addressbook;
 
 
-Addressbook.AddressbookJson = function(jsonData) {
+Addressbook.AddressbookJson = function() {
 	this.implementInterface = 'AddressbookInterface';
-	var data = new Array();
+	this.type = 'AddressbookJson';
+	this.data = new Array();
 
-	var initialize = (function() {
+	this.dataSourceTypes = Domain.Addressbook.dataSourceTypes.file;
+};
+
+Addressbook.AddressbookJson.prototype = {
+	load: function(jsonData) {
 		var inputData;
 		if(typeof jsonData === 'object') {
 			inputData = jsonData;
 		} else {
-			inputData = JSON.parse(prompt('Please insert addressbook data in JSON Style with fields "sip", "name", "photo"'));
+			inputData = JSON.parse(jsonData);
 		}
 
 		inputData.forEach(function(dataRow, i) {
 			if(dataRow.hasOwnProperty('sip') && dataRow.hasOwnProperty('name')) {
-				var entry = new Domain.AddressbookEntry(dataRow.sip, dataRow.name, dataRow.photo);
-				data.push(entry);
+				var entry = new Domain.AddressbookEntry();
+				Object.keys(dataRow).forEach(function(key){
+					entry[key] = dataRow[key];
+				});
+				this.data.push(entry);
 			}
-		});
-	})();
+		}.bind(this));
+	},
 
-	this.getEntries = function() {
-		return data;
-	};
-	this.count = function() {
-		return data.length;
-	};
-	this.store = function() {
-		var addressbook = {
-			addressbookType: 'AddressbookJson',
-			entries: []
-		};
-		data.forEach(function(entry) {
-			addressbook.entries.push(entry.store());
-		});
-		return addressbook;
-	};
+	getEntries: function() {
+		return this.data;
+	},
+
+	count: function() {
+		return this.data.length;
+	}
 };

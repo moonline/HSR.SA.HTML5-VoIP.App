@@ -84,7 +84,6 @@ Controller.PhoneController = function() {
 		notify: function(event, sender) {
 			if(event.receiver) {
 				this.call(event.receiver);
-				console.log(event.receiver);
 			}
 		}.bind(this)
 	}, 'startCall');
