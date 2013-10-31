@@ -9,6 +9,7 @@ window.onload = function() {
 	document.getElementById('user').innerHTML = App.Configuration.nick;
 
 	var addressbookController = new Controller.AddressbookController();
+	addressbookController.initialize();
 	addressbookController.list();
 
 	var phoneController = new Controller.PhoneController();

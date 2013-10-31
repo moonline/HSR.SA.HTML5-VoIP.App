@@ -10,13 +10,13 @@
 
     <script src="Core/Lib/AdapterJS/Adapter.js" ></script>
     <script src="Core/Lib/JQuery/jQuery.2.0.3.js" ></script>
-    <script src="Core/Lib/EmberJS/handlebars.js" ></script>
-    <script src="Core/Lib/EmberJS/ember.js" ></script>
+    <script src="Core/Lib/Handlebars/handlebars.js" ></script>
 
 	<script src="Core/Framework/Interface.js" ></script>
 
     <script src="Core/Service/ArrayService.js" ></script>
     <script src="Core/Service/Log.js" ></script>
+	<script src="Core/Service/FileService.js" ></script>
 
     <script src="Model/Domain/Connection.js" ></script>
     <script src="Model/Domain/Host.js" ></script>
@@ -80,15 +80,52 @@
 				</div>
 				<div class="box west" id="addressbook">
 					<div class="box content">
-						<nav class="box north panel">
+						<nav id="contactbookNavigation" class="box north panel">
+
+							<script id="contactbookNavigation-template" type="text/x-handlebars-template">
+								{{#each contactbooks}}
+									<span>Book {{@index}}</span>
+								{{/each}}
+							</script>
 
 						</nav>
-						<div class="addressbookContent box middle">
+						<div id="addressbookContent" class="addressbookContent box middle">
+
+							<script id="addressbookContent-template" type="text/x-handlebars-template">
+								{{#each contactbooks}}
+									<div class="addressbookSlide">
+										{{#each data}}
+											<div class="entry">
+												{{#if photo}}
+													<span class="pic" style="background-image: url(&quot;data:image/png;base64,{{photo}}&quot;);"></span>
+												{{else}}
+													<span class="pic" style="background-image: url(&quot;Resources/Img/person.png&quot;);"></span>
+												{{/if}}
+												<span class="name">{{name}}</span>
+												{{#if sip}}
+													<span class="sip callButton" data-call="{{sip}}" title="{{sip}}">
+														<a href="sip:{{sip}}" >✆ sip</a>
+													</span>
+												{{/if}}
+												{{#if nick}}
+													<span class="nick callButton" data-call="{{nick}}" title="{{nick}}">
+														✆ direct
+													</span>
+												{{/if}}
+											</div>
+										{{/each}}
+									</div>
+								{{/each}}
+							</script>
 
 						</div>
 						<div class="actions box south panel">
 							<form id="import">
-								<input type="file" id="importFile" />
+								<script id="import-template" type="text/x-handlebars-template">
+									{{#each fileImport}}
+										<input type="file" id="{{type}}" value="{{name}}" />
+									{{/each}}
+								</script>
 							</form>
 						</div>
 					</div>

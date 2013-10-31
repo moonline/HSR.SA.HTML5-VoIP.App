@@ -1,57 +1,97 @@
-/**
- * Created by tobias on 10/8/13.
- */
+'use strict';
+
 var Controller = App.Controller;
 var Domain = App.Model.Domain;
 var Addressbook = Domain.Addressbook;
+var Configuration = App.Configuration;
+var Service = App.Core.Service;
 
 Controller.AddressbookController = function() {
-	//var phonebookManager = new Domain.PhonebookManager();
-	//phonebookManager.add(new Addressbook.PhonebookJson());
+	// Todo: remove with 'this'
+	var self = this;
 
-	this.list = function() {
-		var addressbookManager = new Domain.AddressbookManager();
-		addressbookManager.load();
+	this.addressbookManager = new Domain.AddressbookManager();
 
-		document.querySelector('#importFile').addEventListener('change', function(event) {
-			var file = event.target.files[0];
-
-			if (file) {
-				var reader = new FileReader();
-				reader.onload = function(e) {
-					var addressbook = new Addressbook.AddressbookJson();
-					addressbook.load(JSON.parse(e.target.result));
-
-					addressbookManager.add(addressbook);
-
-					renderEntryList(addressbookManager);
-				};
-				reader.readAsText(file);
-				//document.querySelector('#import').remove(0);
-			} else {
-				console.log("Failed to load file");
-			}
-		}, false);
-		renderEntryList(addressbookManager);
+	/**
+	 * get addressbooks from local storage
+	 */
+	this.initialize = function() {
+		this.addressbookManager.load();
+		this.importAction();
 	};
 
-	var renderEntryList = function(addressbookManager) {
-		var panelTabNav = document.querySelector('#addressbook nav');
-		var addressbookElement = document.querySelector('#addressbook .addressbookContent');
-		addressbookElement.innerHTML = "";
-		panelTabNav.innerHTML = "";
+	/**
+	 * list action
+	 *
+	 * create a list of addressbooks
+	 */
+	this.list = function() {
+		this.renderEntryList(this.addressbookManager);
+		this.showAddressbookElements();
+	};
 
-		addressbookManager.getAddressbooks().forEach(function(addressbook, i) {
+	/**
+	 * import action
+	 *
+	 * import an addressbook
+	 */
+	this.importAction = function() {
+		var template = Handlebars.compile(document.getElementById('import-template').innerHTML);
+		var context = { fileImport: Configuration.contactbookImport.file };
+		document.getElementById('import').outerHTML = template(context);
 
-			var addressbookSlide = document.createElement('div');
-			addressbookSlide.className = "addressbookSlide";
 
-			var addressbookTab = document.createElement('span');
-			addressbookTab.innerHTML = "AB"+i+" ("+addressbook.count()+")";
-			panelTabNav.appendChild(addressbookTab);
+		Configuration.contactbookImport.file.forEach(function(contactBookConfig, index){
+			// Todo: check addressbok exists and implements interface
+			document.getElementById(contactBookConfig.type).addEventListener('change', function(event) {
+				Service.FileService.readFile(event.target.files[0], function(fileContent) {
+					var contactbook = new Addressbook[contactBookConfig.type]();
+					contactbook.load(fileContent);
+					self.addressbookManager.add(contactbook);
 
-			addressbookTab.onclick = function(event) {
-				var tabs = document.querySelectorAll('#addressbook nav span');
+					// update
+					var context = { contactbooks: self.addressbookManager.getAddressbooks() };
+					document.getElementById('contactbookNavigation').innerHTML = (Handlebars.compile(self.templates.addressbookTabs.toString()))(context);
+					document.getElementById('addressbookContent').innerHTML = (Handlebars.compile(self.templates.addressbookContent.toString()))(context);
+					self.showAddressbookElements();
+				});
+			});
+		});
+	};
+
+	/**
+	 * compile addressbook navigation and content templates
+	 *
+	 * @param addressbookManager
+	 */
+	this.renderEntryList = function(addressbookManager) {
+		var adressbookContentElement = document.getElementById('addressbookContent-template');
+		var context = { contactbooks: addressbookManager.getAddressbooks() };
+		var addressbookTemplate = Handlebars.compile(adressbookContentElement.innerHTML);
+		adressbookContentElement.outerHTML = addressbookTemplate(context);
+
+		var addressbookTabsElement = document.getElementById('contactbookNavigation-template');
+		var tabsTemplate = Handlebars.compile(addressbookTabsElement.innerHTML);
+		addressbookTabsElement.outerHTML = tabsTemplate(context);
+
+		this.templates = {
+			addressbookTabs: addressbookTabsElement.textContent,
+			addressbookContent:  adressbookContentElement.textContent
+		};
+	};
+
+	/**
+	 * set eventlisteners on tabs, enable first tab and first addressbook
+	 */
+	this.showAddressbookElements = function() {
+		var addressbooks = document.querySelectorAll('#addressbook .addressbookContent .addressbookSlide');
+		var tabs = document.querySelectorAll('#addressbook nav span');
+		if(addressbooks && addressbooks.length > 0) {
+			addressbooks[0].className = addressbooks[0].className+" active";
+			tabs[0].className = "active";
+		}
+		Array.prototype.slice.call(tabs,0).forEach(function(element, index) {
+			element.onclick = function(event) {
 				Array.prototype.slice.call(tabs).forEach(function(tab, j) {
 					tab.className = "";
 				});
@@ -60,63 +100,11 @@ Controller.AddressbookController = function() {
 				var slides = document.querySelectorAll('#addressbook .addressbookContent .addressbookSlide');
 				Array.prototype.slice.call(slides).forEach(function(slide, k) {
 					slide.className = "addressbookSlide";
-					if(slide == addressbookSlide) {
+					if(slide == addressbooks[index]) {
 						slide.className = slide.className+" active";
 					}
 				});
 			};
-
-			addressbook.getEntries().forEach(function(bookEntry, i) {
-				var entry = document.createElement('div');
-				entry.setAttribute('class','entry');
-
-				var pic = document.createElement('span');
-				pic.setAttribute('class','pic');
-				if(bookEntry.hasOwnProperty('photo') && bookEntry.photo !== "" && typeof(bookEntry.photo) !== 'undefined') {
-					pic.setAttribute('style','background-image: url("data:image/png;base64,'+bookEntry.photo+'");');
-				} else {
-					pic.setAttribute('style','background-image: url("Resources/Img/person.png");');
-				}
-
-				var name = document.createElement('span');
-				name.setAttribute('class','name');
-				name.innerHTML = bookEntry.name;
-
-				var sip = document.createElement('span');
-				sip.setAttribute('class','sip callButton');
-				sip.setAttribute('data-call',bookEntry.sip);
-				sip.setAttribute('title', bookEntry.sip);
-				var sipLink = document.createElement('a');
-				sipLink.setAttribute('href','sip:'+bookEntry.sip);
-				sipLink.innerHTML = '✆ '+'sip';
-				sip.appendChild(sipLink);
-
-				entry.appendChild(pic);
-				entry.appendChild(name);
-				entry.appendChild(sip);
-
-				if(bookEntry.nick) {
-					var nick = document.createElement('span');
-					nick.setAttribute('class','nick callButton');
-					nick.setAttribute('data-call', bookEntry.nick);
-					nick.setAttribute('title', bookEntry.nick);
-					nick.innerHTML = '✆ '+'direct';
-					nick.onclick = function() {
-						Domain.EventManager.notify('startCall', { "receiver": bookEntry.nick }, 'addressbookEntry');
-					}
-					entry.appendChild(nick);
-				}
-
-				addressbookSlide.appendChild(entry);
-			});
-			addressbookElement.appendChild(addressbookSlide);
 		});
-
-		var addressbooks = document.querySelectorAll('#addressbook .addressbookContent .addressbookSlide');
-		var tabs = document.querySelectorAll('#addressbook nav span');
-		if(addressbooks && addressbooks.length > 0) {
-			addressbooks[0].className = addressbooks[0].className+" active";
-			tabs[0].className = "active";
-		}
-	}
+	};
 };

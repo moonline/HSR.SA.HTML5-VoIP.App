@@ -27,7 +27,6 @@ Domain.AddressbookManager = function() {
 						addressBook[key] = tempBook[key];
 					});
 					this.addressbooks.push(addressBook);
-					console.log(addressBook);
 				}
 			}
 		}.bind(this));
