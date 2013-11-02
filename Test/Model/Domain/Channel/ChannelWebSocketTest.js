@@ -24,6 +24,7 @@
 
 		channel.addReceiveListener(listener);
 		channel.send(message);
+		setTimeout(function() { channel.stop(); }, 1000);
 	});
 
 })();

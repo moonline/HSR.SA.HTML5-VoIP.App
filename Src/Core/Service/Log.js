@@ -6,12 +6,12 @@
 	Service.Log = {
 		logLevels: {
 			All: 0,
-			Error: 1,
-			None: 2
+			Error: 10,
+			None: 20
 		},
 		logTypes: {
 			Info: 0,
-			Error: 1
+			Error: 10
 		},
 
 

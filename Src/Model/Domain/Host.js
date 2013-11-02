@@ -40,7 +40,4 @@
 		}.bind(this);
 	};
 
-	Domain.Host.prototype = {
-	};
-
 })();

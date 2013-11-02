@@ -16,18 +16,17 @@
 		this.entries = entries;
 	};
 
-	Domain.Addressbook.prototype = {
-		load: function () {
-			return this.entries;
-		},
 
-		getEntries: function () {
-			return this.entries;
-		},
+	Domain.Addressbook.prototype.load = function () {
+		return this.entries;
+	};
 
-		count: function () {
-			return this.entries.length;
-		}
+	Domain.Addressbook.prototype.getEntries = function () {
+		return this.entries;
+	};
+
+	Domain.Addressbook.prototype.count = function () {
+		return this.entries.length;
 	};
 
 	Domain.Addressbook.dataSourceTypes = { file: 0, webservice: 1};

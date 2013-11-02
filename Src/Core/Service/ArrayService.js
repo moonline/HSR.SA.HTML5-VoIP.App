@@ -10,7 +10,7 @@
 	 *
 	 * @param list: the list to search the needle in
 	 * @param needle: the element to search in the list
-	 * @returns {boolean}
+	 * @returns {foolean}
 	 */
 	Array.prototype.contains = function(needle) {
 		return this.indexOf(needle) !== -1;
@@ -47,7 +47,7 @@
 	Array.prototype.trimElements = function() {
 		this.forEach(function(element, i) {
 			this[i] = element.trim();
-		}.bind(this));
+		},this);
 		return this;
 	};
 

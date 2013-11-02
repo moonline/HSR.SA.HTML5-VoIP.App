@@ -2,61 +2,61 @@
 
 (function () {
 	var Domain = App.Model.Domain;
-	var Service = App.Core.Service;
 	var Channel = Domain.Channel;
-	var Interfaces = App.Model.Interfaces;
+	var Service = App.Core.Service;
 
 
 	Channel.ChannelWebSocket = function () {
 		this.implementInterface = 'ChannelInterface';
-		// Todo fix 'this' problem
-		var self = this;
-
-		var channel;
-		var listeners = [];
-		var state;
-		var waiters = []
+		this.channel;
+		this.listeners = [];
+		this.state;
+		this.waiters = [];
 
 		this.requiredFields = [ 'sip', 'name' ];
 		this.configuration = {
 			server: ''
 		};
+	};
 
-		var notify = function (message) {
-			listeners.forEach(function (listener) {
+	Channel.ChannelWebSocket.prototype.notify = function (message) {
+			this.listeners.forEach(function (listener) {
 				if (typeof(listener.notify) === 'function') {
 					listener.notify(message);
 				}
-			});
+			},this);
 		};
 
 		/**
 		 * open the channel connection
 		 */
-		this.start = function () {
-			channel = new WebSocket(self.configuration.server);
-			channel.onmessage = function (event) {
-				notify(event.data);
-				console.log("receive: '" + event.data + "'");
-			};
-			channel.onopen = function () {
-				console.log("connected");
-				state = "connected";
-				waiters.forEach(function (waiterMessage) {
-					channel.send(waiterMessage);
-				})
-			}
-			channel.onclose = function () {
-				console.log("connection closed");
-			}
+		Channel.ChannelWebSocket.prototype.start = function () {
+			this.channel = new WebSocket(this.configuration.server);
+
+			this.channel.onmessage = function(event) {
+				this.notify(event.data);
+				Service.Log.log(Service.Log.logTypes.Info, 'ChannelWebSockets', "receive: '" + event.data + "'");
+			}.bind(this);
+
+			this.channel.onopen = function () {
+				Service.Log.log(Service.Log.logTypes.Info, 'ChannelWebSockets', "connected");
+				this.state = "connected";
+				this.waiters.forEach(function (waiterMessage) {
+					this.channel.send(waiterMessage);
+				},this)
+			}.bind(this);
+
+			this.channel.onclose = function () {
+				Service.Log.log(Service.Log.logTypes.Info, 'ChannelWebSockets', "connection closed");
+			}.bind(this);
 		};
 
 		/**
 		 * close the channel connection and remove all listeners
 		 */
-		this.stop = function () {
-			channel.close();
-			listeners = [];
+		Channel.ChannelWebSocket.prototype.stop = function () {
+			this.channel.close();
+			this.listeners = [];
 		};
 
 		/**
@@ -64,12 +64,12 @@
 		 *
 		 * @param message: plain text message
 		 */
-		this.send = function (message) {
-			if (state !== "connected") {
-				waiters.push(message);
+		Channel.ChannelWebSocket.prototype.send = function (message) {
+			if (this.state !== "connected") {
+				this.waiters.push(message);
 			} else {
-				channel.send(message);
-				console.log("send: '" + message + "'");
+				this.channel.send(message);
+				Service.Log.log(Service.Log.logTypes.Info, 'ChannelWebSockets', "send: '" + message + "'");
 			}
 		};
 
@@ -78,9 +78,9 @@
 		 *
 		 * @param listener: an object implementing a notify(message) method
 		 */
-		this.addReceiveListener = function (listener) {
-			if (Service.ArrayService.listContains(listeners, listener) === false) {
-				listeners.push(listener);
+		Channel.ChannelWebSocket.prototype.addReceiveListener = function (listener) {
+			if (Service.ArrayService.listContains(this.listeners, listener) === false) {
+				this.listeners.push(listener);
 			}
 		};
 
@@ -89,12 +89,11 @@
 		 *
 		 * @param listener
 		 */
-		this.removeReceiveListener = function (listener) {
-			var position = listeners.indexOf(listener);
+		Channel.ChannelWebSocket.prototype.removeReceiveListener = function (listener) {
+			var position = this.listeners.indexOf(listener);
 			if (position !== -1) {
-				listeners[position] = null;
+				this.listeners[position] = null;
 			}
 		};
-	};
 
-})()
+})();

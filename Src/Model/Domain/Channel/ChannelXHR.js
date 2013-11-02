@@ -24,122 +24,122 @@
 		};
 	};
 
-	Channel.ChannelXHR.prototype = {
-		/**
-		 * receive
-		 */
-		receive: function (receiver) {
-			var response = '';
 
-			$.ajax({ type: "GET",
-				url: this.configuration.server + '?getMessage&receiverType=' + this.nick,
-				async: false,
-				success: function (text) {
-					response = text;
-				}
-			});
-			return response;
-		},
-		/**
-		 * fetch message from server
-		 */
-		receiveMessage: function () {
+	/**
+	 * receive
+	 */
+	Channel.ChannelXHR.prototype.receive = function (receiver) {
+		var response = '';
+
+		$.ajax({ type: "GET",
+			url: this.configuration.server + '?getMessage&receiverType=' + this.nick,
+			async: false,
+			success: function (text) {
+				response = text;
+			}
+		});
+		return response;
+	};
+
+	/**
+	 * fetch message from server
+	 */
+	Channel.ChannelXHR.prototype.receiveMessage = function () {
+		var response = this.receive();
+		if (response != "0") {
+			Service.Log.log(Service.Log.logTypes.Info, 'ChannelXHR', 'receive message: ' + response);
+			this.notify(response);
+		}
+	};
+
+	/**
+	 * call receiveMessage from time to time
+	 */
+	Channel.ChannelXHR.prototype.receiveLoop = function () {
+		if (this.state === Domain.Channel.states.connected || this.state === Domain.Channel.states.waiting) {
+			this.receiveMessage();
+			setTimeout(function () {
+				this.receiveLoop();
+			}.bind(this), 1000);
+		} else {
+			Service.Log.log(Service.Log.logTypes.Info, 'ChannelXHR', 'stop receiving loop');
+		}
+	};
+
+	/**
+	 * notify listeners
+	 *
+	 * @param message: the received message
+	 */
+	Channel.ChannelXHR.prototype.notify = function (message) {
+		this.listeners.forEach(function (listener) {
+			if (typeof(listener.notify) === 'function') {
+				listener.notify(message);
+			}
+		}, this);
+	};
+
+	/**
+	 * empty channel
+	 */
+	Channel.ChannelXHR.prototype.emptyChannel = function () {
+		var channelEmpty = false;
+		while (!channelEmpty) {
 			var response = this.receive();
-			if (response != "0") {
-				Service.Log.log(Service.Log.logTypes.Info, 'ChannelXHR', 'receive message: ' + response);
-				this.notify(response);
+			if (response == "0") {
+				channelEmpty = true;
 			}
-		},
+		}
+	};
 
-		/**
-		 * call receiveMessage from time to time
-		 */
-		receiveLoop: function () {
-			if (this.state === Domain.Channel.states.connected || this.state === Domain.Channel.states.waiting) {
-				this.receiveMessage();
-				setTimeout(function () {
-					this.receiveLoop();
-				}.bind(this), 1000);
-			} else {
-				Service.Log.log(Service.Log.logTypes.Info, 'ChannelXHR', 'stop receiving loop');
-			}
-		},
+	/**
+	 * open the channel connection
+	 */
+	Channel.ChannelXHR.prototype.start = function () {
+		this.state = Domain.Channel.states.connected;
+		Service.Log.log(Service.Log.logTypes.Info, 'ChannelXHR', 'start receiving loop');
+		this.emptyChannel();
+		this.receiveLoop();
+	};
 
-		/**
-		 * notify listeners
-		 *
-		 * @param message: the received message
-		 */
-		notify: function (message) {
-			this.listeners.forEach(function (listener) {
-				if (typeof(listener.notify) === 'function') {
-					listener.notify(message);
-				}
-			});
-		},
+	/**
+	 * close the channel connection and remove all listeners
+	 */
+	Channel.ChannelXHR.prototype.stop = function () {
+		this.state = Domain.Channel.states.disconnected;
+		this.listeners = [];
+	};
 
-		/**
-		 * empty channel
-		 */
-		emptyChannel: function () {
-			var channelEmpty = false;
-			while (!channelEmpty) {
-				var response = this.receive();
-				if (response == "0") {
-					channelEmpty = true;
-				}
-			}
-		},
+	/**
+	 * send a message
+	 *
+	 * @param message: a message like { "receiver": "frank", "message": "theMessage" }
+	 */
+	Channel.ChannelXHR.prototype.send = function (message) {
+		Service.Log.log(Service.Log.logTypes.Info, 'ChannelXHR', 'send message: ' + message.message + ' to ' + message.receiver);
+		$.post(this.configuration.server + "?setMessage&receiverType=" + message.receiver, { message: message.message });
+	};
 
-		/**
-		 * open the channel connection
-		 */
-		start: function () {
-			this.state = Domain.Channel.states.connected;
-			Service.Log.log(Service.Log.logTypes.Info, 'ChannelXHR', 'start receiving loop');
-			this.emptyChannel();
-			this.receiveLoop();
-		},
+	/**
+	 * add a listener to receive messages
+	 *
+	 * @param listener: an object implementing a notify(message) method
+	 */
+	Channel.ChannelXHR.prototype.addReceiveListener = function (listener) {
+		if (Service.ArrayService.listContains(this.listeners, listener) === false) {
+			this.listeners.push(listener);
+		}
+	};
 
-		/**
-		 * close the channel connection and remove all listeners
-		 */
-		stop: function () {
-			this.state = Domain.Channel.states.disconnected;
-			this.listeners = [];
-		},
-
-		/**
-		 * send a message
-		 *
-		 * @param message: a message like { "receiver": "frank", "message": "theMessage" }
-		 */
-		send: function (message) {
-			Service.Log.log(Service.Log.logTypes.Info, 'ChannelXHR', 'send message: ' + message.message + ' to ' + message.receiver);
-			$.post(this.configuration.server + "?setMessage&receiverType=" + message.receiver, { message: message.message });
-		},
-
-		/**
-		 * add a listener to receive messages
-		 *
-		 * @param listener: an object implementing a notify(message) method
-		 */
-		addReceiveListener: function (listener) {
-			if (Service.ArrayService.listContains(this.listeners, listener) === false) {
-				this.listeners.push(listener);
-			}
-		},
-
-		/**
-		 * remove a listener from the list
-		 *
-		 * @param listener
-		 */
-		removeReceiveListener: function (listener) {
-			var position = this.listeners.indexOf(listener);
-			if (position !== -1) {
-				this.listeners[position] = null;
-			}
+	/**
+	 * remove a listener from the list
+	 *
+	 * @param listener
+	 */
+	Channel.ChannelXHR.prototype.removeReceiveListener = function (listener) {
+		var position = this.listeners.indexOf(listener);
+		if (position !== -1) {
+			this.listeners[position] = null;
 		}
 	};
 

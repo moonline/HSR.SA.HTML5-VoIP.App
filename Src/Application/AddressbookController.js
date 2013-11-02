@@ -107,6 +107,12 @@
 					});
 				};
 			});
+
+			Array.prototype.slice.call(document.querySelectorAll('#addressbookContent .entry .nick'), 0).forEach(function(node,index){
+				node.onclick = function() {
+					Domain.EventManager.notify('startCall', { "receiver":node.getAttribute('data-call') }, 'addressbookEntry');
+				};
+			},this);
 		};
 	};
 
