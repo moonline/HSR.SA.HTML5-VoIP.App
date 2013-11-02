@@ -1,44 +1,45 @@
-/**
- * Created by tobias on 10/8/13.
- */
-var Domain = App.Model.Domain;
-var Interfaces = App.Model.Interfaces;
-var Addressbook = Domain.Addressbook;
+'use strict';
+
+(function() {
+	var Domain = App.Model.Domain;
+	var Addressbook = Domain.Addressbook;
 
 
-Addressbook.AddressbookJson = function() {
-	this.implementInterface = 'AddressbookInterface';
-	this.type = 'AddressbookJson';
-	this.data = new Array();
+	Addressbook.AddressbookJson = function() {
+		this.implementInterface = 'AddressbookInterface';
+		this.type = 'AddressbookJson';
+		this.data = new Array();
 
-	this.dataSourceTypes = Domain.Addressbook.dataSourceTypes.file;
-};
+		this.dataSourceTypes = Domain.Addressbook.dataSourceTypes.file;
+	};
 
-Addressbook.AddressbookJson.prototype = {
-	load: function(jsonData) {
-		var inputData;
-		if(typeof jsonData === 'object') {
-			inputData = jsonData;
-		} else {
-			inputData = JSON.parse(jsonData);
-		}
-
-		inputData.forEach(function(dataRow, i) {
-			if(dataRow.hasOwnProperty('sip') && dataRow.hasOwnProperty('name')) {
-				var entry = new Domain.AddressbookEntry();
-				Object.keys(dataRow).forEach(function(key){
-					entry[key] = dataRow[key];
-				});
-				this.data.push(entry);
+	Addressbook.AddressbookJson.prototype = {
+		load: function(jsonData) {
+			var inputData;
+			if(typeof jsonData === 'object') {
+				inputData = jsonData;
+			} else {
+				inputData = JSON.parse(jsonData);
 			}
-		}.bind(this));
-	},
 
-	getEntries: function() {
-		return this.data;
-	},
+			inputData.forEach(function(dataRow, i) {
+				if(dataRow.hasOwnProperty('sip') && dataRow.hasOwnProperty('name')) {
+					var entry = new Domain.AddressbookEntry();
+					Object.keys(dataRow).forEach(function(key){
+						entry[key] = dataRow[key];
+					});
+					this.data.push(entry);
+				}
+			}.bind(this));
+		},
 
-	count: function() {
-		return this.data.length;
-	}
-};
+		getEntries: function() {
+			return this.data;
+		},
+
+		count: function() {
+			return this.data.length;
+		}
+	};
+
+})();

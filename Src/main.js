@@ -1,16 +1,19 @@
-/**
- * Created by tobias on 10/8/13.
- */
-'use strict'; // use JS strict mode
+'use strict';
+
+(function() {
+	var Controller = App.Controller;
+	var Configuration = App.Configuration;
 
 
-window.onload = function() {
-	App.Configuration.nick = prompt('Please insert your nick name');
-	document.getElementById('user').innerHTML = App.Configuration.nick;
+	window.onload = function() {
+		Configuration.nick = prompt('Please insert your nick name');
+		document.getElementById('user').innerHTML = Configuration.nick;
 
-	var addressbookController = new Controller.AddressbookController();
-	addressbookController.initialize();
-	addressbookController.list();
+		var addressbookController = new Controller.AddressbookController();
+		addressbookController.initialize();
+		addressbookController.list();
 
-	var phoneController = new Controller.PhoneController();
-};
+		var phoneController = new Controller.PhoneController();
+	};
+
+})();

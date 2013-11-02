@@ -1,7 +1,7 @@
 /**
  * Created by tobias on 10/8/13.
  */
-Test = {
+var Test = {
 	Model: {
 		Domain:{
 			Phonebook:{},

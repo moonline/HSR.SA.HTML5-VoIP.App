@@ -1,7 +1,6 @@
-/**
- * Created by tobias on 10/8/13.
- */
-App = {
+'use strict';
+
+var App = {
 	Core: {
 		Service: {},
 		Framework:{}

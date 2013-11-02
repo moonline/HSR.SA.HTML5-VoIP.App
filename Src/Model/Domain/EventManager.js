@@ -1,39 +1,43 @@
-/**
- * Created by tobias on 10/22/13.
- */
-var Domain = App.Model.Domain;
+'use strict';
 
-/**
- * EventManager
- */
-Domain.EventManager = {
-	listeners: [],
+(function() {
+	var Domain = App.Model.Domain;
+
 
 	/**
-	 * add listener
-	 *
-	 * @param listener: listener object
-	 * @param eventType: type to listen for
+	 * EventManager
+	 * @type: Singleton
 	 */
-	addListener: function(listener, eventType) {
-		if(!this.listeners[eventType] ) {
-			this.listeners[eventType] = [];
-		}
-		this.listeners[eventType].push(listener);
-	},
+	Domain.EventManager = {
+		listeners: [],
 
-	/**
-	 * notify listeners
-	 *
-	 * @param eventType: type to notify listen listeners
-	 * @param event: event to notify
-	 * @param sender: who is the notifier
-	 */
-	notify: function(eventType, event, sender) {
-		if(this.listeners[eventType]) {
-			this.listeners[eventType].forEach(function(listener, i) {
-				listener.notify(event, sender);
-			}.bind(this));
+		/**
+		 * add listener
+		 *
+		 * @param listener: listener object
+		 * @param eventType: type to listen for
+		 */
+		addListener: function(listener, eventType) {
+			if(!this.listeners[eventType] ) {
+				this.listeners[eventType] = [];
+			}
+			this.listeners[eventType].push(listener);
+		},
+
+		/**
+		 * notify listeners
+		 *
+		 * @param eventType: type to notify listen listeners
+		 * @param event: event to notify
+		 * @param sender: who is the notifier
+		 */
+		notify: function(eventType, event, sender) {
+			if(this.listeners[eventType]) {
+				this.listeners[eventType].forEach(function(listener, i) {
+					listener.notify(event, sender);
+				}.bind(this));
+			}
 		}
-	}
-};
+	};
+
+})();

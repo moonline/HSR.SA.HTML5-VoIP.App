@@ -1,37 +1,40 @@
-/**
- * Created by tobias on 10/16/13.
- */
-var Service = App.Core.Service;
+'use strict';
 
-Service.Log = {
-	logLevels: {
-		All: 0,
-		Error: 1,
-		None: 2
-	},
-	logTypes: {
-		Info: 0,
-		Error: 1
-	},
+(function() {
+	var Service = App.Core.Service;
 
-	/**
-	 * log message to console
-	 *
-	 * @param App.Core.Service.Log.logType logType: type of the log event
-	 * @param causer: the Object which causes the log event
-	 * @param message: the log message
-	 */
-	log:function(logType, causer, message) {
-		if(Service.Log.logLevel <= logType) {
-			if(logType === Service.Log.logTypes.Info) {
-				console.info(causer+': '+message);
-			} else if (logType === Service.Log.logTypes.Error) {
-				console.warn(causer+': '+message);
-			} else {
-				console.log(causer+': '+message);
+	Service.Log = {
+		logLevels: {
+			All: 0,
+			Error: 1,
+			None: 2
+		},
+		logTypes: {
+			Info: 0,
+			Error: 1
+		},
+
+
+		/**
+		 * log message to console
+		 *
+		 * @param App.Core.Service.Log.logType logType: type of the log event
+		 * @param causer: the Object which causes the log event
+		 * @param message: the log message
+		 */
+		log:function(logType, causer, message) {
+			if(Service.Log.logLevel <= logType) {
+				if(logType === Service.Log.logTypes.Info) {
+					console.info(causer+': '+message);
+				} else if (logType === Service.Log.logTypes.Error) {
+					console.warn(causer+': '+message);
+				} else {
+					console.log(causer+': '+message);
+				}
 			}
 		}
-	}
-};
+	};
 
-Service.Log.logLevel = App.Core.Service.Log.logLevels.All;
+	Service.Log.logLevel = App.Core.Service.Log.logLevels.All;
+
+})();

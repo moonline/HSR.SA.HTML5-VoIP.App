@@ -1,26 +1,29 @@
-/**
- * Created by tobias on 10/12/13.
- */
-var Domain = App.Model.Domain;
-var Channel = Domain.Channel;
+'use strict';
 
-module("Channel Tests");
-asyncTest("ChannelWebSocket echo test", function() {
-	var channel = new Channel.ChannelWebSocket();
-	channel.configuration.server = "ws://echo.websocket.org";
+(function () {
+	var Domain = App.Model.Domain;
+	var Channel = Domain.Channel;
 
-	var message = "Websocket message echo test";
 
-	channel.start();
+	module("Channel Tests");
+	asyncTest("ChannelWebSocket echo test", function () {
+		var channel = new Channel.ChannelWebSocket();
+		channel.configuration.server = "ws://echo.websocket.org";
 
-	var listener = {
-		notify: function(receiveMessage) {
-			console.log(receiveMessage);
-			strictEqual(message, receiveMessage, "message and receiveMessage comparison");
-			start();
-		}
-	};
+		var message = "Websocket message echo test";
 
-	channel.addReceiveListener(listener);
-	channel.send(message);
-});
+		channel.start();
+
+		var listener = {
+			notify: function (receiveMessage) {
+				console.log(receiveMessage);
+				strictEqual(message, receiveMessage, "message and receiveMessage comparison");
+				start();
+			}
+		};
+
+		channel.addReceiveListener(listener);
+		channel.send(message);
+	});
+
+})();

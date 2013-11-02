@@ -1,29 +1,35 @@
-/**
- * Created by tobias on 10/21/13.
- */
-var Domain = App.Model.Domain;
+'use strict';
 
-/**
- * Addressbook
- *
- * @param entries: list of AddressbookEntry
- * @constructor
- */
-Domain.Addressbook = function(entries) {
-	this.load = function() {
-		return this.entries;
+(function () {
+	// Todo: is this class used jet? -> otherwise: remove
+	var Domain = App.Model.Domain;
+
+
+	/**
+	 * Addressbook
+	 *
+	 * @param entries: list of AddressbookEntry
+	 * @constructor
+	 */
+	Domain.Addressbook = function (entries) {
+		this.implementInterface = 'AddressbookInterface';
+		this.entries = entries;
 	};
-	this.entries = entries;
-};
 
-Domain.Addressbook.prototype = {
-	implementInterface: 'AddressbookInterface',
-	getEntries: function() {
-		return this.entries;
-	},
-	count: function() {
-		return this.entries.length;
-	}
-};
+	Domain.Addressbook.prototype = {
+		load: function () {
+			return this.entries;
+		},
 
-Domain.Addressbook.dataSourceTypes = { file: 0, webservice: 1};
+		getEntries: function () {
+			return this.entries;
+		},
+
+		count: function () {
+			return this.entries.length;
+		}
+	};
+
+	Domain.Addressbook.dataSourceTypes = { file: 0, webservice: 1};
+
+})();
