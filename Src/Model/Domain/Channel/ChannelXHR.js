@@ -121,13 +121,16 @@
 	};
 
 	/**
-	 * add a listener to receive messages
+	 * add a listener to receive messages if it's not registered jet
 	 *
 	 * @param listener: an object implementing a notify(message) method
 	 */
 	Channel.ChannelXHR.prototype.addReceiveListener = function (listener) {
-		if (Service.ArrayService.listContains(this.listeners, listener) === false) {
+		if (this.listeners.contains(listener) === false) {
 			this.listeners.push(listener);
+			return true;
+		} else {
+			return false;
 		}
 	};
 

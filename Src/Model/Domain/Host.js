@@ -1,6 +1,6 @@
 'use strict';
 
-(function() {
+(function () {
 	var Domain = App.Model.Domain;
 	var Service = App.Core.Service;
 
@@ -12,7 +12,8 @@
 	 * @param hostReadyCallback: will be called on ready media stream
 	 * @constructor
 	 */
-	Domain.Host = function(videoFrame) {
+	// Todo: How to test? -> Refactor?
+	Domain.Host = function (videoFrame) {
 		this.constraints = {
 			video: {
 				mandatory: {
@@ -26,18 +27,19 @@
 
 		this.videoFrame = videoFrame;
 		this.localstream = null;
+	};
 
-		this.startLocalMedia = function(hostReadyCallback) {
-			getUserMedia(this.constraints, function(stream) {
-					this.localstream = stream;
-					attachMediaStream(this.videoFrame,stream);
-					hostReadyCallback();
-				}.bind(this),
-				function(error){
-					Service.Log.log(Service.Log.logTypes.Error, 'Host', error.toString()+': {'+Service.ArrayService.listToString(error)+'}');
-				}
-			);
-		}.bind(this);
+
+	Domain.Host.prototype.startLocalMedia = function (hostReadyCallback) {
+		getUserMedia(this.constraints, function (stream) {
+			this.localstream = stream;
+			attachMediaStream(this.videoFrame, stream);
+			hostReadyCallback();
+		}.bind(this),
+			function (error) {
+				Service.Log.log(Service.Log.logTypes.Error, 'Host', error.toString() + ': {' + Service.ArrayService.listToString(error) + '}');
+			}
+		);
 	};
 
 })();

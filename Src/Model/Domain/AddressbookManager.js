@@ -11,7 +11,7 @@
 	};
 
 
-	// Todo: fix 'this' problem if moved to prototype
+	// Todo: create a prefix for local storage setting which is set by the controller (prevent testing and app collisions)
 	Domain.AddressbookManager.prototype.getAddressBookIndex = function () {
 		return (Storage.getItem("addressBookIndex")) ? JSON.parse(Storage.getItem("addressBookIndex")) : [];
 	};

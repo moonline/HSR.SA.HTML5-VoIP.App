@@ -7,7 +7,7 @@
 
 	window.onload = function() {
 		Configuration.nick = prompt('Please insert your nick name');
-		document.getElementById('user').innerHTML = Configuration.nick;
+		document.getElementById('user').textContent = Configuration.nick;
 
 		var addressbookController = new Controller.AddressbookController();
 		addressbookController.initialize();

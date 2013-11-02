@@ -3,6 +3,7 @@
 (function () {
 	var Domain = App.Model.Domain;
 	var Service = App.Core.Service;
+	var Configuration = App.Configuration;
 
 
 	/**
@@ -25,6 +26,54 @@
 		this.streamReady = streamReady;
 	};
 
+
+	/**
+	 * sending sdp helper
+	 *
+	 * @param sdp
+	 */
+	Domain.Connection.prototype.sendSDP = function (sdp) {
+		this.peerConnection.setLocalDescription(sdp);
+		var message = {
+			"receiver": this.receiver,
+			"message": JSON.stringify({
+				type: sdp.type,
+				sdp: sdp.sdp,
+				sender: Configuration.nick
+			})
+		};
+		this.channel.send(message);
+	};
+
+	/**
+	 * sending ice candidate helper
+	 *
+	 * @param event
+	 */
+	Domain.Connection.prototype.sendIceCandidate = function (event) {
+		if (event.candidate) {
+			var message = {
+				"receiver": this.receiver,
+				"message": JSON.stringify(event.candidate)
+			};
+			this.channel.send(message);
+		} else {
+			Service.Log.log(Service.Log.logTypes.Info, 'Connection', "End of candidates");
+		}
+	};
+
+	/**
+	 * receive stream helper
+	 * @type {function(this:*)}
+	 */
+	Domain.Connection.prototype.receiveStream = function (event) {
+		this.state = Domain.Connection.states.connected;
+		Service.Log.log(Service.Log.logTypes.Info, 'Connection', 'stream added to p2p connection, attach remote stream');
+		attachMediaStream(this.videoFrame, event.stream);
+		this.streamReady();
+	};
+
+
 	/**
 	 * caller create offer
 	 */
@@ -37,40 +86,12 @@
 		this.peerConnection = new RTCPeerConnection(this.config);
 		this.peerConnection.addStream(this.localstream);
 
-		this.peerConnection.onicecandidate = function (event) {
-			if (event.candidate) {
-				var message = {
-					"receiver": this.receiver,
-					"message": JSON.stringify(event.candidate)
-				};
-				this.channel.send(message);
-			} else {
-				Service.Log.log(Service.Log.logTypes.Info, 'Connection', "End of candidates");
-			}
-		}.bind(this);
+		this.peerConnection.onicecandidate = this.sendIceCandidate.bind(this);
+		this.peerConnection.onaddstream = this.receiveStream.bind(this);
 
-		this.peerConnection.onaddstream = function (event) {
-			this.state = Domain.Connection.states.connected;
-			Service.Log.log(Service.Log.logTypes.Info, 'Connection', 'stream added to p2p connection, attach remote stream');
-			attachMediaStream(this.videoFrame, event.stream);
-			this.streamReady();
-		}.bind(this);
-
-		this.peerConnection.createOffer(function (sdpOffer) {
-			this.peerConnection.setLocalDescription(sdpOffer);
-			var message = {
-				"receiver": this.receiver,
-				"message": JSON.stringify({
-					type: sdpOffer.type,
-					sdp: sdpOffer.sdp,
-					sender: App.Configuration.nick
-				})
-			};
-			this.channel.send(message);
-		}.bind(this),
-			function (error) {
-				Service.Log.log(Service.Log.logTypes.Error, 'Connection', error);
-			});
+		this.peerConnection.createOffer(this.sendSDP.bind(this), function (error) {
+			Service.Log.log(Service.Log.logTypes.Error, 'Connection', error);
+		});
 	};
 
 	/**
@@ -87,39 +108,14 @@
 		this.peerConnection = new RTCPeerConnection(this.config);
 		this.peerConnection.addStream(this.localstream);
 
-		this.peerConnection.onicecandidate = function (event) {
-			if (event.candidate) {
-				var message = {
-					"receiver": this.receiver,
-					"message": JSON.stringify(event.candidate)
-				};
-				this.channel.send(message);
-			} else {
-				Service.Log.log(Service.Log.logTypes.Info, 'Connection', 'End of candidates.');
-			}
-		}.bind(this);
-
-		this.peerConnection.onaddstream = function (event) {
-			this.state = Domain.Connection.states.connected;
-			Service.Log.log(Service.Log.logTypes.Info, 'Connection', 'stream added to p2p connection, attach remote stream');
-			attachMediaStream(this.videoFrame, event.stream);
-			this.streamReady();
-		}.bind(this);
+		this.peerConnection.onicecandidate = this.sendIceCandidate.bind(this);
+		this.peerConnection.onaddstream = this.receiveStream.bind(this);
 
 		this.peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
 
-		this.peerConnection.createAnswer(function (sdpAnswer) {
-			this.peerConnection.setLocalDescription(sdpAnswer);
-			var message = {
-				"receiver": this.receiver,
-				"message": JSON.stringify(sdpAnswer)
-			};
-			this.channel.send(message);
-		}.bind(this),
-			function (error) {
-				Service.Log.log(Service.Log.logTypes.Error, 'Connection', error);
-			}
-		);
+		this.peerConnection.createAnswer(this.sendSDP.bind(this),function (error) {
+			Service.Log.log(Service.Log.logTypes.Error, 'Connection', error);
+		});
 	};
 
 	/**
