@@ -42,7 +42,7 @@
 	 * @param addressbook
 	 */
 	Domain.AddressbookManager.prototype.add = function (addressbook) {
-		Interfaces.AddressbookInterface.implementedBy(addressbook);
+		Interfaces.AddressbookInterface.assertImplementedBy(addressbook);
 		var index = this.addressbooks.length;
 		this.addressbooks.push(addressbook);
 		var addressbookKey = "addressbooks." + index + '-' + (new Date()).getMilliseconds();

@@ -14,7 +14,7 @@
 			}
 		};
 		raises(function () {
-			carInterface.implementedBy(car);
+			carInterface.assertImplementedBy(car);
 		}, 'Error', "Interface not implemented correctly");
 
 		var vehicle = {
@@ -26,7 +26,7 @@
 			leavePerson: function () {
 			}
 		};
-		strictEqual(carInterface.implementedBy(vehicle), true, "Interface implemented correctly");
+		strictEqual(carInterface.assertImplementedBy(vehicle), true, "Interface implemented correctly");
 	});
 
 })();

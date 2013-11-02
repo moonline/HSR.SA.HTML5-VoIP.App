@@ -14,7 +14,7 @@
 	 *
 	 * @param object: the object which implements the interface
 	 */
-	Framework.Interface.prototype.implementedBy= function(object) {
+	Framework.Interface.prototype.assertImplementedBy= function(object) {
 		var implementsInterface = true;
 		if(typeof(object.implementInterface) === 'undefined' || object.implementInterface !== this.name) {
 			implementsInterface = false;
