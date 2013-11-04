@@ -39,7 +39,7 @@
 		this.importAction = function() {
 			var template = Handlebars.compile(document.getElementById('import-template').textContent);
 			var context = { fileImport: Configuration.contactbookImport.file };
-			document.getElementById('import').outerHTML = template(context);
+			document.getElementById('import').innerHTML = template(context);
 
 
 			Configuration.contactbookImport.file.forEach(function(contactBookConfig, index){

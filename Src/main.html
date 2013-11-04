@@ -44,97 +44,103 @@
 	<link href="Resources/Styles/listView.css" rel="stylesheet" />
 </head>
 <body>
-	<div class="page box layout" id="page">
-		<header class="box north">
-			<div class="box content">
-				<div class="box east">
-					<h1>
-						<img id="logo" src="../Src/Resources/Img/icon-js-voip.png" />
-						JS VoIP App
-					</h1>
-				</div>
-				<div class="box west userInfo">
-					<span id="user">
-
-					</span>
-				</div>
-			</div>
-		</header>
-		<div class="content box middle" id="content">
-			<div class="box content">
-				<div class="box center" id="phone">
+	<div class="frame">
+		<div class="page box layout" id="page">
+			<header class="box north">
+				<div class="box line">
 					<div class="box content">
-						<div class="controlls panel box north" id="constrolls">
-							<form>
-								<input type="button" name="fullScreen" class="fullScreen button" title="Fullscreen" value="&#8689 Fullscreen" />
-								<input type="button" name="hangUp" id="hangUp" class="hangUp" value="&#10008; Hang up" title="Hang up" disable="disable" />
-							</form>
+						<div class="box east">
+							<h1>
+								<img id="logo" src="../Src/Resources/Img/icon-js-voip.png" />
+								JS VoIP App
+							</h1>
 						</div>
-						<div class="box middle callWindow">
-							<div class="videoFrame">
-								<video id="localVideo"  autoplay="true"></video>
-								<video id="remoteVideo"  autoplay="true"></video>
+						<div class="box west userInfo">
+							<span id="user">
+
+							</span>
+						</div>
+					</div>
+				</div>
+			</header>
+			<div class="box middle" id="content">
+				<div class="box line">
+					<div class="box content">
+						<div class="box center" id="phone">
+							<div class="box content">
+								<div class="controlls panel box north" id="constrolls">
+									<form>
+										<input type="button" name="fullScreen" class="fullScreen button" title="Fullscreen" value="&#8689 Fullscreen" />
+										<input type="button" name="hangUp" id="hangUp" class="hangUp" value="&#10008; Hang up" title="Hang up" disable="disable" />
+									</form>
+								</div>
+								<div class="box middle callWindow">
+									<div class="videoFrame">
+										<video id="localVideo"  autoplay="true"></video>
+										<video id="remoteVideo"  autoplay="true"></video>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="box west" id="addressbook">
+							<div class="box content">
+								<nav id="contactbookNavigation" class="box north panel">
+
+									<script id="contactbookNavigation-template" type="text/x-handlebars-template">
+										{{#each contactbooks}}
+											<span>Book {{@index}}</span>
+										{{/each}}
+									</script>
+
+								</nav>
+								<div id="addressbookContent" class="addressbookContent box middle">
+
+									<script id="addressbookContent-template" type="text/x-handlebars-template">
+										{{#each contactbooks}}
+											<div class="addressbookSlide">
+												{{#each data}}
+													<div class="entry">
+														{{#if photo}}
+															<span class="pic" style="background-image: url(&quot;data:image/png;base64,{{photo}}&quot;);"></span>
+														{{else}}
+															<span class="pic" style="background-image: url(&quot;Resources/Img/person.png&quot;);"></span>
+														{{/if}}
+														<span class="name">{{name}}</span>
+														{{#if sip}}
+															<span class="sip callButton" data-call="{{sip}}" title="{{sip}}">
+																<a href="sip:{{sip}}" >✆ sip</a>
+															</span>
+														{{/if}}
+														{{#if nick}}
+															<span class="nick callButton" data-call="{{nick}}" title="{{nick}}">
+																✆ direct
+															</span>
+														{{/if}}
+													</div>
+												{{/each}}
+											</div>
+										{{/each}}
+									</script>
+
+								</div>
+								<div class="actions box south panel">
+									<form id="import" class="box west">
+										<script id="import-template" type="text/x-handlebars-template">
+											{{#each fileImport}}
+												<input type="file" id="{{type}}" value="{{name}}" />
+											{{/each}}
+										</script>
+									</form>
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="box west" id="addressbook">
-					<div class="box content">
-						<nav id="contactbookNavigation" class="box north panel">
-
-							<script id="contactbookNavigation-template" type="text/x-handlebars-template">
-								{{#each contactbooks}}
-									<span>Book {{@index}}</span>
-								{{/each}}
-							</script>
-
-						</nav>
-						<div id="addressbookContent" class="addressbookContent box middle">
-
-							<script id="addressbookContent-template" type="text/x-handlebars-template">
-								{{#each contactbooks}}
-									<div class="addressbookSlide">
-										{{#each data}}
-											<div class="entry">
-												{{#if photo}}
-													<span class="pic" style="background-image: url(&quot;data:image/png;base64,{{photo}}&quot;);"></span>
-												{{else}}
-													<span class="pic" style="background-image: url(&quot;Resources/Img/person.png&quot;);"></span>
-												{{/if}}
-												<span class="name">{{name}}</span>
-												{{#if sip}}
-													<span class="sip callButton" data-call="{{sip}}" title="{{sip}}">
-														<a href="sip:{{sip}}" >✆ sip</a>
-													</span>
-												{{/if}}
-												{{#if nick}}
-													<span class="nick callButton" data-call="{{nick}}" title="{{nick}}">
-														✆ direct
-													</span>
-												{{/if}}
-											</div>
-										{{/each}}
-									</div>
-								{{/each}}
-							</script>
-
-						</div>
-						<div class="actions box south panel">
-							<form id="import">
-								<script id="import-template" type="text/x-handlebars-template">
-									{{#each fileImport}}
-										<input type="file" id="{{type}}" value="{{name}}" />
-									{{/each}}
-								</script>
-							</form>
-						</div>
-					</div>
-				</div>
 			</div>
-		</div>
-		<footer class="box south">
+			<footer class="box south">
 
-		</footer>
+			</footer>
+		</div>
 	</div>
 </body>
 </html>

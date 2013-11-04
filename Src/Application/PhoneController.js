@@ -19,25 +19,27 @@
 		this.channel = new Channel.ChannelXHR("http://colvarim.ch/service/messageQueue/messageQueue.php");
 		var listener = {
 			notify: function(channelMessage) {
-				var message = JSON.parse(channelMessage);
+				if(channelMessage) {
+					var message = JSON.parse(channelMessage);
 
-				if (message.type === 'offer') {
-					// Callee creates PeerConnection
-					//console.log(this);
-					if (!self.channel.type !== Domain.Channel.types.caller && (!self.connection || self.connection.state === Domain.Connection.states.off || self.connection.state === Domain.Connection.states.stopped)) {
-						var accept = confirm(message.sender+' want\'s to call you. Receive?');
-						if(accept) {
-							self.receiveCall(message);
+					if (message.type === 'offer') {
+						// Callee creates PeerConnection
+						//console.log(this);
+						if (!self.channel.type !== Domain.Channel.types.caller && (!self.connection || self.connection.state === Domain.Connection.states.off || self.connection.state === Domain.Connection.states.stopped)) {
+							var accept = confirm(message.sender+' want\'s to call you. Receive?');
+							if(accept) {
+								self.receiveCall(message);
+							}
 						}
+					} else if (message.type === 'answer' && self.connection.state > Domain.Connection.states.off) {
+						self.connection.callerReceiveAnswer(message);
+					} else if (message.type === 'candidate' && self.connection.state > Domain.Connection.states.off) {
+						var candidate = new RTCIceCandidate({sdpMLineIndex:message.label, candidate:message.candidate});
+						self.connection.peerConnection.addIceCandidate(candidate);
+					} else if (message.type === 'bye') {
+						self.connection.hangUp(false);
+						self.hangUp();
 					}
-				} else if (message.type === 'answer' && self.connection.state > Domain.Connection.states.off) {
-					self.connection.callerReceiveAnswer(message);
-				} else if (message.type === 'candidate' && self.connection.state > Domain.Connection.states.off) {
-					var candidate = new RTCIceCandidate({sdpMLineIndex:message.label, candidate:message.candidate});
-					self.connection.peerConnection.addIceCandidate(candidate);
-				} else if (message.type === 'bye') {
-					self.connection.hangUp(false);
-					self.hangUp();
 				}
 			}
 		};

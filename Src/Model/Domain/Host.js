@@ -3,6 +3,7 @@
 (function () {
 	var Domain = App.Model.Domain;
 	var Service = App.Core.Service;
+	var Configuration = App.Configuration;
 
 
 	/**
@@ -15,13 +16,7 @@
 	// Todo: How to test? -> Refactor?
 	Domain.Host = function (videoFrame) {
 		this.constraints = {
-			video: {
-				mandatory: {
-					maxHeight: 120,
-					maxWidth: 160
-				},
-				optional: []
-			},
+			video: Configuration.connection.quality.video,
 			audio: true
 		};
 
@@ -34,6 +29,7 @@
 		getUserMedia(this.constraints, function (stream) {
 			this.localstream = stream;
 			attachMediaStream(this.videoFrame, stream);
+			console.log(stream);
 			hostReadyCallback();
 		}.bind(this),
 			function (error) {

@@ -5,7 +5,7 @@
 
 
 /** content */
-.panel { padding: 0.5em; background: rgb(50,50,50); color: white; }
+.panel { padding: 0.5em; background: rgb(50,50,50); color: white; min-height: 2em; }
 .panel h2 { color: white; vertical-align: middle; }
 
 #phone { width: 60%; }
