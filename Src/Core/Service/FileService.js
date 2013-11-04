@@ -22,4 +22,32 @@
 		}
 	};
 
+	/**
+	 * rad files from harddisk
+	 *
+	 * @param files
+	 * @param callback
+	 */
+	Service.FileService.readFiles = function(files, callback) {
+		var fileContents = [];
+
+		for(var index=0; index<files.length; index++) {
+			var file = files[index];
+			if (file) {
+				var reader = new FileReader();
+				(function(i) {
+					reader.onload = function(event) {
+						fileContents.push(event.target.result);
+						if(i == (files.length-1)) {
+							callback(fileContents);
+						}
+					};
+				})(index);
+				reader.readAsText(file);
+			} else {
+				Service.Log(Service.Log.logTypes.Error, 'FileService', "Can not read file "+file);
+			}
+		}
+	};
+
 })();

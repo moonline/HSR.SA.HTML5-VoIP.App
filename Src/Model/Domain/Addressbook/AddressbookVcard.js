@@ -20,18 +20,12 @@
 
 
 	// Todo: write a test for load
-	Addressbook.AddressbookVcard.prototype.load = function (files) {
-		var j = 0, k = files.length;
-		files.forEach(function (file, i) {
-			var reader = new FileReader();
-			reader.onload = function (event) {
-				if (event.target.readyState == FileReader.DONE) {
-					this.addEntry(event.target.result);
-				}
-			};
-			reader.readAsText(file);
-		}, this);
+	Addressbook.AddressbookVcard.prototype.load = function (vcards) {
+		vcards.forEach(function(vcard, index) {
+			this.addEntry(vcard);
+		},this);
 	};
+
 
 	/**
 	 * add a vcard entry
@@ -41,7 +35,8 @@
 		var mapping = this.fieldMapping;
 		var entry = new Domain.AddressbookEntry();
 
-		var lines = vcardContent.split('\n')
+		var lines = vcardContent.split('\n');
+		console.log(vcardContent);
 		lines.forEach(function (line) {
 			if (line != '' && line != "BEGIN:VCARD" && line != "END:VCARD") {
 				var fieldParts = line.splitOnce(':');

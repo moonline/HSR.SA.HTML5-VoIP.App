@@ -17,6 +17,7 @@
     <script src="Core/Service/ArrayService.js" ></script>
     <script src="Core/Service/Log.js" ></script>
 	<script src="Core/Service/FileService.js" ></script>
+	<script src="Core/Service/StringService.js" ></script>
 
     <script src="Model/Domain/Connection.js" ></script>
     <script src="Model/Domain/Host.js" ></script>
@@ -28,6 +29,7 @@
 	<script src="Model/Domain/AddressbookManager.js" ></script>
 	<script src="Model/Domain/Addressbook.js" ></script>
 	<script src="Model/Domain/Addressbook/AddressbookJson.js" ></script>
+	<script src="Model/Domain/Addressbook/AddressbookVcard.js" ></script>
 
 	<script src="Model/Domain/EventManager.js" ></script>
 
@@ -127,7 +129,14 @@
 									<form id="import" class="box west">
 										<script id="import-template" type="text/x-handlebars-template">
 											{{#each fileImport}}
-												<input type="file" id="{{type}}" value="{{name}}" />
+												<div class="formLine">
+													<label for="{{name}}">{{name}}</label><input type="file" id="{{type}}" name="{{type}}" value="{{name}}" />
+												</div>
+											{{/each}}
+											{{#each directoryImport}}
+												<div class="formLine">
+													<label for="{{name}}">{{name}}</label><input type="file" id="{{type}}" name="{{type}}" value="{{name}}" multiple />
+												</div>
 											{{/each}}
 										</script>
 									</form>

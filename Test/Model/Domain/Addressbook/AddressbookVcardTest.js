@@ -34,4 +34,17 @@ END:VCARD";
 		strictEqual(entries[1].url, "http://de.wikipedia.org/", "url field ':' skip");
 	});
 
+	test("AddressbookVcard load test", function () {
+		var addressbook = new Addressbook.AddressbookVcard();
+		addressbook.fieldMapping.URL = 'url';
+
+		addressbook.load([entry1, entry2]);
+		var entries = addressbook.getEntries();
+
+		strictEqual(entries[0].sip, '564895214@corephone.com', "sip field");
+		strictEqual(entries[0].firstName, 'Hilary', "firstName field");
+		strictEqual(entries[1].name, "Max Mustermann", "full name field");
+		strictEqual(entries[1].url, "http://de.wikipedia.org/", "url field ':' skip");
+	});
+
 })();

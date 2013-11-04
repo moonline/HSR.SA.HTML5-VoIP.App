@@ -1,17 +1,20 @@
 App.Configuration = {
-	// Todo: move to a user storage
-	"lastName": "Caller name",
-	"firstName": "Caller firstname",
-	"photo": "base64 image string",
-	"sip": "yourSipId@sipHost.tld",
+	"accounts": [
+		{
+			"channelType": 'ChannelXHR',
+			"username": 'maxmuster',
+			"password": '***'
+		}
+	],
 
 	"stunService": "", // not used allready
 
 	"connection" : {
 		"connectTimeout": 30, // sec
+		// Does not work -  browser does not support
 		"quality": {
 			"video": {
-				/** list from standard
+				/** standardisized resolutions
 				 1280, 720,
 				 960, 720,
 				 640, 360,
@@ -25,27 +28,7 @@ App.Configuration = {
 					//"width": { "min": 160, "max": 1280 },
 					//"height": { "min": 120, "max": 960 }
 				},
-				"optional": []/*,
-				"optional" : [
-					{
-						"frameRate": {
-							"min": 10,
-							"max": 25
-						}
-					},
-					{
-						"width": {
-							"min": 160,
-							"max": 320
-						}
-					},
-					{
-						"height": {
-							"min": 120,
-							"max": 240
-						}
-					}
-				]*/
+				"optional": []
 			}
 		}
 	},

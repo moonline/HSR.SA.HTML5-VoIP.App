@@ -38,7 +38,10 @@
 		 */
 		this.importAction = function() {
 			var template = Handlebars.compile(document.getElementById('import-template').textContent);
-			var context = { fileImport: Configuration.contactbookImport.file };
+			var context = {
+				fileImport: Configuration.contactbookImport.file,
+				directoryImport: Configuration.contactbookImport.directory
+			};
 			document.getElementById('import').innerHTML = template(context);
 
 
@@ -48,6 +51,25 @@
 					Service.FileService.readFile(event.target.files[0], function(fileContent) {
 						var contactbook = new Addressbook[contactBookConfig.type]();
 						contactbook.load(fileContent);
+						self.addressbookManager.add(contactbook);
+
+						// update
+						var context = { contactbooks: self.addressbookManager.getAddressbooks() };
+						document.getElementById('contactbookNavigation').innerHTML = (Handlebars.compile(self.templates.addressbookTabs.toString()))(context);
+						document.getElementById('addressbookContent').innerHTML = (Handlebars.compile(self.templates.addressbookContent.toString()))(context);
+						self.showAddressbookElements();
+					});
+				});
+			});
+
+			Configuration.contactbookImport.directory.forEach(function(contactBookConfig, index){
+				console.log(contactBookConfig);
+				// Todo: check addressbok exists and implements interface
+				document.getElementById(contactBookConfig.type).addEventListener('change', function(event) {
+
+					Service.FileService.readFiles(event.target.files, function(fileContents) {
+						var contactbook = new Addressbook[contactBookConfig.type]();
+						contactbook.load(fileContents);
 						self.addressbookManager.add(contactbook);
 
 						// update
