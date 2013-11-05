@@ -23,8 +23,6 @@
 					var message = JSON.parse(channelMessage);
 
 					if (message.type === 'offer') {
-						// Callee creates PeerConnection
-						//console.log(this);
 						if (!self.channel.type !== Domain.Channel.types.caller && (!self.connection || self.connection.state === Domain.Connection.states.off || self.connection.state === Domain.Connection.states.stopped)) {
 							var accept = confirm(message.sender+' want\'s to call you. Receive?');
 							if(accept) {
@@ -60,6 +58,29 @@
 				self.connection.calleeCreateAnswer(message);
 			}.bind(this));
 		};
+
+		/**
+		 * messaging
+		 */
+		document.getElementById('sendButton').onclick = function() {
+			this.connection.dataChannel.send(JSON.stringify({
+				"messageType": "user",
+				"message": document.getElementById('localMessage').value
+			}));
+			document.getElementById('localMessage').value = '';
+		}.bind(this);
+
+		Domain.EventManager.addListener({
+				"notify": function(event, sender) {
+					if(event.messageType === 'user') {
+						var message = document.createElement('p');
+						message.textContent = event.message;
+						document.getElementById('messageReceiveBox').insertBefore(message,document.getElementById('messageReceiveBox').firstChild);
+					}
+				}
+			},
+			'dataChannelMessageReceive'
+		);
 
 		/**
 		 * call action

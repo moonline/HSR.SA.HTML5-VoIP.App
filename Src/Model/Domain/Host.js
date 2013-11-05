@@ -29,7 +29,6 @@
 		getUserMedia(this.constraints, function (stream) {
 			this.localstream = stream;
 			attachMediaStream(this.videoFrame, stream);
-			console.log(stream);
 			hostReadyCallback();
 		}.bind(this),
 			function (error) {
