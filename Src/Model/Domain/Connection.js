@@ -90,21 +90,25 @@
 		this.peerConnection.onaddstream = this.receiveStream.bind(this);
 
 
-		this.dataChannel = this.peerConnection.createDataChannel('channel');
-		this.dataChannel.binaryType = 'blob';
+		try {
+			this.dataChannel = this.peerConnection.createDataChannel('channel');
+			this.dataChannel.binaryType = 'blob';
 
-		this.dataChannel.onmessage = function(event) {
-			var message = JSON.parse(event.data);
-			Domain.EventManager.notify('dataChannelMessageReceive',message, Domain.Connection);
-			Service.Log.log(Service.Log.logTypes.Info, 'Connection','DataChannel message received: '+message.message);
-		}.bind(this);
+			this.dataChannel.onmessage = function(event) {
+				var message = JSON.parse(event.data);
+				Domain.EventManager.notify('dataChannelMessageReceive',message, Domain.Connection);
+				Service.Log.log(Service.Log.logTypes.Info, 'Connection','DataChannel message received: '+message.message);
+			}.bind(this);
 
-		this.dataChannel.onopen = function(){
-			this.dataChannel.send(JSON.stringify({
-				"messageType": "system",
-				"message": 'caller: hello data channel'
-			}));
-		}.bind(this);
+			this.dataChannel.onopen = function(){
+				this.dataChannel.send(JSON.stringify({
+					"messageType": "system",
+					"message": 'caller: hello data channel'
+				}));
+			}.bind(this);
+		} catch (e) {
+			Service.Log.log(Service.Log.logTypes.error, 'Connection', e);
+		}
 
 
 		this.peerConnection.createOffer(this.sendSDP.bind(this), function (error) {

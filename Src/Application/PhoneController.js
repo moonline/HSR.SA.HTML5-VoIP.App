@@ -5,6 +5,7 @@
 	var Domain = App.Model.Domain;
 	var Channel = Domain.Channel;
 	var Configuration = App.Configuration;
+	var Service = App.Core.Service;
 
 
 	Controller.PhoneController = function() {
@@ -35,7 +36,7 @@
 						var candidate = new RTCIceCandidate({sdpMLineIndex:message.label, candidate:message.candidate});
 						self.connection.peerConnection.addIceCandidate(candidate);
 					} else if (message.type === 'bye') {
-						self.connection.hangUp(false);
+						if(self.connection) { self.connection.hangUp(false); }
 						self.hangUp();
 					}
 				}
@@ -44,20 +45,6 @@
 
 		this.channel.addReceiveListener(listener);
 		this.channel.start();
-
-		/**
-		 * receive a call
-		 *
-		 * @param message
-		 */
-		this.receiveCall = function(message) {
-			this.host.startLocalMedia(function() {
-				self.connection = new Domain.Connection(self.host.localstream,self.channel, self.remoteVideoFrame, null, function() {
-					document.getElementById('hangUp').removeAttribute('disable');
-				});
-				self.connection.calleeCreateAnswer(message);
-			}.bind(this));
-		};
 
 		/**
 		 * messaging
@@ -70,19 +57,6 @@
 			document.getElementById('localMessage').value = '';
 		}.bind(this);
 
-
-		/**
-		 * receive a messenger message and display for user
-		 *
-		 * @param message
-		 */
-		this.printReceiveMessage = function(message) {
-			var messageBox = document.createElement('p');
-			var date = new Date();
-			messageBox.innerHTML = '<span class="time">'+date.getHours()+':'+date.getMinutes()+':'+date.getSeconds()+'</span><span class="messageContent">'+message+'</span>';
-			document.getElementById('messageReceiveBox').insertBefore(messageBox,document.getElementById('messageReceiveBox').firstChild);
-		};
-
 		Domain.EventManager.addListener({
 				"notify": function(event, sender) {
 					if(event.messageType === 'user') {
@@ -92,57 +66,20 @@
 						self.connection.hangUp(false);
 						self.hangUp();
 					}
-				}
+				}.bind(this)
 			},
 			'dataChannelMessageReceive'
 		);
 
-		/**
-		 * call action
-		 */
-		this.call = function(receiver) {
-			this.host.startLocalMedia(function() {
-				self.connection = new Domain.Connection(self.host.localstream,self.channel, self.remoteVideoFrame, receiver, function() {
-					document.getElementById('hangUp').removeAttribute('disable');
-				});
-				self.connection.callerCreateOffer();
-			}.bind(this));
-			this.timeOutIfConnectionNotEtablished();
-		}.bind(this);
-
-		/**
-		 * wait for some seconds, if connection is not etablished, hang up and clean up
-		 */
-		this.timeOutIfConnectionNotEtablished = function() {
-			setTimeout(function() {
-				if(this.connection.state < Domain.Connection.states.connected) {
-					self.connection.hangUp(true);
-					self.hangUp();
-					alert('could no connection etablish.');
-				}
-			}.bind(this),1000*Configuration.connection.connectTimeout);
-		}.bind(this);
-
-		/**
-		 * hang up
-		 *
-		 * @type {function(this:App.Controller.PhoneController)}
-		 */
-		this.hangUp = function() {
-			console.log('hang up');
-			this.localVideoFrame.pause(); this.localVideoFrame.src = '';
-			this.remoteVideoFrame.pause(); this.remoteVideoFrame.src = '';
-			document.getElementById('hangUp').setAttribute('disable', 'disable');
-		}.bind(this);
-
-
 		Domain.EventManager.addListener({
-			notify: function(event, sender) {
-				if(event.receiver) {
-					this.call(event.receiver);
-				}
-			}.bind(this)
-		}, 'startCall');
+				notify: function(event, sender) {
+					if(event.receiver) {
+						this.call(event.receiver);
+					}
+				}.bind(this)
+			},
+			'startCall'
+		);
 
 		document.querySelector('.fullScreen').onclick = function() {
 			var element = document.getElementById('remoteVideo');
@@ -161,6 +98,71 @@
 				this.hangUp();
 			}
 		}.bind(this);
+	};
+
+
+	/**
+	 * receive a call
+	 *
+	 * @param message
+	 */
+	Controller.PhoneController.prototype.receiveCall = function(message) {
+		this.host.startLocalMedia(function() {
+			this.connection = new Domain.Connection(this.host.localstream,this.channel, this.remoteVideoFrame, null, function() {
+				document.getElementById('hangUp').removeAttribute('disable');
+			}.bind(this));
+			this.connection.calleeCreateAnswer(message);
+		}.bind(this));
+	};
+
+	/**
+	 * receive a messenger message and display for user
+	 *
+	 * @param message
+	 */
+	Controller.PhoneController.prototype.printReceiveMessage = function(message) {
+		var messageBox = document.createElement('p');
+		var date = new Date();
+		messageBox.innerHTML = '<span class="time">'+date.getHours()+':'+date.getMinutes()+':'+date.getSeconds()+'</span><span class="messageContent">'+message+'</span>';
+		document.getElementById('messageReceiveBox').insertBefore(messageBox,document.getElementById('messageReceiveBox').firstChild);
+	};
+
+	/**
+	 * call action
+	 */
+	Controller.PhoneController.prototype.call = function(receiver) {
+		this.host.startLocalMedia(function() {
+			this.connection = new Domain.Connection(this.host.localstream, this.channel, this.remoteVideoFrame, receiver, function() {
+				document.getElementById('hangUp').removeAttribute('disable');
+			}.bind(this));
+			this.connection.callerCreateOffer();
+		}.bind(this));
+		this.timeOutIfConnectionNotEtablished();
+	};
+
+	/**
+	 * wait for some seconds, if connection is not etablished, hang up and clean up
+	 */
+	Controller.PhoneController.prototype.timeOutIfConnectionNotEtablished = function() {
+		setTimeout(function() {
+			if(this.connection.state < Domain.Connection.states.connected) {
+				this.connection.hangUp(true);
+				this.hangUp();
+				alert('could no connection etablish.');
+			}
+		}.bind(this),1000*Configuration.connection.connectTimeout);
+	};
+
+	/**
+	 * hang up
+	 *
+	 * @type {function(this:App.Controller.PhoneController)}
+	 */
+	Controller.PhoneController.prototype.hangUp = function() {
+		Service.Log.log(Service.Log.logTypes.Info,'PhoneController','hang up');
+		this.remoteVideoFrame.pause(); this.remoteVideoFrame.setAttribute('src','');
+		this.localVideoFrame.pause(); this.localVideoFrame.setAttribute('src','');
+		document.getElementById('hangUp').setAttribute('disable', 'disable');
 	};
 
 })();

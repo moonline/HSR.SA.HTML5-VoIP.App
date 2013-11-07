@@ -63,7 +63,6 @@
 			});
 
 			Configuration.contactbookImport.directory.forEach(function(contactBookConfig, index){
-				console.log(contactBookConfig);
 				// Todo: check addressbok exists and implements interface
 				document.getElementById(contactBookConfig.type).addEventListener('change', function(event) {
 
