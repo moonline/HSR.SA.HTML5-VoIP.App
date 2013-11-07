@@ -70,12 +70,27 @@
 			document.getElementById('localMessage').value = '';
 		}.bind(this);
 
+
+		/**
+		 * receive a messenger message and display for user
+		 *
+		 * @param message
+		 */
+		this.printReceiveMessage = function(message) {
+			var messageBox = document.createElement('p');
+			var date = new Date();
+			messageBox.innerHTML = '<span class="time">'+date.getHours()+':'+date.getMinutes()+':'+date.getSeconds()+'</span><span class="messageContent">'+message+'</span>';
+			document.getElementById('messageReceiveBox').insertBefore(messageBox,document.getElementById('messageReceiveBox').firstChild);
+		};
+
 		Domain.EventManager.addListener({
 				"notify": function(event, sender) {
 					if(event.messageType === 'user') {
-						var message = document.createElement('p');
-						message.textContent = event.message;
-						document.getElementById('messageReceiveBox').insertBefore(message,document.getElementById('messageReceiveBox').firstChild);
+						this.printReceiveMessage(event.message);
+					}
+					if(event.messageType === 'system' && event.message === 'bye') {
+						self.connection.hangUp(false);
+						self.hangUp();
 					}
 				}
 			},

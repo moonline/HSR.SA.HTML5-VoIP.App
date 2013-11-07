@@ -1,0 +1,12 @@
+.messageContainer { background: gray; padding: 0.5em; height: 9em; display: none !important; }
+
+.messageSendBox { height: 2em; padding-top: 0.5em; }
+.messageSendBox * {  vertical-align: top; }
+.messageSendBox textarea { height: 3em; width: 80%;  font-size: 1em; }
+#sendButton { width: 15%; margin: 0 2.2%; height: 2.5em; disply: inline-block; }
+
+.messageReceiveBox { height: 5em; overflow-y: scroll; }
+.messageReceiveBox p { background: silver; margin: 0.25em 0; border-radius: 0.25em; }
+.messageReceiveBox p .time { background: none repeat scroll 0% 0% black; color: white; padding: 0.1em 0.25em; display: inline-block;
+	border-radius: 0.25em 0px 0px 0.25em; }
+.messageReceiveBox p .messageContent { padding: 0.1em 0.25em; }

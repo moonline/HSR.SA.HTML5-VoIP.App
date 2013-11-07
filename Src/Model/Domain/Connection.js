@@ -96,6 +96,7 @@
 		this.dataChannel.onmessage = function(event) {
 			var message = JSON.parse(event.data);
 			Domain.EventManager.notify('dataChannelMessageReceive',message, Domain.Connection);
+			Service.Log.log(Service.Log.logTypes.Info, 'Connection','DataChannel message received: '+message.message);
 		}.bind(this);
 
 		this.dataChannel.onopen = function(){
@@ -134,6 +135,7 @@
 			this.dataChannel.onmessage = function(event) {
 				var message = JSON.parse(event.data);
 				Domain.EventManager.notify('dataChannelMessageReceive',message, Domain.Connection);
+				Service.Log.log(Service.Log.logTypes.Info, 'Connection','DataChannel message received: '+message.message);
 			}.bind(this);
 
 			this.dataChannel.onopen = function(){
@@ -168,10 +170,17 @@
 	Domain.Connection.prototype.hangUp = function (notifyClient) {
 		this.localstream.stop();
 		if (notifyClient) {
-			this.channel.send({
-				"receiver": this.receiver,
-				"message": JSON.stringify({"type": "bye"})
-			});
+			if(this.dataChannel && this.dataChannel.readyState === 'open') {
+				this.dataChannel.send(JSON.stringify({
+					"messageType": 'system',
+					"message": 'bye'
+				}));
+			} else {
+				this.channel.send({
+					"receiver": this.receiver,
+					"message": JSON.stringify({"type": "bye"})
+				});
+			}
 		}
 		try {
 			this.peerConnection.close();
