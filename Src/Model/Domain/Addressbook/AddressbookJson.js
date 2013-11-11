@@ -28,7 +28,7 @@
 		}
 
 		inputData.forEach(function (dataRow, i) {
-			if (dataRow.hasOwnProperty('sip') && dataRow.hasOwnProperty('name')) {
+			if (dataRow.hasOwnProperty('name')) {
 				var entry = new Domain.AddressbookEntry();
 				Object.keys(dataRow).forEach(function (key) {
 					entry[key] = dataRow[key];

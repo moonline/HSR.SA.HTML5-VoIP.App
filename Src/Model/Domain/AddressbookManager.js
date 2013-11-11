@@ -30,6 +30,11 @@
 					Object.keys(tempBook).forEach(function (key) {
 						addressBook[key] = tempBook[key];
 					}, this);
+
+					// update online addressbooks
+					if(addressBook.dataSourceType === Domain.Addressbook.dataSourceTypes.online && addressBook.address) {
+						addressBook.load(addressBook.address);
+					}
 					this.addressbooks.push(addressBook);
 				}
 			}
