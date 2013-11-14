@@ -15,6 +15,8 @@
 		this.localVideoFrame = document.getElementById('localVideo');
 		this.remoteVideoFrame = document.getElementById('remoteVideo');
 
+		this.receiveCandidates = new Array();
+
 		this.host = new Domain.Host(this.localVideoFrame);
 
 		this.channel = new Channel.ChannelXHR("http://colvarim.ch/service/messageQueue/messageQueue.php");
@@ -32,12 +34,21 @@
 						}
 					} else if (message.type === 'answer' && self.connection.state > Domain.Connection.states.off) {
 						self.connection.callerReceiveAnswer(message);
-					} else if (message.type === 'candidate' && self.connection.state > Domain.Connection.states.off) {
-						var candidate = new RTCIceCandidate({sdpMLineIndex:message.label, candidate:message.candidate});
-						self.connection.peerConnection.addIceCandidate(candidate);
+					} else if (message.type === 'candidate') {
+						self.channel.receiveMessage();
+						var candidate = new RTCIceCandidate({ sdpMLineIndex:message.label, candidate:message.candidate });
+						if(self.connection && self.connection.peerConnection && self.connection.state > Domain.Connection.states.off) {
+							console.log('add candidate');
+							self.connection.peerConnection.addIceCandidate(candidate);
+						} else {
+							console.log('toEarlyReceived candidate');
+							self.receiveCandidates.push(candidate);
+						}
 					} else if (message.type === 'bye') {
 						if(self.connection) { self.connection.hangUp(false); }
 						self.hangUp();
+					} else {
+						console.log('unhandled message');
 					}
 				}
 			}
@@ -98,6 +109,10 @@
 				this.hangUp();
 			}
 		}.bind(this);
+
+		document.getElementById('fancyTestButton').onclick = function() {
+			Domain.EventManager.notify('startCall', { "receiver": prompt('Please insert the nickname you want to call.') }, 'addressbookEntry');
+		};
 	};
 
 
@@ -110,7 +125,7 @@
 		this.host.startLocalMedia(function() {
 			this.connection = new Domain.Connection(this.host.localstream,this.channel, this.remoteVideoFrame, null, function() {
 				document.getElementById('hangUp').removeAttribute('disable');
-			}.bind(this));
+			}.bind(this), this.receiveCandidates);
 			this.connection.calleeCreateAnswer(message);
 		}.bind(this));
 	};
@@ -134,7 +149,7 @@
 		this.host.startLocalMedia(function() {
 			this.connection = new Domain.Connection(this.host.localstream, this.channel, this.remoteVideoFrame, receiver, function() {
 				document.getElementById('hangUp').removeAttribute('disable');
-			}.bind(this));
+			}.bind(this),this.receiveCandidates);
 			this.connection.callerCreateOffer();
 		}.bind(this));
 		this.timeOutIfConnectionNotEtablished();

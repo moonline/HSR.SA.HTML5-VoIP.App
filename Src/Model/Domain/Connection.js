@@ -14,7 +14,7 @@
 	 * @param videoFrame: dom element to attach the mediastream
 	 * @constructor
 	 */
-	Domain.Connection = function (localstream, channel, videoFrame, receiver, streamReady) {
+	Domain.Connection = function (localstream, channel, videoFrame, receiver, streamReady, receiveCandidates) {
 		// Todo: How to test? -> Refactor?
 		this.localstream = localstream;
 		this.channel = channel;
@@ -24,6 +24,79 @@
 		this.peerConnection = null;
 		this.config = null;
 		this.streamReady = streamReady;
+		this.receiveCandidates = receiveCandidates;
+	};
+
+
+	Domain.Connection.prototype.removeCN = function(sdpLines, mLineIndex) {
+		var mLineElements = sdpLines[mLineIndex].split(' ');
+		// Scan from end for the convenience of removing an item.
+		for (var i = sdpLines.length-1; i >= 0; i--) {
+			var payload = Domain.Connection.prototype.extractSdp(sdpLines[i], /a=rtpmap:(\d+) CN\/\d+/i);
+			if (payload) {
+				var cnPos = mLineElements.indexOf(payload);
+				if (cnPos !== -1) {
+					// Remove CN payload from m line.
+					mLineElements.splice(cnPos, 1);
+				}
+				// Remove CN line in sdp
+				sdpLines.splice(i, 1);
+			}
+		}
+
+		sdpLines[mLineIndex] = mLineElements.join(' ');
+		return sdpLines;
+	};
+
+
+	Domain.Connection.prototype.setDefaultCodec = function(mLine, payload) {
+		var elements = mLine.split(' ');
+		var newLine = new Array();
+		var index = 0;
+		for (var i = 0; i < elements.length; i++) {
+			if (index === 3) // Format of media starts from the fourth.
+				newLine[index++] = payload; // Put target payload to the first.
+			if (elements[i] !== payload)
+				newLine[index++] = elements[i];
+		}
+		return newLine.join(' ');
+	};
+
+	Domain.Connection.prototype.extractSdp = function(sdpLine, pattern) {
+		var result = sdpLine.match(pattern);
+		return (result && result.length == 2)? result[1]: null;
+	};
+
+	Domain.Connection.prototype.preferOpus = function(sdp) {
+		var sdpLines = sdp.split('\r\n');
+
+		// Search for m line.
+		for (var i = 0; i < sdpLines.length; i++) {
+			if (sdpLines[i].search('m=audio') !== -1) {
+				var mLineIndex = i;
+				break;
+			}
+		}
+		if (mLineIndex === null) {
+			return sdp;
+		}
+
+		// If Opus is available, set it as the default in m line.
+		for (var i = 0; i < sdpLines.length; i++) {
+			if (sdpLines[i].search('opus/48000') !== -1) {
+				var opusPayload = Domain.Connection.prototype.extractSdp(sdpLines[i], /:(\d+) opus\/48000/i);
+				if (opusPayload)
+					sdpLines[mLineIndex] = Domain.Connection.prototype.setDefaultCodec(sdpLines[mLineIndex],
+						opusPayload);
+				break;
+			}
+		}
+
+		// Remove CN in m line and sdp.
+		sdpLines = Domain.Connection.prototype.removeCN(sdpLines, mLineIndex);
+
+		sdp = sdpLines.join('\r\n');
+		return sdp;
 	};
 
 
@@ -32,7 +105,8 @@
 	 *
 	 * @param sdp
 	 */
-	Domain.Connection.prototype.sendSDP = function (sdp) {
+	Domain.Connection.prototype.setLocalAndSendSDP = function (sdp) {
+		sdp.sdp = Domain.Connection.prototype.preferOpus(sdp.sdp);
 		this.peerConnection.setLocalDescription(sdp);
 		var message = {
 			"receiver": this.receiver,
@@ -51,10 +125,22 @@
 	 * @param event
 	 */
 	Domain.Connection.prototype.sendIceCandidate = function (event) {
+		//signalingChannel.send(JSON.stringify({ "candidate": evt.candidate }));
+		/*
+		 {type: 'candidate',
+		 label: event.candidate.sdpMLineIndex,
+		 id: event.candidate.sdpMid,
+		 candidate: event.candidate.candidate}
+		*/
 		if (event.candidate) {
 			var message = {
 				"receiver": this.receiver,
-				"message": JSON.stringify(event.candidate)
+				"message": JSON.stringify({
+					type: 'candidate',
+					label: event.candidate.sdpMLineIndex,
+					id: event.candidate.sdpMid,
+					candidate: event.candidate.candidate
+				})
 			};
 			this.channel.send(message);
 		} else {
@@ -111,7 +197,7 @@
 		}
 
 
-		this.peerConnection.createOffer(this.sendSDP.bind(this), function (error) {
+		this.peerConnection.createOffer(this.setLocalAndSendSDP.bind(this), function (error) {
 			Service.Log.log(Service.Log.logTypes.Error, 'Connection', error);
 		});
 	};
@@ -152,7 +238,13 @@
 
 		this.peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
 
-		this.peerConnection.createAnswer(this.sendSDP.bind(this),function (error) {
+		this.receiveCandidates.forEach(function(candidate, index) {
+			console.log('addLateCandidate');
+			this.peerConnection.addIceCandidate(candidate);
+			delete this.receiveCandidates[index];
+		},this);
+
+		this.peerConnection.createAnswer(this.setLocalAndSendSDP.bind(this),function (error) {
 			Service.Log.log(Service.Log.logTypes.Error, 'Connection', error);
 		});
 	};
@@ -176,9 +268,10 @@
 		if (notifyClient) {
 			if(this.dataChannel && this.dataChannel.readyState === 'open') {
 				this.dataChannel.send(JSON.stringify({
-					"messageType": 'system',
-					"message": 'bye'
-				}));
+						"messageType": 'system',
+						"message": 'bye'
+					})
+				);
 			} else {
 				this.channel.send({
 					"receiver": this.receiver,
