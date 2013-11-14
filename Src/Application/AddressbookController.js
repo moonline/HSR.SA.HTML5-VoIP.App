@@ -40,11 +40,12 @@
 			var template = Handlebars.compile(document.getElementById('import-template').textContent);
 			var context = {
 				fileImport: Configuration.contactbookImport.file,
-				directoryImport: Configuration.contactbookImport.directory
+				directoryImport: Configuration.contactbookImport.directory,
+				onlineImport: Configuration.contactbookImport.online
 			};
 			document.getElementById('import').innerHTML = template(context);
 
-
+			// file import
 			Configuration.contactbookImport.file.forEach(function(contactBookConfig, index){
 				// Todo: check addressbok exists and implements interface
 				document.getElementById(contactBookConfig.type).addEventListener('change', function(event) {
@@ -62,6 +63,7 @@
 				});
 			});
 
+			// directory import
 			Configuration.contactbookImport.directory.forEach(function(contactBookConfig, index){
 				// Todo: check addressbok exists and implements interface
 				document.getElementById(contactBookConfig.type).addEventListener('change', function(event) {
@@ -79,6 +81,29 @@
 					});
 				});
 			});
+
+			// online import
+			Configuration.contactbookImport.online.forEach(function(contactBookConfig, index){
+				// Todo: check addressbok exists and implements interface
+				document.getElementById(contactBookConfig.type+'Load').addEventListener('click', function(event) {
+					var address = prompt('Please insert the address of the remote contactbook file.');
+					address = (address.indexOf('http://') == 0) ? address : 'http://'+address;
+					var contactbook = new Addressbook[contactBookConfig.type]();
+
+					contactbook.load(address, function() {
+							self.addressbookManager.add(contactbook);
+							self.updateContactBooks();
+						}.bind(this)
+					);
+				}.bind(this));
+			});
+		};
+
+		this.updateContactBooks = function() {
+			var context = { contactbooks: self.addressbookManager.getAddressbooks() };
+			document.getElementById('contactbookNavigation').innerHTML = (Handlebars.compile(self.templates.addressbookTabs.toString()))(context);
+			document.getElementById('addressbookContent').innerHTML = (Handlebars.compile(self.templates.addressbookContent.toString()))(context);
+			self.showAddressbookElements();
 		};
 
 		/**

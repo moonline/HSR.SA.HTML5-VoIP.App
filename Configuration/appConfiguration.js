@@ -48,7 +48,10 @@ App.Configuration = {
 			}
 		],
 		"online": [
-
+			{
+				"name": "Remote Json Contactbook",
+				"type": 'AddressbookRemoteJson'
+			}
 		]
 	},
 	"contactbookVcardConfig": [

@@ -30,6 +30,7 @@
 	<script src="Model/Domain/Addressbook.js" ></script>
 	<script src="Model/Domain/Addressbook/AddressbookJson.js" ></script>
 	<script src="Model/Domain/Addressbook/AddressbookVcard.js" ></script>
+	<script src="Model/Domain/Addressbook/AddressbookRemoteJson.js" ></script>
 
 	<script src="Model/Domain/EventManager.js" ></script>
 
@@ -142,16 +143,28 @@
 								<div class="actions box south panel">
 									<form id="import" class="box west">
 										<script id="import-template" type="text/x-handlebars-template">
-											{{#each fileImport}}
-												<div class="formLine">
-													<label for="{{name}}">{{name}}</label><input type="file" id="{{type}}" name="{{type}}" value="{{name}}" />
-												</div>
-											{{/each}}
-											{{#each directoryImport}}
-												<div class="formLine">
-													<label for="{{name}}">{{name}}</label><input type="file" id="{{type}}" name="{{type}}" value="{{name}}" multiple />
-												</div>
-											{{/each}}
+											<div class="fileImport">
+												{{#each fileImport}}
+													<div class="formLine">
+														<label for="{{name}}">{{name}}</label><input type="file" id="{{type}}" name="{{type}}" value="{{name}}" />
+													</div>
+												{{/each}}
+											</div>
+											<div class="directoryImport">
+												{{#each directoryImport}}
+													<div class="formLine">
+														<label for="{{name}}">{{name}}</label><input type="file" id="{{type}}" name="{{type}}" value="{{name}}" multiple />
+													</div>
+												{{/each}}
+											</div>
+											<div class="onlineImport">
+												{{#each onlineImport}}
+													<div class="formLine">
+														<label for="{{name}}">{{name}}</label>
+														<input id="{{type}}Load" type="button" class="button" value="load" />
+													</div>
+												{{/each}}
+											</div>
 											<a download class="button" href="Resources/Data/json/adressbook-221013.json" target="_blank" >download default</a>
 										</script>
 									</form>

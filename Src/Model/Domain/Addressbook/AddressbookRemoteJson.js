@@ -18,29 +18,29 @@
 	/**
 	 * load contactbook from json struct
 	 *
-	 * @param jsonData: a string with a json struct or a javascript object
+	 * @param address
+	 * @param doneSuccessCallback: method called on data load success
 	 */
-	Addressbook.AddressbookRemoteJson.prototype.load = function (address, successCallback) {
+	Addressbook.AddressbookRemoteJson.prototype.load = function(address,doneSuccessCallback) {
 		this.address = address;
 
 		$.getJSON(address, function( data ) {
-			this.data = new Array();
+				this.data = new Array();
 
-			Object.keys(data).forEach(function(key) {
-				var dataRow = data[key];
-				if (dataRow.hasOwnProperty('name')) {
-					var entry = new Domain.AddressbookEntry();
-					Object.keys(dataRow).forEach(function (key) {
-						entry[key] = dataRow[key];
-					});
-					this.data.push(entry);
-					console.log(this.data);
-				}
-			},this);
-		}.bind(this))
+				Object.keys(data).forEach(function(key) {
+					var dataRow = data[key];
+					if (dataRow.hasOwnProperty('name')) {
+						var entry = new Domain.AddressbookEntry();
+						Object.keys(dataRow).forEach(function (key) {
+							entry[key] = dataRow[key];
+						});
+						this.data.push(entry);
+					}
+				},this);
+			}.bind(this)
+		)
 			.done(function() {
-				console.log('done');
-				successCallback();
+				doneSuccessCallback();
 			})
 			.fail(function() {
 				Service.Log.log(Service.Log.logLevels.Error, 'AddressbookRemoteJson', 'Could not load addressbook from '+address);
