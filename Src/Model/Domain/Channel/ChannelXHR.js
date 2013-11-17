@@ -14,7 +14,7 @@
 	 */
 	Channel.ChannelXHR = function (webServer) {
 		// Todo fix problem with 'var Configuration = App.Configuration;
-		this.nick = App.Configuration.nick;
+		this.nick = App.Configuration.user.accounts['ChannelXHR']['fields']['nick'];
 
 		this.listeners = [];
 		this.state = Domain.Channel.states.waiting;

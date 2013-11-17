@@ -10,8 +10,7 @@
 		accountController.addDummyUser();
 		accountController.selectUser();
 
-		Configuration.nick = prompt('Please insert your nick name');
-		document.getElementById('user').textContent = Configuration.nick;
+		document.getElementById('user').textContent = Configuration.user.firstname+' '+Configuration.user.lastname;
 
 		var addressbookController = new Controller.AddressbookController();
 		addressbookController.initialize();
