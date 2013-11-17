@@ -1,17 +1,11 @@
 App.Configuration = {
-	"accounts": [
-		{
-			"channelType": 'ChannelXHR',
-			"username": 'maxmuster',
-			"password": '***'
-		}
-	],
+	"user":null, // this setting ist set by the accountManager
 
 	"stunService": "", // not used allready
 
 	"connection" : {
 		"connectTimeout": 30, // sec
-		// Does not work -  browser does not support
+		// Does not work -  browser do not support yet
 		"quality": {
 			"video": {
 				/** standardisized resolutions
@@ -32,6 +26,13 @@ App.Configuration = {
 			}
 		}
 	},
+
+	"channels" : [
+		{
+			"name": "XHR Messenger",
+			"type": "ChannelXHR"
+		}
+	],
 
 	"contactbookImport": {
 		"file": [

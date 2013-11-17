@@ -25,6 +25,19 @@
 	};
 
 
+	Channel.ChannelXHR.accountFields = [
+		{
+			"name": "username",
+			"type": "text"
+
+		},
+		{
+			"name": "password",
+			"type": "password"
+		}
+	];
+
+
 	/**
 	 * receive
 	 */
