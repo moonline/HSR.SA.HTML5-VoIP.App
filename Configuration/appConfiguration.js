@@ -4,7 +4,7 @@ App.Configuration = {
 	"stunService": "", // not used allready
 
 	"connection" : {
-		"connectTimeout": 30, // sec
+		"connectTimeout": 60, // sec
 		// Does not work -  browser do not support yet
 		"quality": {
 			"video": {

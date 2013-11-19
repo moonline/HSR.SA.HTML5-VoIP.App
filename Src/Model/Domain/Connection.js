@@ -113,7 +113,7 @@
 			"message": JSON.stringify({
 				type: sdp.type,
 				sdp: sdp.sdp,
-				sender: Configuration.nick
+				sender: Configuration.user.username
 			})
 		};
 		this.channel.send(message);

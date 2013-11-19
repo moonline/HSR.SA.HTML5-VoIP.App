@@ -29,9 +29,14 @@
 	};
 
 	Controller.AccountController.prototype.selectUser = function() {
+		var availableUsers = '\n';
+		this.accountManager.getUsers().forEach(function(user) {
+			availableUsers += '• '+user.username+'\n';
+		},this);
+
 		var username;
 		while(!username && this.accountManager.findByUsername(username) === null) {
-			username = prompt('please insert the user account you want to select');
+			username = prompt('please insert the user account you want to select.\nAvailable users:'+availableUsers);
 		}
 		Configuration.user = this.accountManager.findByUsername(username);
 	};

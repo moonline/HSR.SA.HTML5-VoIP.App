@@ -3,9 +3,16 @@
 (function () {
 	var Domain = App.Model.Domain;
 	var Channel = Domain.Channel;
+	var Configuration = App.Configuration;
 
 
 	module("Channel Tests");
+
+
+	var bruce = new Domain.User('bruce', '', 'Bruce', 'Willis', null, null);
+	bruce.setAccount(new Domain.Account('ChannelXHR',{ "nick": 'bruce' }));
+
+	App.Configuration.user = bruce;
 	asyncTest("ChannelXHR echo test", function () {
 		var channel = new Channel.ChannelXHR("http://colvarim.ch/service/messageQueue/messageQueue.php");
 		channel.nick = 'testUser';

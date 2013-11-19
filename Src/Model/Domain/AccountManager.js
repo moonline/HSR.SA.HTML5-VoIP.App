@@ -49,4 +49,12 @@
 		}
 	};
 
+	Domain.AccountManager.prototype.getUsers = function() {
+		var users = new Array();
+		Object.keys(this.users).forEach(function(key){
+			users.push(this.users[key]);
+		},this);
+		return users;
+	};
+
 })();
