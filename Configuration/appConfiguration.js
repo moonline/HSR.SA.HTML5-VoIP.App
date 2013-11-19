@@ -69,9 +69,9 @@ App.Configuration = {
 			"path": ["FN"],
 			"mapTo": ['name']
 		},{
-			"path": ["ADR", "HOME", "POSTAL"],
+			"path": ["ADR", "HOME", "POSTAL"], // ADR;HOME;POSTAL:Address extra, Street/Nr, City, Region, Postcode/Zip, Country
 			"mapTo": {
-				2: ['address','street'],
+				2: ['address','street'], // mount second field (Street/Nr) in vcard  to address.street in the js object
 				3: ['address','city'],
 				4: ['address','region'],
 				5: ['address','postcode'],
@@ -83,7 +83,7 @@ App.Configuration = {
 		},{
 			"path": ["TEL", "CELL", "VOICE"],
 			"mapTo": ['phone'],
-			"mappingRule": 'list'
+			"mappingRule": 'list' // there can be multiple fields in the js object 'phone' -> make a list
 		},{
 			"path": ["TEL", "HOME","VOICE"],
 			"mapTo": ['phone'],
