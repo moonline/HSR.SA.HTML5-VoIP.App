@@ -1,6 +1,5 @@
-/**
- * Created by tobias on 10/8/13.
- */
+'use strict';
+
 var Test = {
 	Model: {
 		Domain:{

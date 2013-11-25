@@ -1,6 +1,6 @@
-'use strict';
-
 (function() {
+	'use strict';
+
 	var Interfaces = App.Model.Interfaces;
 	var Framework = App.Core.Framework;
 

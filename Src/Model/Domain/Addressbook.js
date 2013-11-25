@@ -1,6 +1,6 @@
-'use strict';
-
 (function () {
+	'use strict';
+
 	// Todo: is this class used jet? -> otherwise: remove
 	var Domain = App.Model.Domain;
 

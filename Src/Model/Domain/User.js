@@ -1,6 +1,6 @@
-'use strict';
-
 (function () {
+	'use strict';
+
 	var Domain = App.Model.Domain;
 
 	Domain.User = function(username, password, firstname, lastname, email, photo) {

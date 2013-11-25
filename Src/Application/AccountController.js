@@ -1,6 +1,6 @@
-'use strict';
-
 (function () {
+	'use strict';
+
 	var Controller = App.Controller;
 	var Domain = App.Model.Domain;
 	var Configuration = App.Configuration;

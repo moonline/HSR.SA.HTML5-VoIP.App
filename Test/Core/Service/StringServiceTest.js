@@ -1,6 +1,6 @@
-'use strict';
-
 (function () {
+	'use strict';
+
 
 	module("StringService Tests");
 	test("StringService Test", function () {

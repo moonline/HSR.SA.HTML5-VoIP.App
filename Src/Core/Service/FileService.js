@@ -1,6 +1,6 @@
-'use strict';
-
 (function() {
+	'use strict';
+
 	var Service = App.Core.Service;
 	Service.FileService = {};
 

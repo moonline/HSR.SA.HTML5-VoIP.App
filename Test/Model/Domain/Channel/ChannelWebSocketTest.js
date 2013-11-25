@@ -1,6 +1,6 @@
-'use strict';
-
 (function () {
+	'use strict';
+
 	var Domain = App.Model.Domain;
 	var Channel = Domain.Channel;
 

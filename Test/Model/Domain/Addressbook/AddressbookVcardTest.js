@@ -1,6 +1,6 @@
-'use strict';
-
 (function () {
+	'use strict';
+
 	var entry1 = "BEGIN:VCARD\n\
 N:Swank;Hilary;;;\n\
 X-SIP:564895214@corephone.com\n\

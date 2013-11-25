@@ -1,6 +1,6 @@
-'use strict';
-
 (function() {
+	'use strict';
+
 
 	/**
 	 * split the string at the first position of the delimiter

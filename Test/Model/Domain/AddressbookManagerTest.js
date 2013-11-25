@@ -1,6 +1,6 @@
-'use strict';
-
 (function () {
+	'use strict';
+
 	var Domain = App.Model.Domain;
 	var vcard1 = "BEGIN:VCARD\n\
 N:Swank;Hilary;;;\n\
