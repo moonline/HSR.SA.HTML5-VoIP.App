@@ -16,7 +16,7 @@
 		this.accountManager.add(bruce);
 
 		var james = new Domain.User('bond', '', 'James', 'Bond', null, null);
-		james.setAccount(new Domain.Account('ChannelXHR',{ "nick": 'james' }));
+		james.setAccount(new Domain.Account('ChannelXHR',{ "nick": 'bond' }));
 		this.accountManager.add(james);
 
 		var michelle = new Domain.User('michelle', '', 'Michelle', 'Monoghan', null, null);

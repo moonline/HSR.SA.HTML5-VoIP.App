@@ -10,7 +10,7 @@
 		accountController.addDummyUser();
 		accountController.selectUser();
 
-		document.getElementById('user').textContent = Configuration.user.firstname+' '+Configuration.user.lastname;
+		document.getElementById('user').textContent = Configuration.user.firstname+' '+Configuration.user.lastname+' ('+Configuration.user.username+')';
 
 		var addressbookController = new Controller.AddressbookController();
 		addressbookController.initialize();
