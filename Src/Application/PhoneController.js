@@ -128,6 +128,7 @@
 			}.bind(this), this.receiveCandidates);
 			this.connection.calleeCreateAnswer(message);
 		}.bind(this));
+		this.timeOutIfConnectionNotEtablished();
 	};
 
 	/**
@@ -160,7 +161,7 @@
 	 */
 	Controller.PhoneController.prototype.timeOutIfConnectionNotEtablished = function() {
 		setTimeout(function() {
-			if(this.connection.state < Domain.Connection.states.connected) {
+			if(this.connection && this.connection.state < Domain.Connection.states.connected) {
 				this.connection.hangUp(true);
 				this.hangUp();
 				alert('could no connection etablish.');
