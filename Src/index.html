@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JS VoIP App</title>
+    <meta charset="utf-8" />
+
+	<!-- styles -->
+	<link href="Resources/Styles/browserReset.css" 	type="text/css" rel="stylesheet" />
+	<link href="Resources/Styles/styles.less" type="text/css" rel="stylesheet/less"/>
+
+	<!-- scripts -->
+    <script src="Namespaces.js" ></script>
+
+
+	<!-- configuration -->
+	<script src="../Configuration/appConfiguration.js" ></script>
+	<script src="Configuration/lessConfig.js" ></script>
+
+	<!-- core -->
+    <script src="Core/Lib/AdapterJS/Adapter.js" ></script>
+    <script src="Core/Lib/JQuery/jQuery.2.0.3.js" ></script>
+    <script src="Core/Lib/Handlebars/handlebars.js" ></script>
+	<script src="Core/Lib/less/less-1.5.0.min.js" ></script>
+
+	<script src="Core/Framework/Interface.js" ></script>
+
+    <script src="Core/Service/ArrayService.js" ></script>
+    <script src="Core/Service/Log.js" ></script>
+	<script src="Core/Service/FileService.js" ></script>
+	<script src="Core/Service/StringService.js" ></script>
+	<script src="Core/Service/SdpService.js" ></script>
+
+	<!-- model -->
+	<script src="Model/Domain/User.js" ></script>
+	<script src="Model/Domain/Account.js" ></script>
+	<script src="Model/Domain/AccountManager.js" ></script>
+
+    <script src="Model/Domain/Connection.js" ></script>
+    <script src="Model/Domain/Host.js" ></script>
+	<script src="Model/Domain/Channel.js" ></script>
+
+    <script src="Model/Domain/Channel/ChannelXHR.js" ></script>
+
+	<script src="Model/Domain/AddressbookEntry.js" ></script>
+	<script src="Model/Domain/AddressbookManager.js" ></script>
+	<script src="Model/Domain/Addressbook.js" ></script>
+	<script src="Model/Domain/Addressbook/AddressbookJson.js" ></script>
+	<script src="Model/Domain/Addressbook/AddressbookVcard.js" ></script>
+	<script src="Model/Domain/Addressbook/AddressbookRemoteJson.js" ></script>
+
+	<script src="Model/Domain/EventManager.js" ></script>
+
+	<script src="Model/Interfaces/AddressbookInterface.js" ></script>
+
+	<!-- controller -->
+	<script src="Application/PhoneController.js" ></script>
+	<script src="Application/AddressbookController.js" ></script>
+	<script src="Application/AccountController.js" ></script>
+
+	<!-- run app -->
+	<script src="initialize.js" ></script>
+</head>
+<body>
+	<div class="page">
+		<div class="content">
+			<ul class="userList">
+				<li>
+					<div class="userImage">
+						<span class="image" />
+					</div>
+					<div class="userInfo">
+						<span class="userName">
+							User1
+						</span>
+					</div>
+					<div class="operations">
+						<input type="button" class="button red" value="delete" />
+					</div>
+				</li>
+				<li>
+					<div class="userImage">
+						<span class="image" />
+					</div>
+					<div class="userInfo">
+						<span class="userName">
+							User2
+						</span>
+					</div>
+					<div class="operations">
+						<input type="button" class="button red" value="delete" />
+					</div>
+				</li>
+				<li>
+					<div class="userImage">
+						<span class="image" />
+					</div>
+					<div class="userInfo">
+						<span class="userName">
+							User3
+						</span>
+					</div>
+					<div class="operations">
+						<input type="button" class="button red" value="delete" />
+					</div>
+				</li>
+			</ul>
+		</div>
+		<footer class="operationPanel">
+			<input type="button" id="addUser" class="button green" value="Add user account" />
+		</footer>
+	</div>
+</body>
+</html>

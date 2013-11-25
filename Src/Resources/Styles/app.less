@@ -1,0 +1,44 @@
+@elementPadding: 0.5em;
+@lementMargin: 0.5em;
+
+* {
+	.box-sizing(border-box);
+}
+
+/* container */
+span { display: inline-block; }
+html, body {
+	width: 100%; height: 100%; overflow: hidden;
+	font-family: Ubuntu, Arial, Helvetica, sans-serif; font-size: 1em; color: black;
+}
+
+/* page */
+.page {
+	.flex; .flex-flow(column); .justify-content(space-between); .align-items(stretch);
+	width: 100%;
+	height: 100%;
+
+	.content {
+		height: 100%;
+		overflow-y: scroll;
+
+		ul {
+			li {
+				.flex; .flex-flow(row); .justify-content(space-between); .align-items(center);
+				padding: @elementPadding; margin: @lementMargin 0;
+				.background-linear-gradient(white, gainsboro);
+
+				.userImage .image {
+					background: silver;
+					height: 3em; width: 3em;
+				}
+			}
+		}
+	}
+
+	footer {
+		.background-linear-gradient(rgb(40,40,40), black);
+		border-top: 0.2em solid teal;
+		padding: @elementPadding;
+	}
+}

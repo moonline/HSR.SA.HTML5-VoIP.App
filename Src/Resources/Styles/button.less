@@ -1,0 +1,52 @@
+input[type="button"], .button {
+	border: 0.1em solid white; border-radius: 0.5em;
+	.background-linear-gradient(white,silver);
+	color: black; font-weight: bold;
+	padding: (@elementPadding / 2) 1em;
+	.box-shadow(0 0 0.5em gray);
+
+	&:hover {
+		color: white;
+		.background-linear-gradient(silver,gray);
+		border-color: silver;
+	}
+
+	&:active {
+		color: black;
+		.background-linear-gradient(gray,silver);
+		border-color: silver;
+	}
+
+	&.error, &.red {
+		.background-linear-gradient(red,maroon);
+		border-color: maroon;
+
+		&:hover {
+			.background-linear-gradient(brown, rgb(100,0,0));
+		}
+	}
+
+	&.green, &.success {
+		.background-linear-gradient(mediumseagreen, darkgreen);
+		border-color: rgb(0,50,0);
+
+		&:hover {
+			.background-linear-gradient(rgb(45,165,100), rgb(0,85,0));
+		}
+
+		&:active {
+			.background-linear-gradient(rgb(20,115,60), rgb(0,75,0));
+		}
+	}
+}
+
+input[type="button"][disable="disable"], .button[disable="disable"] {
+	background: white; color: gray;
+	.background-linear-gradient(white,silver);
+	border-color: gray; .box-shadow(none);
+}
+
+input[type="button"].error, .button.error {
+	background: red;
+	.background-linear-gradient(red,maroon);
+}
