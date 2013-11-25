@@ -64,7 +64,7 @@ END:VCARD\n\
 
 		strictEqual(entries[0].sip, '564895214@corephone.com', "sip field");
 		strictEqual(entries[0].firstname, 'Hilary', "firstName field");
-		strictEqual(entries[1].name, "Max Mustermann", "full name field")
+		strictEqual(entries[1].name, "Max Mustermann", "full name field");
 		strictEqual(entries[1].website, "http://de.wikipedia.org/", "url field ':' skip");
 	});
 

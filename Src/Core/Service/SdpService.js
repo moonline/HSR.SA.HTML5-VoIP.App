@@ -3,7 +3,12 @@
 
 	var Service = App.Core.Service;
 
-
+	/**
+	 * SDP parsing library
+	 *
+	 * @licence http://www.apache.org/licenses/LICENSE-2.0
+	 * @copyright (c) 2012 Google Inc.
+	 */
 	Service.SDPService = {};
 
 	Service.SDPService.removeCN = function(sdpLines, mLineIndex) {
