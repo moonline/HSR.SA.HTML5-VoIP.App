@@ -17,12 +17,15 @@
 	<script src="Configuration/lessConfig.js" ></script>
 
 	<!-- core -->
+	<script src="Core/Framework/Interface.js" ></script>
+	<script src="Core/Framework/Namespace.js" ></script>
+	<script src="Core/Framework/View.js" ></script>
+
     <script src="Core/Lib/AdapterJS/Adapter.js" ></script>
     <script src="Core/Lib/JQuery/jQuery.2.0.3.js" ></script>
     <script src="Core/Lib/Handlebars/handlebars.js" ></script>
 	<script src="Core/Lib/less/less-1.5.0.min.js" ></script>
-
-	<script src="Core/Framework/Interface.js" ></script>
+	<script src="Core/Lib/Lib.js" ></script>
 
     <script src="Core/Service/ArrayService.js" ></script>
     <script src="Core/Service/Log.js" ></script>
@@ -63,50 +66,28 @@
 <body>
 	<div class="page">
 		<div class="content">
-			<ul class="userList">
-				<li>
-					<div class="userImage">
-						<span class="image" />
-					</div>
-					<div class="userInfo">
-						<span class="userName">
-							User1
-						</span>
-					</div>
-					<div class="operations">
-						<input type="button" class="button red" value="delete" />
-					</div>
-				</li>
-				<li>
-					<div class="userImage">
-						<span class="image" />
-					</div>
-					<div class="userInfo">
-						<span class="userName">
-							User2
-						</span>
-					</div>
-					<div class="operations">
-						<input type="button" class="button red" value="delete" />
-					</div>
-				</li>
-				<li>
-					<div class="userImage">
-						<span class="image" />
-					</div>
-					<div class="userInfo">
-						<span class="userName">
-							User3
-						</span>
-					</div>
-					<div class="operations">
-						<input type="button" class="button red" value="delete" />
-					</div>
-				</li>
+			<ul class="userList" id="userList" >
+				<script type="text/x-handlebars-template">
+					{{#each users}}
+
+					<li>
+						<div class="userImage">
+							<span class="image" />
+						</div>
+						<div class="userInfo">
+							<span class="userName">{{item.firstname}} {{lastname}} ({{username}})</span>
+						</div>
+						<div class="operations">
+							<input type="button" class="button red" value="delete" />
+						</div>
+					</li>
+
+					{{/each}}
+				</script>
 			</ul>
 		</div>
 		<footer class="operationPanel">
-			<input type="button" id="addUser" class="button green" value="Add user account" />
+			<input type="button" id="addUser" class="button green" value="Add user account" data-bind="click: controller.addUser" />
 		</footer>
 	</div>
 </body>

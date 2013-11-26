@@ -1,13 +1,45 @@
 (function () {
 	'use strict';
 
-	var Controller = App.Controller;
-	var Domain = App.Model.Domain;
-	var Configuration = App.Configuration;
+	var using = App.Core.Framework.namespace;
+	var Controller = using('App.Controller');
+	var Domain = using('App.Model.Domain');
+	var Configuration = using('App.Configuration');
+	var Lib = using('App.Core.Lib');
+	var Framework = using('App.Core.Framework');
+
 
 	Controller.AccountController = function() {
+		var self = this;
 		this.accountManager = new Domain.AccountManager();
 		this.accountManager.load();
+
+		this.view = new Framework.View(document.getElementById('userList'),{
+			users: function() { return this.accountManager.getUsers(); }.bind(this)
+		});
+		this.view.render();
+
+		document.getElementById('addUser').onclick = function() {
+			this.addUser();
+		}.bind(this);
+	};
+
+	Controller.AccountController.prototype.addUser = function() {
+		var user = new Domain.User(
+			prompt('Please insert your username'),
+			prompt('Please insert a password (empty for none)'),
+			prompt('Please insert your firstname'),
+			prompt('Please insert your lastname'),
+			null,
+			null
+		);
+		while(this.accountManager.findByUsername(user.username) !== null) {
+			user.username = prompt('username is already used. Please take an other');
+		}
+		if(user.username) {
+			this.accountManager.add(user);
+		}
+		this.view.render();
 	};
 
 	Controller.AccountController.prototype.addDummyUser = function() {
@@ -41,21 +73,6 @@
 		Configuration.user = this.accountManager.findByUsername(username);
 	};
 
-	Controller.AccountController.prototype.addUser = function() {
-		var user = new Domain.User(
-			prompt('Please insert your username'),
-			prompt('Please insert a password (empty for none)'),
-			prompt('Please insert your firstname'),
-			prompt('Please insert your lastname'),
-			null,
-			null
-		);
-		while(this.accountManager.findByUsername(user.username) !== null) {
-			user.username = prompt('username is already used. Please take an other');
-		}
-		if(user.username) {
-			this.accountManager.add(user);
-		}
-	};
-
 })();
+
+

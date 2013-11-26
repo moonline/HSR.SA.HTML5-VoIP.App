@@ -1,12 +1,14 @@
 'use strict';
 
 (function() {
-	var Controller = App.Controller;
-	var Configuration = App.Configuration;
+	var using = App.Core.Framework.namespace;
+	var Controller = using('App.Controller');
 
 
 	window.onload = function() {
-
+		var accountController = new Controller.AccountController();
+		accountController.addDummyUser();
+		//accountController.selectUser();
 	};
 
 })();
