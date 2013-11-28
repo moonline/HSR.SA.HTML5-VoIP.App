@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html data-ng-app="app">
 <head>
     <title>JS VoIP App</title>
     <meta charset="utf-8" />
@@ -19,11 +19,9 @@
 	<!-- core -->
 	<script src="Core/Framework/Interface.js" ></script>
 	<script src="Core/Framework/Namespace.js" ></script>
-	<script src="Core/Framework/View.js" ></script>
 
     <script src="Core/Lib/AdapterJS/Adapter.js" ></script>
-    <script src="Core/Lib/JQuery/jQuery.2.0.3.js" ></script>
-    <script src="Core/Lib/Handlebars/handlebars.js" ></script>
+    <sc ript src="Core/Lib/JQuery/jQuery.2.0.3.js" ></script>
 	<script src="Core/Lib/less/less-1.5.0.min.js" ></script>
 	<script src="Core/Lib/Lib.js" ></script>
 
@@ -61,34 +59,26 @@
 	<script src="Application/AccountController.js" ></script>
 
 	<!-- run app -->
+    <script src="Core/Lib/AngularJS/angular.js" ></script>
 	<script src="initialize.js" ></script>
 </head>
 <body>
 	<div class="page" id="accountView">
 		<div class="content">
-			<ul class="userList" id="userList" >
-				<script type="text/x-handlebars-template">
-					{{#each users}}
-
-					<li>
-						<div class="userImage">
-							{{#if photo}}
-								<span class="image" style="background-image: url(&quot;data:image/png;base64,{{photo}}&quot;);"></span>
-							{{else}}
-								<span class="image" style="background-image: url(&quot;Resources/Img/person.png&quot;);"></span>
-							{{/if}}
-						</div>
-						<div class="userInfo">
-							<span class="username">{{username}}</span>
-							<span class="name">{{firstname}} {{lastname}}</span>
-						</div>
-						<div class="operations">
-							<button class="button red" data-username="{{username}}"><span class="icon-batch">&#xf155;</span> Delete</button>
-						</div>
-					</li>
-
-					{{/each}}
-				</script>
+			<ul class="userList" id="userList" data-ng-controller="AM">
+				<li data-ng-repeat="user in accountManager.users">
+					<div class="userImage">
+						<span class="image" data-ng-if="user.photo" style="background-image: url(&quot;data:image/png;base64,{{user.photo}}&quot;);"></span>
+						<span class="image" data-ng-if="!user.photo" style="background-image: url(&quot;Resources/Img/person.png&quot;);"></span>
+					</div>
+					<div class="userInfo">
+						<span class="username">{{user.username}}</span>
+						<span class="name">{{user.firstname}} {{user.lastname}}</span>
+					</div>
+					<div class="operations">
+						<button class="button red" data-username="{{user.username}}"><span class="icon-batch">&#xf155;</span> Delete</button>
+					</div>
+				</li>
 			</ul>
 		</div>
 		<footer class="operationPanel">
