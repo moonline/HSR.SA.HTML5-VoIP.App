@@ -1,4 +1,4 @@
-App.Configuration = {
+define({
 	"user":null, // this setting ist set by the accountManager
 
 	"stunService": "", // not used allready
@@ -120,4 +120,4 @@ App.Configuration = {
 			"mapTo": ["website"]
 		}
 	]
-};
+});

@@ -8,15 +8,22 @@
 	<link href="Resources/Styles/browserReset.css" 	type="text/css" rel="stylesheet" />
 	<link href="Resources/Styles/styles.less" type="text/css" rel="stylesheet/less"/>
 
-	<!-- scripts -->
-    <script src="Namespaces.js" ></script>
+	<script src="Core/Lib/less/less.min.js" ></script>
 
+	<!-- scripts -->
+	<script src="Core/Lib/RequireJS/require.js" data-main="initialize.js"></script>
+	<script src="Configuration/requireJSconfig.js"></script>
+
+
+	<!--<script src="Configuration/lessConfig.js" ></script>-->
+
+    <!--<script src="Namespaces.js" ></script>-->
 
 	<!-- configuration -->
-	<script src="../Configuration/appConfiguration.js" ></script>
-	<script src="Configuration/lessConfig.js" ></script>
+	<!--<script src="../Configuration/appConfiguration.js" ></script>
+	-->
 
-	<!-- core -->
+	<!-- core - ->
 	<script src="Core/Framework/Interface.js" ></script>
 	<script src="Core/Framework/Namespace.js" ></script>
 	<script src="Core/Framework/View.js" ></script>
@@ -33,7 +40,7 @@
 	<script src="Core/Service/StringService.js" ></script>
 	<script src="Core/Service/SdpService.js" ></script>
 
-	<!-- model -->
+	<!-- model - ->
 	<script src="Model/Domain/User.js" ></script>
 	<script src="Model/Domain/Account.js" ></script>
 	<script src="Model/Domain/AccountManager.js" ></script>
@@ -55,13 +62,13 @@
 
 	<script src="Model/Interfaces/AddressbookInterface.js" ></script>
 
-	<!-- controller -->
+	<!-- controller - ->
 	<script src="Application/PhoneController.js" ></script>
 	<script src="Application/AddressbookController.js" ></script>
 	<script src="Application/AccountController.js" ></script>
 
-	<!-- run app -->
-	<script src="initialize.js" ></script>
+	<!-- run app - ->
+	<script src="initialize.js" ></script>-->
 </head>
 <body>
 	<div class="page" id="accountView">

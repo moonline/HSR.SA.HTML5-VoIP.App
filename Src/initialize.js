@@ -1,14 +1,13 @@
 'use strict';
 
-(function() {
-	var using = App.Core.Framework.namespace;
-	var Controller = using('App.Controller');
 
+define(["Configuration", "Application/AccountController", "jQuery"],
+	function(Configuration, AccountController, jQuery) {
 
-	window.onload = function() {
-		var accountController = new Controller.AccountController();
+	jQuery('#accountView').ready(function(){
+		var accountController = new AccountController();
 		accountController.addDummyUser();
 		//accountController.selectUser();
-	};
+	});
 
-})();
+});

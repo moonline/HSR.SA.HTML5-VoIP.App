@@ -1,14 +1,14 @@
-(function () {
+define(function() {
 	'use strict';
 
-	var Domain = App.Model.Domain;
 	var Storage = window.localStorage;
 
-	Domain.AccountManager = function() {
+
+	var AccountManager = function() {
 		this.users = new Object();
 	};
 
-	Domain.AccountManager.prototype.load = function() {
+	AccountManager.prototype.load = function() {
 		var users = JSON.parse(Storage.getItem('accounts'));
 		if(users) {
 			this.users = users;
@@ -21,7 +21,7 @@
 	 * @param user
 	 * @returns {boolean} true if adding was successful
 	 */
-	Domain.AccountManager.prototype.add = function(user) {
+	AccountManager.prototype.add = function(user) {
 		if(this.findByUsername(user.username) === null) {
 			this.users[user.username] = user;
 			this.store();
@@ -31,7 +31,7 @@
 		}
 	};
 
-	Domain.AccountManager.prototype.store = function() {
+	AccountManager.prototype.store = function() {
 		Storage.setItem('accounts',JSON.stringify(this.users));
 	};
 
@@ -41,7 +41,7 @@
 	 * @param username
 	 * @returns {null}
 	 */
-	Domain.AccountManager.prototype.findByUsername = function(username) {
+	AccountManager.prototype.findByUsername = function(username) {
 		if(this.users[username]) {
 			return this.users[username];
 		} else {
@@ -49,7 +49,7 @@
 		}
 	};
 
-	Domain.AccountManager.prototype.getUsers = function() {
+	AccountManager.prototype.getUsers = function() {
 		var users = new Array();
 		Object.keys(this.users).forEach(function(key){
 			users.push(this.users[key]);
@@ -57,4 +57,5 @@
 		return users;
 	};
 
-})();
+	return AccountManager;
+});

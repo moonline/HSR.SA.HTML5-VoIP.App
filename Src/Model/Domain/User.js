@@ -1,9 +1,7 @@
-(function () {
+define(function() {
 	'use strict';
 
-	var Domain = App.Model.Domain;
-
-	Domain.User = function(username, password, firstname, lastname, email, photo) {
+	var User = function(username, password, firstname, lastname, email, photo) {
 		this.username = username;
 		this.password = password;
 		this.firstname = firstname;
@@ -13,8 +11,9 @@
 		this.accounts = {};
 	};
 
-	Domain.User.prototype.setAccount = function(account) {
+	User.prototype.setAccount = function(account) {
 		this.accounts[account.type] = account;
 	};
 
-})();
+	return User;
+});

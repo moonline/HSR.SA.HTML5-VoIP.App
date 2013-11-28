@@ -1,11 +1,10 @@
-(function () {
+define(function() {
 	'use strict';
 
-	var Domain = App.Model.Domain;
-
-	Domain.Account = function(type, fields) {
+	var Account = function(type, fields) {
 		this.type = type;
 		this.fields = fields;
 	};
 
-})();
+	return Account;
+});
