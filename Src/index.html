@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html data-ng-app>
 <head>
     <title>JS VoIP App</title>
     <meta charset="utf-8" />
@@ -12,35 +12,27 @@
 	<script src="Core/Lib/RequireJS/require.js" data-main="initialize.js"></script>
 </head>
 <body>
-	<div class="page" id="accountView">
+	<div class="page" id="accountView" data-ng-controller="App.Controller.AccountController as accountController">
 		<div class="content">
-			<ul class="userList" id="userList" >
-				<script type="text/x-handlebars-template">
-					{{#each users}}
-
-					<li>
-						<div class="userImage">
-							{{#if photo}}
-								<span class="image" style="background-image: url(&quot;data:image/png;base64,{{photo}}&quot;);"></span>
-							{{else}}
-								<span class="image" style="background-image: url(&quot;Resources/Img/person.png&quot;);"></span>
-							{{/if}}
-						</div>
-						<div class="userInfo">
-							<span class="username">{{username}}</span>
-							<span class="name">{{firstname}} {{lastname}}</span>
-						</div>
-						<div class="operations">
-							<button class="button red" data-username="{{username}}"><span class="icon-batch">&#xf155;</span> Delete</button>
-						</div>
-					</li>
-
-					{{/each}}
-				</script>
+			<ul class="userList" id="userList">
+				<li data-ng-repeat="user in accountController.accountManager.users">
+					<div class="userImage">
+						<span class="image" data-ng-if="user.photo" style="background-image: url(&quot;data:image/png;base64,{{user.photo}}&quot;);"></span>
+						<span class="image" data-ng-if="!user.photo" style="background-image: url(&quot;Resources/Img/person.png&quot;);"></span>
+					</div>
+					<div class="userInfo">
+						<span class="username">{{user.username}}</span>
+						<span class="name">{{user.firstname}} {{user.lastname}}</span>
+					</div>
+					<div class="operations">
+						<button class="button red" data-ng-click="accountController.deleteUser(user)"><span class="icon-batch">&#xf155;</span> Delete</button>
+					</div>
+				</li>
 			</ul>
 		</div>
 		<footer class="operationPanel">
-			<input type="button" id="addUser" class="button green" value="Add user account" data-bind="click: controller.addUser" />
+			<button class="button green" data-ng-click="accountController.addUser()">Add user account</button>
+			<button class="button green" data-ng-click="accountController.resetToDummies()">Reset users to dummy users</button>
 		</footer>
 	</div>
 </body>

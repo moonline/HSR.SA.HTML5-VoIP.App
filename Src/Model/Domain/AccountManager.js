@@ -5,7 +5,7 @@ define(function() {
 
 
 	var AccountManager = function() {
-		this.users = new Object();
+		this.users = {};
 	};
 
 	AccountManager.prototype.load = function() {
@@ -29,6 +29,16 @@ define(function() {
 		} else {
 			return false;
 		}
+	};
+	
+	/**
+	 * remove user
+	 * 
+	 * @param user
+	 */
+	AccountManager.prototype.remove = function(user) {
+		delete this.users[user.username];
+		this.store();
 	};
 
 	AccountManager.prototype.store = function() {
