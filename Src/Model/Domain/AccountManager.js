@@ -5,7 +5,7 @@
 	var Storage = window.localStorage;
 
 	Domain.AccountManager = function() {
-		this.users = new Object();
+		this.users = {};
 	};
 
 	Domain.AccountManager.prototype.load = function() {
@@ -29,6 +29,16 @@
 		} else {
 			return false;
 		}
+	};
+	
+	/**
+	 * remove user
+	 * 
+	 * @param user
+	 */
+	Domain.AccountManager.prototype.remove = function(user) {
+		delete this.users[user.username];
+		this.store();
 	};
 
 	Domain.AccountManager.prototype.store = function() {
