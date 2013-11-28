@@ -64,7 +64,7 @@
 	<script src="initialize.js" ></script>
 </head>
 <body>
-	<div class="page">
+	<div class="page" id="accountView">
 		<div class="content">
 			<ul class="userList" id="userList" >
 				<script type="text/x-handlebars-template">
@@ -72,13 +72,18 @@
 
 					<li>
 						<div class="userImage">
-							<span class="image" />
+							{{#if photo}}
+								<span class="image" style="background-image: url(&quot;data:image/png;base64,{{photo}}&quot;);"></span>
+							{{else}}
+								<span class="image" style="background-image: url(&quot;Resources/Img/person.png&quot;);"></span>
+							{{/if}}
 						</div>
 						<div class="userInfo">
-							<span class="userName">{{item.firstname}} {{lastname}} ({{username}})</span>
+							<span class="username">{{username}}</span>
+							<span class="name">{{firstname}} {{lastname}}</span>
 						</div>
 						<div class="operations">
-							<input type="button" class="button red" value="delete" />
+							<button class="button red" data-username="{{username}}"><span class="icon-batch">&#xf155;</span> Delete</button>
 						</div>
 					</li>
 

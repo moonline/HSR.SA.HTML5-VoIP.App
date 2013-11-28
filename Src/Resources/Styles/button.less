@@ -1,9 +1,11 @@
-input[type="button"], .button {
+input[type="button"], .button, button {
 	border: 0.1em solid white; border-radius: 0.5em;
 	.background-linear-gradient(white,silver);
 	color: black; font-weight: bold;
 	padding: (@elementPadding / 2) 1em;
 	.box-shadow(0 0 0.5em gray);
+
+	span { display: inline; }
 
 	&:hover {
 		color: white;
@@ -40,13 +42,13 @@ input[type="button"], .button {
 	}
 }
 
-input[type="button"][disable="disable"], .button[disable="disable"] {
+input[type="button"][disable="disable"], .button[disable="disable"], button[disable="disable"] {
 	background: white; color: gray;
 	.background-linear-gradient(white,silver);
 	border-color: gray; .box-shadow(none);
 }
 
-input[type="button"].error, .button.error {
+input[type="button"].error, .button.error, button.error {
 	background: red;
 	.background-linear-gradient(red,maroon);
 }

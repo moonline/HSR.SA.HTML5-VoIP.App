@@ -58,6 +58,8 @@
 		var hilary = new Domain.User('hilary', '', 'Hilary', 'Swank', null, null);
 		hilary.setAccount(new Domain.Account('ChannelXHR',{ "nick": 'hilary' }));
 		this.accountManager.add(hilary);
+
+		this.view.render();
 	};
 
 	Controller.AccountController.prototype.selectUser = function() {

@@ -1,0 +1,35 @@
+#accountView .content {
+	ul.userList {
+		li {
+			.flex; .flex-flow(row); .justify-content(space-between); .align-items(center); .align-content(stretch);
+			padding: @elementPadding;
+			.background-linear-gradient(white, gainsboro);
+			border-bottom: 0.05em solid silver;
+
+			&>div { display: block; }
+
+			.userImage {
+				width: 3.5em;
+
+				.image {
+					height: 3em; width: 3em; display: inline-block; vertical-align: middle;
+					background-size:cover; background-position: top center; background-repeat: no-repeat;
+				}
+			}
+			.userInfo {
+				width: 100%; padding: 0.5em; margin-left: 1em;
+				text-align: left;
+
+				span {
+					&.username { font-weight: bold; }
+
+					display: block; padding: 0.1em 0;
+				}
+			}
+			.operations > * {
+				height: 100%;
+			}
+		}
+	}
+
+}
