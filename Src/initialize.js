@@ -11,17 +11,17 @@
 		shim: {
 			Handlebars: {
 				exports: "Handlebars"
+			},
+			jQuery: {
+				exports: "jQuery"
 			}
-		},
-		jQuery: {
-			exports: "jQuery"
 		}
 	});
 
 	define(["Configuration", "Application/AccountController", "jQuery"],
 		function(Configuration, AccountController, jQuery) {
 
-			require("Core/Service/StringService");
+
 
 			jQuery('#accountView').ready(function(){
 				var accountController = new AccountController();
