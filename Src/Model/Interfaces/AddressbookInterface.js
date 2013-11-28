@@ -1,13 +1,11 @@
-(function() {
+define(["Core/Framework/Interface"],function(Interface) {
 	'use strict';
 
-	var Interfaces = App.Model.Interfaces;
-	var Framework = App.Core.Framework;
 
-
-	Interfaces.AddressbookInterface = new Framework.Interface(
+	var AddressbookInterface = new Interface(
 		'AddressbookInterface',
 		['getEntries', 'count', 'load']
 	);
 
-})();
+	return AddressbookInterface;
+});

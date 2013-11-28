@@ -1,11 +1,9 @@
-(function () {
+define(["QUnit", "Core/Framework/Interface"], function(QUnit, Interface) {
 	'use strict';
 
-	var Framework = App.Core.Framework;
-
-
-	test("Interface test", function () {
-		var carInterface = new Framework.Interface('carInterface', ['drive', 'enterPerson', 'leavePerson']);
+	QUnit.module('Framework Utilities Tests');
+	QUnit.test("Interface test", function () {
+		var carInterface = new Interface('carInterface', ['drive', 'enterPerson', 'leavePerson']);
 		var car = {
 			implementInterface: 'carInterface',
 			drive: function () {
@@ -13,7 +11,7 @@
 			enterPerson: function () {
 			}
 		};
-		raises(function () {
+		QUnit.raises(function () {
 			carInterface.assertImplementedBy(car);
 		}, 'Error', "Interface not implemented correctly");
 
@@ -26,7 +24,7 @@
 			leavePerson: function () {
 			}
 		};
-		strictEqual(carInterface.assertImplementedBy(vehicle), true, "Interface implemented correctly");
+		QUnit.strictEqual(carInterface.assertImplementedBy(vehicle), true, "Interface implemented correctly");
 	});
 
-})();
+});

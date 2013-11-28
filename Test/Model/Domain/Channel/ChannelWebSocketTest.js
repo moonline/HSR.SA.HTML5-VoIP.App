@@ -1,13 +1,10 @@
-(function () {
+define(["QUnit", "Model/Domain/Channel/ChannelWebSocket" ], function(QUnit, ChannelWebSocket) {
 	'use strict';
 
-	var Domain = App.Model.Domain;
-	var Channel = Domain.Channel;
 
-
-	module("Channel Tests");
-	asyncTest("ChannelWebSocket echo test", function () {
-		var channel = new Channel.ChannelWebSocket();
+	QUnit.module("Channel Tests");
+	QUnit.asyncTest("ChannelWebSocket echo test", function () {
+		var channel = new ChannelWebSocket();
 		channel.configuration.server = "ws://echo.websocket.org";
 
 		var message = "Websocket message echo test";
@@ -17,8 +14,8 @@
 		var listener = {
 			notify: function (receiveMessage) {
 				console.log(receiveMessage);
-				strictEqual(message, receiveMessage, "message and receiveMessage comparison");
-				start();
+				QUnit.strictEqual(message, receiveMessage, "message and receiveMessage comparison");
+				QUnit.start();
 			}
 		};
 
@@ -27,4 +24,4 @@
 		setTimeout(function() { channel.stop(); }, 1000);
 	});
 
-})();
+});

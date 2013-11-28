@@ -1,20 +1,18 @@
-(function () {
-	'use strict';
-
-	var Domain = App.Model.Domain;
+define(["QUnit","Model/Domain/EventManager"], function(QUnit, EventManager) {
+		'use strict';
 
 
-	module("EventManager Tests");
-	test("EventManager Test", function () {
-		expect(1);
+	QUnit.module("EventManager Tests");
+	QUnit.test("EventManager Test", function () {
+		QUnit.expect(1);
 
-		Domain.EventManager.addListener({
+		EventManager.addListener({
 			notify: function (event, sender) {
-				ok(event, "check notification");
+				QUnit.ok(event, "check notification");
 			}
 		}, 'call');
-		Domain.EventManager.notify('call', { message: 'nothing'}, this);
-		Domain.EventManager.notify('setting', { message: 'nothing'}, this);
+		EventManager.notify('call', { message: 'nothing'}, this);
+		EventManager.notify('setting', { message: 'nothing'}, this);
 	});
 
-})();
+});

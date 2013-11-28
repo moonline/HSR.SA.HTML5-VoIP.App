@@ -1,8 +1,5 @@
-(function () {
+define(function () {
 	'use strict';
-
-	var Domain = App.Model.Domain;
-
 
 	/**
 	 * EventManager
@@ -43,6 +40,9 @@
 	/**
 	 * @type: Singleton
 	 */
-	Domain.EventManager = new EventManager();
+	if(!window.appEventManager) {
+		window.appEventManager = new EventManager();
+	}
 
-})();
+	return window.appEventManager;
+});

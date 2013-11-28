@@ -1,9 +1,7 @@
-(function () {
+define(function () {
 	'use strict';
 
-	// Todo: is this class used jet? -> otherwise: remove
-	var Domain = App.Model.Domain;
-
+	// Todo: is this class used jet outside tests? -> otherwise: remove
 
 	/**
 	 * Addressbook
@@ -11,24 +9,25 @@
 	 * @param entries: list of AddressbookEntry
 	 * @constructor
 	 */
-	Domain.Addressbook = function (entries) {
+	var Addressbook = function (entries) {
 		this.implementInterface = 'AddressbookInterface';
 		this.entries = entries;
 	};
 
 
-	Domain.Addressbook.prototype.load = function () {
+	Addressbook.prototype.load = function () {
 		return this.entries;
 	};
 
-	Domain.Addressbook.prototype.getEntries = function () {
+	Addressbook.prototype.getEntries = function () {
 		return this.entries;
 	};
 
-	Domain.Addressbook.prototype.count = function () {
+	Addressbook.prototype.count = function () {
 		return this.entries.length;
 	};
 
-	Domain.Addressbook.dataSourceTypes = { file: 0, directory: 1, online: 2 };
+	Addressbook.dataSourceTypes = { file: 0, directory: 1, online: 2 };
 
-})();
+	return Addressbook;
+});

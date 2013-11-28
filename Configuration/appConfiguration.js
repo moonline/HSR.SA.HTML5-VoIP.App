@@ -38,20 +38,20 @@ define({
 		"file": [
 			{
 				"name": "Json Import",
-				"type": 'AddressbookJson',
+				"type": 'Model/Domain/Addressbook/AddressbookJson',
 				"fileEnding": ["json", "js","jsn"]
 			}
 		],
 		"directory": [
 			{
 				"name": "VCard Import",
-				"type": 'AddressbookVcard'
+				"type": 'Model/Domain/Addressbook/AddressbookVcard'
 			}
 		],
 		"online": [
 			{
 				"name": "Remote Json Contactbook",
-				"type": 'AddressbookRemoteJson'
+				"type": 'Model/Domain/Addressbook/AddressbookRemoteJson'
 			}
 		]
 	},

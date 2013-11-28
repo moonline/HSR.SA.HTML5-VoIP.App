@@ -1,16 +1,13 @@
-(function () {
+define(["Model/Domain/Addressbook", "Model/Domain/AddressbookEntry"], function(Addressbook, AddressbookEntry) {
 	'use strict';
 
-	var Domain = App.Model.Domain;
-	var Addressbook = Domain.Addressbook;
 
-
-	Addressbook.AddressbookJson = function () {
+	var AddressbookJson = function () {
 		this.implementInterface = 'AddressbookInterface';
-		this.type = 'AddressbookJson';
+		this.type = 'Model/Domain/Addressbook/AddressbookJson';
 		this.data = new Array();
 
-		this.dataSourceTypes = Domain.Addressbook.dataSourceTypes.file;
+		this.dataSourceTypes = Addressbook.dataSourceTypes.file;
 	};
 
 
@@ -19,7 +16,7 @@
 	 *
 	 * @param jsonData: a string with a json struct or a javascript object
 	 */
-	Addressbook.AddressbookJson.prototype.load = function (jsonData) {
+	AddressbookJson.prototype.load = function (jsonData) {
 		var inputData;
 		if (typeof jsonData === 'object') {
 			inputData = jsonData;
@@ -29,7 +26,7 @@
 
 		inputData.forEach(function (dataRow, i) {
 			if (dataRow.hasOwnProperty('name')) {
-				var entry = new Domain.AddressbookEntry();
+				var entry = new AddressbookEntry();
 				Object.keys(dataRow).forEach(function (key) {
 					entry[key] = dataRow[key];
 				});
@@ -38,12 +35,13 @@
 		}, this);
 	};
 
-	Addressbook.AddressbookJson.prototype.getEntries = function () {
+	AddressbookJson.prototype.getEntries = function () {
 		return this.data;
 	};
 
-	Addressbook.AddressbookJson.prototype.count = function () {
+	AddressbookJson.prototype.count = function () {
 		return this.data.length;
 	};
 
-})();
+	return AddressbookJson;
+});

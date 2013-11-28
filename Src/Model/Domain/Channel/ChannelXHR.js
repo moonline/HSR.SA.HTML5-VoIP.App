@@ -1,9 +1,5 @@
-(function () {
+define(["Configuration", "Core/Service/Log", "Model/Domain/Channel", "jQuery"], function(Configuration, Log, Channel, jQuery) {
 	'use strict';
-
-	var Domain = App.Model.Domain;
-	var Service = App.Core.Service;
-	var Channel = Domain.Channel;
 
 
 	/**
@@ -12,20 +8,20 @@
 	 * @param webServer: e.q. http://colvarim.ch/service/messageQueue/messageQueue.php
 	 * @constructor
 	 */
-	Channel.ChannelXHR = function (webServer) {
-		// Todo fix problem with 'var Configuration = App.Configuration;
-		this.nick = App.Configuration.user.accounts['ChannelXHR']['fields']['nick'];
+	var ChannelXHR = function (webServer) {
+		// Todo fix problem with 'var Configuration = Configuration;
+		this.nick = Configuration.user.accounts['ChannelXHR']['fields']['nick'];
 
 		this.listeners = [];
-		this.state = Domain.Channel.states.waiting;
-		this.type = Domain.Channel.types.callee;
+		this.state = Channel.states.waiting;
+		this.type = Channel.types.callee;
 		this.configuration = {
 			server: webServer
 		};
 	};
 
 
-	Channel.ChannelXHR.accountFields = [
+	ChannelXHR.accountFields = [
 		{
 			"name": "username",
 			"type": "text"
@@ -41,10 +37,10 @@
 	/**
 	 * receive
 	 */
-	Channel.ChannelXHR.prototype.receive = function (receiver) {
+	ChannelXHR.prototype.receive = function (receiver) {
 		var response = '';
 
-		$.ajax({ type: "GET",
+		jQuery.ajax({ type: "GET",
 			url: this.configuration.server + '?getMessage&receiverType=' + this.nick,
 			async: false,
 			success: function (text) {
@@ -57,10 +53,10 @@
 	/**
 	 * fetch message from server
 	 */
-	Channel.ChannelXHR.prototype.receiveMessage = function () {
+	ChannelXHR.prototype.receiveMessage = function () {
 		var response = this.receive();
 		if (response != "0") {
-			Service.Log.log(Service.Log.logTypes.Info, 'ChannelXHR', 'receive message: ' + response);
+			Log.log(Log.logTypes.Info, 'ChannelXHR', 'receive message: ' + response);
 			this.notify(response);
 		}
 	};
@@ -68,14 +64,14 @@
 	/**
 	 * call receiveMessage from time to time
 	 */
-	Channel.ChannelXHR.prototype.receiveLoop = function () {
-		if (this.state === Domain.Channel.states.connected || this.state === Domain.Channel.states.waiting) {
+	ChannelXHR.prototype.receiveLoop = function () {
+		if (this.state === Channel.states.connected || this.state === Channel.states.waiting) {
 			this.receiveMessage();
 			setTimeout(function () {
 				this.receiveLoop();
 			}.bind(this), 1000);
 		} else {
-			Service.Log.log(Service.Log.logTypes.Info, 'ChannelXHR', 'stop receiving loop');
+			Log.log(Log.logTypes.Info, 'ChannelXHR', 'stop receiving loop');
 		}
 	};
 
@@ -84,7 +80,7 @@
 	 *
 	 * @param message: the received message
 	 */
-	Channel.ChannelXHR.prototype.notify = function (message) {
+	ChannelXHR.prototype.notify = function (message) {
 		this.listeners.forEach(function (listener) {
 			if (typeof(listener.notify) === 'function') {
 				listener.notify(message);
@@ -95,7 +91,7 @@
 	/**
 	 * empty channel
 	 */
-	Channel.ChannelXHR.prototype.emptyChannel = function () {
+	ChannelXHR.prototype.emptyChannel = function () {
 		var channelEmpty = false;
 		while (!channelEmpty) {
 			var response = this.receive();
@@ -108,9 +104,9 @@
 	/**
 	 * open the channel connection
 	 */
-	Channel.ChannelXHR.prototype.start = function () {
-		this.state = Domain.Channel.states.connected;
-		Service.Log.log(Service.Log.logTypes.Info, 'ChannelXHR', 'start receiving loop');
+	ChannelXHR.prototype.start = function () {
+		this.state = Channel.states.connected;
+		Log.log(Log.logTypes.Info, 'ChannelXHR', 'start receiving loop');
 		this.emptyChannel();
 		this.receiveLoop();
 	};
@@ -118,8 +114,8 @@
 	/**
 	 * close the channel connection and remove all listeners
 	 */
-	Channel.ChannelXHR.prototype.stop = function () {
-		this.state = Domain.Channel.states.disconnected;
+	ChannelXHR.prototype.stop = function () {
+		this.state = Channel.states.disconnected;
 		this.listeners = [];
 	};
 
@@ -128,9 +124,9 @@
 	 *
 	 * @param message: a message like { "receiver": "frank", "message": "theMessage" }
 	 */
-	Channel.ChannelXHR.prototype.send = function (message) {
-		Service.Log.log(Service.Log.logTypes.Info, 'ChannelXHR', 'send message: ' + message.message + ' to ' + message.receiver);
-		$.post(this.configuration.server + "?setMessage&receiverType=" + message.receiver, { message: message.message });
+	ChannelXHR.prototype.send = function (message) {
+		Log.log(Log.logTypes.Info, 'ChannelXHR', 'send message: ' + message.message + ' to ' + message.receiver);
+		jQuery.post(this.configuration.server + "?setMessage&receiverType=" + message.receiver, { message: message.message });
 	};
 
 	/**
@@ -138,7 +134,7 @@
 	 *
 	 * @param listener: an object implementing a notify(message) method
 	 */
-	Channel.ChannelXHR.prototype.addReceiveListener = function (listener) {
+	ChannelXHR.prototype.addReceiveListener = function (listener) {
 		if (this.listeners.contains(listener) === false) {
 			this.listeners.push(listener);
 			return true;
@@ -152,11 +148,12 @@
 	 *
 	 * @param listener
 	 */
-	Channel.ChannelXHR.prototype.removeReceiveListener = function (listener) {
+	ChannelXHR.prototype.removeReceiveListener = function (listener) {
 		var position = this.listeners.indexOf(listener);
 		if (position !== -1) {
 			this.listeners[position] = null;
 		}
 	};
 
-})();
+	return ChannelXHR;
+});

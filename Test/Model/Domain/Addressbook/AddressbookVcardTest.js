@@ -1,5 +1,6 @@
-(function () {
+define(["QUnit", "Model/Domain/Addressbook/AddressbookVcard" ], function(QUnit, AddressbookVcard) {
 	'use strict';
+	
 
 	var entry1 = "BEGIN:VCARD\n\
 N:Swank;Hilary;;;\n\
@@ -51,31 +52,29 @@ END:VCARD\n\
 	";
 
 
-	var Addressbook = App.Model.Domain.Addressbook;
 
-
-	module("Addressbook Tests");
-	test("AddressbookVcard test", function () {
-		var addressbook = new Addressbook.AddressbookVcard();
+	QUnit.module("Addressbook Tests");
+	QUnit.test("AddressbookVcard test", function () {
+		var addressbook = new AddressbookVcard();
 
 		addressbook.addEntry(entry1);
 		addressbook.addEntry(entry2);
 		var entries = addressbook.getEntries();
 
-		strictEqual(entries[0].sip, '564895214@corephone.com', "sip field");
-		strictEqual(entries[0].firstname, 'Hilary', "firstName field");
-		strictEqual(entries[1].name, "Max Mustermann", "full name field");
-		strictEqual(entries[1].website, "http://de.wikipedia.org/", "url field ':' skip");
+		QUnit.strictEqual(entries[0].sip, '564895214@corephone.com', "sip field");
+		QUnit.strictEqual(entries[0].firstname, 'Hilary', "firstName field");
+		QUnit.strictEqual(entries[1].name, "Max Mustermann", "full name field");
+		QUnit.strictEqual(entries[1].website, "http://de.wikipedia.org/", "url field ':' skip");
 	});
 
-	test("AddressbookVcard complex structure test", function () {
-		var addressbook = new Addressbook.AddressbookVcard();
+	QUnit.test("AddressbookVcard complex structure test", function () {
+		var addressbook = new AddressbookVcard();
 
 		addressbook.addEntry(entry3);
 		addressbook.addEntry(entry4);
 		var entries = addressbook.getEntries();
 
-		strictEqual(JSON.stringify(entries[0]), JSON.stringify({
+		QUnit.strictEqual(JSON.stringify(entries[0]), JSON.stringify({
 			"version":"2.1",
 			"lastname":"Meyer",
 			"firstname":"Hans",
@@ -97,7 +96,7 @@ END:VCARD\n\
 			"birthdate":"1985-06-16"
 		}), "check complex vcf structure");
 
-		strictEqual(JSON.stringify(entries[1]), JSON.stringify({
+		QUnit.strictEqual(JSON.stringify(entries[1]), JSON.stringify({
 			"version":"2.1",
 			"lastname":"Müller",
 			"firstname":"Franz",
@@ -122,16 +121,16 @@ END:VCARD\n\
 		}), "check more complex vcf structure");
 	});
 
-	test("AddressbookVcard load test", function () {
-		var addressbook = new Addressbook.AddressbookVcard();
+	QUnit.test("AddressbookVcard load test", function () {
+		var addressbook = new AddressbookVcard();
 
 		addressbook.load([entry1, entry2]);
 		var entries = addressbook.getEntries();
 
-		strictEqual(entries[0].sip, '564895214@corephone.com', "sip field");
-		strictEqual(entries[0].firstname, 'Hilary', "firstName field");
-		strictEqual(entries[1].name, "Max Mustermann", "full name field");
-		strictEqual(entries[1].website, "http://de.wikipedia.org/", "url field ':' skip");
+		QUnit.strictEqual(entries[0].sip, '564895214@corephone.com', "sip field");
+		QUnit.strictEqual(entries[0].firstname, 'Hilary', "firstName field");
+		QUnit.strictEqual(entries[1].name, "Max Mustermann", "full name field");
+		QUnit.strictEqual(entries[1].website, "http://de.wikipedia.org/", "url field ':' skip");
 	});
 
-})();
+});

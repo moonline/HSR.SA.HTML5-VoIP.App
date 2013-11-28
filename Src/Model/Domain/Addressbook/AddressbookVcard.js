@@ -1,16 +1,12 @@
-(function () {
+define(["Configuration", "Model/Domain/Addressbook", "Model/Domain/AddressbookEntry"], function(Configuration, Addressbook, AddressbookEntry) {
 	'use strict';
 
-	var Domain = App.Model.Domain;
-	var Addressbook = Domain.Addressbook;
-	var Configuration = App.Configuration;
 
-
-	Addressbook.AddressbookVcard = function () {
+	var AddressbookVcard = function () {
 		this.implementInterface = 'AddressbookInterface';
-		this.type = 'AddressbookVcard';
+		this.type = 'Model/Domain/Addressbook/AddressbookVcard';
 		this.data = new Array();
-		this.dataSourceTypes = Domain.Addressbook.dataSourceTypes.file;
+		this.dataSourceTypes = Addressbook.dataSourceTypes.file;
 
 		// TODO: move to config
 		this.fieldMapping = (Configuration.contactbookVcardConfig) ? Configuration.contactbookVcardConfig : [
@@ -82,7 +78,7 @@
 
 
 	// Todo: write a test for load
-	Addressbook.AddressbookVcard.prototype.load = function (vcards) {
+	AddressbookVcard.prototype.load = function (vcards) {
 		vcards.forEach(function(vcard, index) {
 			this.addEntry(vcard);
 		},this);
@@ -93,9 +89,9 @@
 	 * add a vcard entry
 	 * @param string:vcardContent
 	 */
-	Addressbook.AddressbookVcard.prototype.addEntry = function (vcardContent) {
+	AddressbookVcard.prototype.addEntry = function (vcardContent) {
 		var mapping = this.fieldMapping;
-		var entry = new Domain.AddressbookEntry();
+		var entry = new AddressbookEntry();
 
 		var lines = vcardContent.split('\n');
 		lines.forEach(function (line, index) {
@@ -183,12 +179,13 @@
 		}
 	};
 
-	Addressbook.AddressbookVcard.prototype.getEntries = function () {
+	AddressbookVcard.prototype.getEntries = function () {
 		return this.data;
 	};
 
-	Addressbook.AddressbookVcard.prototype.count = function () {
+	AddressbookVcard.prototype.count = function () {
 		return this.data.length;
 	};
 
-})();
+	return AddressbookVcard;
+});

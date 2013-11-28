@@ -2,56 +2,10 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>QUnit TestSuite</title>
+        <title>JS VoIP App TestSuite</title>
         <meta charset="utf-8" />
 
-        <script src="../Src/Namespaces.js" ></script>
-
-		<script src="../Src/Core/Lib/JQuery/jQuery.2.0.3.js"></script>
-
-		<script src="../Src/Core/Service/ArrayService.js"></script>
-		<script src="../Src/Core/Service/Log.js"></script>
-		<script src="../Src/Core/Service/StringService.js"></script>
-		<script src="../Src/Core/Service/SdpService.js"></script>
-		<script src="../Src/Core/Framework/Interface.js"></script>
-		<script src="../Src/Core/Framework/Namespace.js"></script>
-
-        <script src="../Src/Model/Interfaces/ChannelInterface.js" ></script>
-		<script src="../Src/Model/Interfaces/AddressbookInterface.js" ></script>
-
-		<script src="../Src/Model/Domain/User.js" ></script>
-		<script src="../Src/Model/Domain/Account.js" ></script>
-		<script src="../Src/Model/Domain/AccountManager.js" ></script>
-
-		<script src="../Src/Model/Domain/Channel.js" ></script>
-        <script src="../Src/Model/Domain/Channel/ChannelWebSocket.js" ></script>
-        <script src="../Src/Model/Domain/Channel/ChannelXHR.js" ></script>
-
-		<script src="../Src/Model/Domain/Addressbook.js" ></script>
-		<script src="../Src/Model/Domain/AddressbookManager.js" ></script>
-		<script src="../Src/Model/Domain/AddressbookEntry.js" ></script>
-		<script src="../Src/Model/Domain/Addressbook/AddressbookVcard.js" ></script>
-		<script src="../Src/Model/Domain/Addressbook/AddressbookJson.js" ></script>
-
-		<script src="../Src/Model/Domain/EventManager.js" ></script>
-
-		<!-- test environment -->
-        <script src="Namespaces.js" ></script>
-        <script src="Lib/QUnit/qunit-1.12.0.js"></script>
-
-        <!-- Tests -->
-        <script src="Model/Domain/Channel/ChannelWebSocketTest.js"></script>
-        <script src="Model/Domain/Channel/ChannelXHRTest.js"></script>
-		<script src="Model/Domain/Addressbook/AddressbookVcardTest.js"></script>
-		<script src="Model/Domain/AddressbookManagerTest.js"></script>
-		<script src="Model/Domain/EventManagerTest.js"></script>
-		<script src="Model/Domain/AccountManagerTest.js"></script>
-
-        <script src="Core/Framework/InterfaceTest.js"></script>
-		<script src="Core/Framework/NamespaceTest.js"></script>
-		<script src="Core/Service/StringServiceTest.js"></script>
-		<script src="Core/Service/ArrayServiceTest.js"></script>
-		<script src="Core/Service/LogTest.js"></script>
+		<script src="../Src/Core/Lib/RequireJS/require.js" data-main="initializeTests.js"></script>
 
         <link rel="stylesheet" href="Lib/QUnit/qunit-1.12.0.css">
     </head>

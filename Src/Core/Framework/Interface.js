@@ -1,10 +1,7 @@
-(function() {
+define(function() {
 	'use strict';
 
-	var Framework = App.Core.Framework;
-
-
-	Framework.Interface = function(name, methods) {
+	var Interface = function(name, methods) {
 		this.name = name;
 		this.methods = methods;
 	};
@@ -14,7 +11,7 @@
 	 *
 	 * @param object: the object which implements the interface
 	 */
-	Framework.Interface.prototype.assertImplementedBy= function(object) {
+	Interface.prototype.assertImplementedBy= function(object) {
 		var implementsInterface = true;
 		if(typeof(object.implementInterface) === 'undefined' || object.implementInterface !== this.name) {
 			implementsInterface = false;
@@ -30,4 +27,5 @@
 
 	};
 
-})();
+	return Interface;
+});

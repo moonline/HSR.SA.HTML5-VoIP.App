@@ -1,11 +1,14 @@
 require.config({
 	baseUrl: "../Src",
 	paths: {
-		"Test": "../Test"
+		"Configuration": "../Configuration/appConfiguration",
+		"Test": "../Test",
+		"QUnit": "../Test/Lib/QUnit/qunit-1.12.0",
+		"jQuery": "Core/Lib/JQuery/jQuery.2.0.3"
 	},
 	shim: {
-		Handlebars: {
-			exports: "Handlebars"
+		QUnit: {
+			exports: "QUnit"
 		},
 		jQuery: {
 			exports: "jQuery"
@@ -13,8 +16,19 @@ require.config({
 	}
 });
 
-define(["Core/Framework/InterfaceTest.js"],
- 	function(InterfaceTest) {
-		'use strict';
-	}
-);
+
+define([
+	"Core/Service/StringService",
+	"Core/Service/ArrayService",
+	"Test/Core/Framework/InterfaceTest",
+	"Test/Core/Service/StringServiceTest",
+	"Test/Core/Service/ArrayServiceTest",
+	"Test/Core/Service/LogTest",
+
+	"Test/Model/Domain/Channel/ChannelWebSocketTest",
+	"Test/Model/Domain/Channel/ChannelXHRTest",
+	"Test/Model/Domain/Addressbook/AddressbookVcardTest",
+	"Test/Model/Domain/AddressbookManagerTest",
+	"Test/Model/Domain/EventManagerTest",
+	"Test/Model/Domain/AccountManagerTest"
+]);

@@ -1,8 +1,7 @@
-(function() {
+define(function() {
 	'use strict';
 
-	var Service = App.Core.Service;
-	Service.ArrayService = {};
+	var ArrayService = {};
 
 
 	/**
@@ -16,7 +15,7 @@
 		return this.indexOf(needle) !== -1;
 	};
 
-	Service.ArrayService.listContains = function(list, needle) {
+	ArrayService.listContains = function(list, needle) {
 		return list.contains(needle);
 	};
 
@@ -27,7 +26,7 @@
 	 * @param list:  array or object
 	 * @returns {string}: a String like 'key1: value1, key2: value2, key3: value3,'
 	 */
-	Service.ArrayService.listToString = function(list) {
+	ArrayService.listToString = function(list) {
 		var representation = '';
 		for(var index in list) {
 			// fetch only properties an no methods
@@ -51,4 +50,5 @@
 		return this;
 	};
 
-})();
+	return ArrayService;
+});

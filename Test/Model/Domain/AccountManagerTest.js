@@ -1,29 +1,25 @@
-(function () {
+define(["QUnit","Model/Domain/AccountManager", "Model/Domain/Account", "Model/Domain/User"], function(QUnit, AccountManager, Account, User) {
 	'use strict';
 
-	var Domain = App.Model.Domain;
 
-
-	module("Accountmanager Tests");
-	test("Accountmanager Test Test", function () {
-		var accountManager = new Domain.AccountManager();
+	QUnit.module("Accountmanager Tests");
+	QUnit.test("Accountmanager Test Test", function () {
+		var accountManager = new AccountManager();
 		accountManager.users = {};
 		accountManager.store();
 		accountManager.load();
 
-		strictEqual(Object.keys(accountManager.users).length,0, 'Accountmanager reset test');
+		QUnit.strictEqual(Object.keys(accountManager.users).length,0, 'Accountmanager reset test');
 
-		var user1 = new Domain.User('johanna', 'ladidum', 'Johanna', 'Meier', 'jo@gmx.net', null);
-		user1.setAccount(new Domain.Account('ChannelXHR', { "nick": user1.username }));
-		user1.setAccount(new Domain.Account('ChannelWebSocket',{ "login": '12345678', "passwort": 'drfm34sls', "server": 'sipcall.ch' }));
+		var user1 = new User('johanna', 'ladidum', 'Johanna', 'Meier', 'jo@gmx.net', null);
+		user1.setAccount(new Account('ChannelXHR', { "nick": user1.username }));
+		user1.setAccount(new Account('ChannelWebSocket',{ "login": '12345678', "passwort": 'drfm34sls', "server": 'sipcall.ch' }));
 
 		accountManager.add(user1);
 
-		//accountManager.users = {};
-		//accountManager.load();
 		console.log(accountManager.users['johanna'].accounts);
-		strictEqual(accountManager.users['johanna'].username, 'johanna', 'test restored username');
-		strictEqual(accountManager.users['johanna'].accounts['ChannelWebSocket'].fields['login'], '12345678', 'test restored account detail');
+		QUnit.strictEqual(accountManager.users['johanna'].username, 'johanna', 'test restored username');
+		QUnit.strictEqual(accountManager.users['johanna'].accounts['ChannelWebSocket'].fields['login'], '12345678', 'test restored account detail');
 	});
 
-})();
+});

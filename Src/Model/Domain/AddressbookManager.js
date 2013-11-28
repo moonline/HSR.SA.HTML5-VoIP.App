@@ -1,42 +1,47 @@
-(function () {
+define(["Model/Interfaces/AddressbookInterface", "Model/Domain/Addressbook", "Core/Framework/Barrier"],function(AddressbookInterface, Addressbook, Barrier) {
 	'use strict';
 
-	var Domain = App.Model.Domain;
-	var Interfaces = App.Model.Interfaces;
 	var Storage = window.localStorage;
+	var scope = this;
 
 
-	Domain.AddressbookManager = function () {
+	var AddressbookManager = function () {
 		this.addressbooks = new Array();
 	};
 
 
 	// Todo: create a prefix for local storage setting which is set by the controller (prevent testing and app collisions)
-	Domain.AddressbookManager.prototype.getAddressBookIndex = function () {
+	AddressbookManager.prototype.getAddressBookIndex = function () {
 		return (Storage.getItem("addressBookIndex")) ? JSON.parse(Storage.getItem("addressBookIndex")) : [];
 	};
 
 	/**
 	 * load addressbooks from localstorage
 	 *
-	 * @type {function(this:Domain.AddressbookManager)}
+	 * @type {function(this:AddressbookManager)}
 	 */
-	Domain.AddressbookManager.prototype.load = function () {
+	AddressbookManager.prototype.load = function (loadedCallback) {
+		var barrier = new Barrier(loadedCallback);
+
 		this.getAddressBookIndex().forEach(function (element) {
 			if (Storage.getItem(element)) {
 				var tempBook = JSON.parse(Storage.getItem(element));
-				if (Domain.Addressbook[tempBook.type]) {
-					var addressBook = new Domain.Addressbook[tempBook.type]();
+
+				// restore concrete addressbook by type string using require.js
+				barrier.startTask();
+				require([tempBook.type], function(ConcreteAddressbook){
+					var addressBook = new ConcreteAddressbook();
 					Object.keys(tempBook).forEach(function (key) {
 						addressBook[key] = tempBook[key];
 					}, this);
 
 					// update online addressbooks
-					if(addressBook.dataSourceType === Domain.Addressbook.dataSourceTypes.online && addressBook.address) {
+					if(addressBook.dataSourceType === Addressbook.dataSourceTypes.online && addressBook.address) {
 						addressBook.load(addressBook.address);
 					}
 					this.addressbooks.push(addressBook);
-				}
+					barrier.taskFinished();
+				}.bind(this));
 			}
 		}, this);
 	};
@@ -46,8 +51,8 @@
 	 *
 	 * @param addressbook
 	 */
-	Domain.AddressbookManager.prototype.add = function (addressbook) {
-		Interfaces.AddressbookInterface.assertImplementedBy(addressbook);
+	AddressbookManager.prototype.add = function (addressbook) {
+		AddressbookInterface.assertImplementedBy(addressbook);
 		var index = this.addressbooks.length;
 		this.addressbooks.push(addressbook);
 		var addressbookKey = "addressbooks." + index + '-' + (new Date()).getMilliseconds();
@@ -64,8 +69,9 @@
 	 *
 	 * @returns {Array}
 	 */
-	Domain.AddressbookManager.prototype.getAddressbooks = function () {
+	AddressbookManager.prototype.getAddressbooks = function () {
 		return this.addressbooks;
 	};
 
-})();
+	return AddressbookManager;
+});

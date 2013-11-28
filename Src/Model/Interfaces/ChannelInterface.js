@@ -1,13 +1,11 @@
-(function() {
+define(["Core/Framework/Interface"],function(Interface) {
 	'use strict';
 
-	var Interfaces = App.Model.Interfaces;
-	var Framework = App.Core.Framework;
 
-
-	Interfaces.ChannelInterface = new Framework.Interface(
+	var ChannelInterface = new Interface(
 		'ChannelInterface',
 		['start', 'stop', 'send', 'addReceiveListener', 'removeReceiveListener']
 	);
 
-})();
+	return ChannelInterface;
+});

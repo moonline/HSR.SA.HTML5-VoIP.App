@@ -1,9 +1,7 @@
-(function() {
+define(function() {
 	'use strict';
 
-	var Service = App.Core.Service;
-
-	Service.Log = {
+	var Log = {
 		logLevels: {
 			All: 0,
 			Error: 10,
@@ -18,15 +16,15 @@
 		/**
 		 * log message to console
 		 *
-		 * @param App.Core.Service.Log.logType logType: type of the log event
+		 * @param App.Core.Log.logType logType: type of the log event
 		 * @param causer: the Object which causes the log event
 		 * @param message: the log message
 		 */
 		log:function(logType, causer, message) {
-			if(Service.Log.logLevel <= logType) {
-				if(logType === Service.Log.logTypes.Info) {
+			if(Log.logLevel <= logType) {
+				if(logType === Log.logTypes.Info) {
 					console.info(causer+': '+message);
-				} else if (logType === Service.Log.logTypes.Error) {
+				} else if (logType === Log.logTypes.Error) {
 					console.warn(causer+': '+message);
 				} else {
 					console.log(causer+': '+message);
@@ -35,6 +33,7 @@
 		}
 	};
 
-	Service.Log.logLevel = App.Core.Service.Log.logLevels.All;
+	Log.logLevel = Log.logLevels.All;
 
-})();
+	return Log;
+});

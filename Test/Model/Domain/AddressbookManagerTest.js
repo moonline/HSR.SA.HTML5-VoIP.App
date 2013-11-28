@@ -1,7 +1,13 @@
-(function () {
+define([
+		"QUnit",
+		"Model/Domain/AddressbookManager",
+		"Model/Domain/Addressbook/AddressbookVcard",
+		"Model/Domain/Addressbook/AddressbookJson"
+	],
+	function(QUnit, AddressbookManager, AddressbookVcard, AddressbookJson) {
 	'use strict';
 
-	var Domain = App.Model.Domain;
+
 	var vcard1 = "BEGIN:VCARD\n\
 N:Swank;Hilary;;;\n\
 IMPP;SIP:564895214@corephone.com\n\
@@ -31,29 +37,31 @@ END:VCARD";
 	];
 
 
-	module("AddressbookManager Tests");
-	test("AddressbookManager Test", function () {
+	QUnit.module("AddressbookManager Tests");
+	QUnit.asyncTest("AddressbookManager Test", function () {
 		window.localStorage.clear();
 
-		var manager = new Domain.AddressbookManager();
+		var manager = new AddressbookManager();
 
-		var addressBookVCard = new Domain.Addressbook.AddressbookVcard();
+		var addressBookVCard = new AddressbookVcard();
 		addressBookVCard.addEntry(vcard1);
 		addressBookVCard.addEntry(vcard2);
 		manager.add(addressBookVCard);
 
-		var addressbookJson = new Domain.Addressbook.AddressbookJson();
+		var addressbookJson = new AddressbookJson();
 		addressbookJson.load(jsonContacts);
 		manager.add(addressbookJson);
 
-		var newManager = new Domain.AddressbookManager();
-		newManager.load();
-		var contactbooks = newManager.getAddressbooks();
+		var newManager = new AddressbookManager();
+		newManager.load(function() {
+			var contactbooks = newManager.getAddressbooks();
 
-		strictEqual(contactbooks[0] instanceof Domain.Addressbook.AddressbookVcard, true, "check correct class type after restore");
-		strictEqual(contactbooks[1] instanceof Domain.Addressbook.AddressbookJson, true, "check correct class type after restore");
-		strictEqual(newManager.getAddressbooks()[0].getEntries().length, manager.getAddressbooks()[0].getEntries().length, "check correct number of entries restored");
-		strictEqual(JSON.stringify(newManager.getAddressbooks()), JSON.stringify(manager.getAddressbooks()), "check correct data restore");
+			QUnit.strictEqual(contactbooks[0] instanceof AddressbookVcard, true, "check correct class type after restore");
+			QUnit.strictEqual(contactbooks[1] instanceof AddressbookJson, true, "check correct class type after restore");
+			QUnit.strictEqual(newManager.getAddressbooks()[0].getEntries().length, manager.getAddressbooks()[0].getEntries().length, "check correct number of entries restored");
+			QUnit.strictEqual(JSON.stringify(newManager.getAddressbooks()), JSON.stringify(manager.getAddressbooks()), "check correct data restore");
+			QUnit.start();
+		});
 	});
 
-})();
+});
