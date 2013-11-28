@@ -6,7 +6,8 @@
 		paths: {
 			"Configuration": "../Configuration/appConfiguration",
 			"Handlebars": "Core/Lib/Handlebars/handlebars",
-			"jQuery": "Core/Lib/JQuery/jQuery.2.0.3"
+			"jQuery": "Core/Lib/JQuery/jQuery.2.0.3",
+			"angular": "Core/Lib/AngularJS/angular"
 		},
 		shim: {
 			Handlebars: {
@@ -14,23 +15,18 @@
 			},
 			jQuery: {
 				exports: "jQuery"
+			},
+			angular: {
+				exports: "angular"
 			}
 		}
 	});
 
-	define(["Configuration", "Application/AccountController", "jQuery"],
-		function(Configuration, AccountController, jQuery) {
 
+	define(["angular", "Application/AccountController"], function(ng, AccountController) {
+		'use strict';
+	});
 
-
-			jQuery('#accountView').ready(function(){
-				var accountController = new AccountController();
-				accountController.addDummyUser();
-				//accountController.selectUser();
-			});
-
-		}
-	);
 })();
 
 

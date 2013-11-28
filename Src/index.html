@@ -9,10 +9,12 @@
 	<link href="Resources/Styles/styles.less" type="text/css" rel="stylesheet/less"/>
 
 	<script src="Core/Lib/less/less.min.js" ></script>
+	<!--<script src="Core/Lib/AngularJS/angular.js" ></script>-->
 	<script src="Core/Lib/RequireJS/require.js" data-main="initialize.js"></script>
+
 </head>
 <body>
-	<div class="page" id="accountView" data-ng-controller="App.Controller.AccountController as accountController">
+	<div class="page" id="accountView" data-ng-controller="Application/AccountController as accountController">
 		<div class="content">
 			<ul class="userList" id="userList">
 				<li data-ng-repeat="user in accountController.accountManager.users">
