@@ -1,7 +1,6 @@
-(function () {
+define(function () {
 	'use strict';
 
-	var Service = App.Core.Service;
 
 	/**
 	 * SDP parsing library
@@ -9,13 +8,13 @@
 	 * @licence http://www.apache.org/licenses/LICENSE-2.0
 	 * @copyright (c) 2012 Google Inc.
 	 */
-	Service.SDPService = {};
+	var SDPService = {};
 
-	Service.SDPService.removeCN = function(sdpLines, mLineIndex) {
+	SDPService.removeCN = function(sdpLines, mLineIndex) {
 		var mLineElements = sdpLines[mLineIndex].split(' ');
 		// Scan from end for the convenience of removing an item.
 		for (var i = sdpLines.length-1; i >= 0; i--) {
-			var payload = Service.SDPService.extractSdp(sdpLines[i], /a=rtpmap:(\d+) CN\/\d+/i);
+			var payload = SDPService.extractSdp(sdpLines[i], /a=rtpmap:(\d+) CN\/\d+/i);
 			if (payload) {
 				var cnPos = mLineElements.indexOf(payload);
 				if (cnPos !== -1) {
@@ -32,7 +31,7 @@
 	};
 
 
-	Service.SDPService.setDefaultCodec = function(mLine, payload) {
+	SDPService.setDefaultCodec = function(mLine, payload) {
 		var elements = mLine.split(' ');
 		var newLine = new Array();
 		var index = 0;
@@ -45,12 +44,12 @@
 		return newLine.join(' ');
 	};
 
-	Service.SDPService.extractSdp = function(sdpLine, pattern) {
+	SDPService.extractSdp = function(sdpLine, pattern) {
 		var result = sdpLine.match(pattern);
 		return (result && result.length == 2)? result[1]: null;
 	};
 
-	Service.SDPService.preferOpus = function(sdp) {
+	SDPService.preferOpus = function(sdp) {
 		var sdpLines = sdp.split('\r\n');
 
 		// Search for m line.
@@ -67,19 +66,20 @@
 		// If Opus is available, set it as the default in m line.
 		for (var i = 0; i < sdpLines.length; i++) {
 			if (sdpLines[i].search('opus/48000') !== -1) {
-				var opusPayload = Service.SDPService.extractSdp(sdpLines[i], /:(\d+) opus\/48000/i);
+				var opusPayload = SDPService.extractSdp(sdpLines[i], /:(\d+) opus\/48000/i);
 				if (opusPayload)
-					sdpLines[mLineIndex] = Service.SDPService.setDefaultCodec(sdpLines[mLineIndex],
+					sdpLines[mLineIndex] = SDPService.setDefaultCodec(sdpLines[mLineIndex],
 						opusPayload);
 				break;
 			}
 		}
 
 		// Remove CN in m line and sdp.
-		sdpLines = Service.SDPService.removeCN(sdpLines, mLineIndex);
+		sdpLines = SDPService.removeCN(sdpLines, mLineIndex);
 
 		sdp = sdpLines.join('\r\n');
 		return sdp;
 	};
 
-})();
+	return SDPService;
+});

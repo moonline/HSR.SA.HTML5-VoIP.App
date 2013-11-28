@@ -1,4 +1,4 @@
-(function() {
+define(function() {
 	'use strict';
 
 
@@ -13,4 +13,4 @@
 		return [this.substring(0,pos),this.substring(pos+1,this.length)];
 	};
 
-})();
+});

@@ -1,9 +1,5 @@
-(function () {
+define(["Configuration","Core/Service/Log", "Core/Service/ArrayService"], function (Configuration, Log, ArrayService) {
 	'use strict';
-
-	var Domain = App.Model.Domain;
-	var Service = App.Core.Service;
-	var Configuration = App.Configuration;
 
 
 	/**
@@ -14,7 +10,7 @@
 	 * @constructor
 	 */
 	// Todo: How to test? -> Refactor?
-	Domain.Host = function (videoFrame) {
+	var Host = function (videoFrame) {
 		this.constraints = {
 			video: Configuration.connection.quality.video,
 			audio: true
@@ -25,16 +21,17 @@
 	};
 
 
-	Domain.Host.prototype.startLocalMedia = function (hostReadyCallback) {
+	Host.prototype.startLocalMedia = function (hostReadyCallback) {
 		getUserMedia(this.constraints, function (stream) {
 			this.localstream = stream;
 			attachMediaStream(this.videoFrame, stream);
 			hostReadyCallback();
 		}.bind(this),
 			function (error) {
-				Service.Log.log(Service.Log.logTypes.Error, 'Host', error.toString() + ': {' + Service.ArrayService.listToString(error) + '}');
+				Log.log(Log.logTypes.Error, 'Host', error.toString() + ': {' + ArrayService.listToString(error) + '}');
 			}
 		);
 	};
 
-})();
+	return Host;
+});

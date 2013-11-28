@@ -1,9 +1,11 @@
-(function () {
+define([
+		"Configuration",
+		"Core/Service/Log",
+		"SDPService",
+		"Model/Domain/Channel",
+		"Model/Domain/EventManager"
+	], function (Configuration, Log, SDPService, Channel, EventManager) {
 	'use strict';
-
-	var Domain = App.Model.Domain;
-	var Service = App.Core.Service;
-	var Configuration = App.Configuration;
 
 
 	/**
@@ -12,15 +14,18 @@
 	 * @param localstream: local media stream from camera / microphone
 	 * @param channel: channel, used to signal the other peer(s)
 	 * @param videoFrame: dom element to attach the mediastream
+	 * @param receiver receiver of channel messages
+	 * @param streamReady callback when stream is ready
+	 * @param receiveCandidates early received candidates
 	 * @constructor
 	 */
-	Domain.Connection = function (localstream, channel, videoFrame, receiver, streamReady, receiveCandidates) {
+	var Connection = function (localstream, channel, videoFrame, receiver, streamReady, receiveCandidates) {
 		// Todo: How to test? -> Refactor?
 		this.localstream = localstream;
 		this.channel = channel;
 		this.videoFrame = videoFrame;
 		this.receiver = receiver;
-		this.state = Domain.Connection.states.off;
+		this.state = Connection.states.off;
 		this.peerConnection = null;
 		this.config = null;
 		this.streamReady = streamReady;
@@ -32,8 +37,8 @@
 	 *
 	 * @param sdp
 	 */
-	Domain.Connection.prototype.setLocalAndSendSDP = function (sdp) {
-		sdp.sdp = Service.SDPService.preferOpus(sdp.sdp);
+	Connection.prototype.setLocalAndSendSDP = function (sdp) {
+		sdp.sdp = SDPService.preferOpus(sdp.sdp);
 		this.peerConnection.setLocalDescription(sdp);
 		var message = {
 			"receiver": this.receiver,
@@ -51,7 +56,7 @@
 	 *
 	 * @param event
 	 */
-	Domain.Connection.prototype.sendIceCandidate = function (event) {
+	Connection.prototype.sendIceCandidate = function (event) {
 		if (event.candidate) {
 			var message = {
 				"receiver": this.receiver,
@@ -64,7 +69,7 @@
 			};
 			this.channel.send(message);
 		} else {
-			Service.Log.log(Service.Log.logTypes.Info, 'Connection', "End of candidates");
+			Log.log(Log.logTypes.Info, 'Connection', "End of candidates");
 		}
 	};
 
@@ -72,9 +77,9 @@
 	 * receive stream helper
 	 * @type {function(this:*)}
 	 */
-	Domain.Connection.prototype.receiveStream = function (event) {
-		this.state = Domain.Connection.states.connected;
-		Service.Log.log(Service.Log.logTypes.Info, 'Connection', 'stream added to p2p connection, attach remote stream');
+	Connection.prototype.receiveStream = function (event) {
+		this.state = Connection.states.connected;
+		Log.log(Log.logTypes.Info, 'Connection', 'stream added to p2p connection, attach remote stream');
 		attachMediaStream(this.videoFrame, event.stream);
 		this.streamReady();
 	};
@@ -83,11 +88,11 @@
 	/**
 	 * caller create offer
 	 */
-	Domain.Connection.prototype.callerCreateOffer = function () {
-		Service.Log.log(Service.Log.logTypes.Info, 'Connection', 'caller create offer');
+	Connection.prototype.callerCreateOffer = function () {
+		Log.log(Log.logTypes.Info, 'Connection', 'caller create offer');
 
-		this.channel.type = Domain.Channel.types.caller;
-		this.state = Domain.Connection.states.running;
+		this.channel.type = Channel.types.caller;
+		this.state = Connection.states.running;
 
 		this.peerConnection = new RTCPeerConnection(this.config);
 		this.peerConnection.addStream(this.localstream);
@@ -102,8 +107,8 @@
 
 			this.dataChannel.onmessage = function(event) {
 				var message = JSON.parse(event.data);
-				Domain.EventManager.notify('dataChannelMessageReceive',message, Domain.Connection);
-				Service.Log.log(Service.Log.logTypes.Info, 'Connection','DataChannel message received: '+message.message);
+				EventManager.notify('dataChannelMessageReceive',message, Connection);
+				Log.log(Log.logTypes.Info, 'Connection','DataChannel message received: '+message.message);
 			}.bind(this);
 
 			this.dataChannel.onopen = function(){
@@ -113,12 +118,12 @@
 				}));
 			}.bind(this);
 		} catch (e) {
-			Service.Log.log(Service.Log.logTypes.error, 'Connection', e);
+			Log.log(Log.logTypes.error, 'Connection', e);
 		}
 
 
 		this.peerConnection.createOffer(this.setLocalAndSendSDP.bind(this), function (error) {
-			Service.Log.log(Service.Log.logTypes.Error, 'Connection', error);
+			Log.log(Log.logTypes.Error, 'Connection', error);
 		});
 	};
 
@@ -127,11 +132,11 @@
 	 *
 	 * @param offer: session description answer
 	 */
-	Domain.Connection.prototype.calleeCreateAnswer = function (offer) {
+	Connection.prototype.calleeCreateAnswer = function (offer) {
 		this.receiver = offer.sender;
 
-		Service.Log.log(Service.Log.logTypes.Info, 'Connection', 'callee create answer');
-		this.state = Domain.Connection.states.running;
+		Log.log(Log.logTypes.Info, 'Connection', 'callee create answer');
+		this.state = Connection.states.running;
 
 		this.peerConnection = new RTCPeerConnection(this.config);
 		this.peerConnection.addStream(this.localstream);
@@ -144,8 +149,8 @@
 
 			this.dataChannel.onmessage = function(event) {
 				var message = JSON.parse(event.data);
-				Domain.EventManager.notify('dataChannelMessageReceive',message, Domain.Connection);
-				Service.Log.log(Service.Log.logTypes.Info, 'Connection','DataChannel message received: '+message.message);
+				EventManager.notify('dataChannelMessageReceive',message, Connection);
+				Log.log(Log.logTypes.Info, 'Connection','DataChannel message received: '+message.message);
 			}.bind(this);
 
 			this.dataChannel.onopen = function(){
@@ -165,7 +170,7 @@
 		},this);
 
 		this.peerConnection.createAnswer(this.setLocalAndSendSDP.bind(this),function (error) {
-			Service.Log.log(Service.Log.logTypes.Error, 'Connection', error);
+			Log.log(Log.logTypes.Error, 'Connection', error);
 		});
 	};
 
@@ -174,8 +179,8 @@
 	 *
 	 * @param sdpAnswer: json answer containing a session description
 	 */
-	Domain.Connection.prototype.callerReceiveAnswer = function (sdpAnswer) {
-		Service.Log.log(Service.Log.logTypes.Info, 'Connection', 'caller receive answer');
+	Connection.prototype.callerReceiveAnswer = function(sdpAnswer) {
+		Log.log(Log.logTypes.Info, 'Connection', 'caller receive answer');
 		if (this.peerConnection) {
 			this.peerConnection.setRemoteDescription(new RTCSessionDescription(sdpAnswer));
 		} else {
@@ -183,7 +188,7 @@
 		}
 	};
 
-	Domain.Connection.prototype.hangUp = function (notifyClient) {
+	Connection.prototype.hangUp = function (notifyClient) {
 		this.localstream.stop();
 		if (notifyClient) {
 			if(this.dataChannel && this.dataChannel.readyState === 'open') {
@@ -202,14 +207,15 @@
 		try {
 			this.peerConnection.close();
 		} catch (error) {
-			Service.Log.log(Service.Log.logTypes.Error, 'Connection', error);
+			Log.log(Log.logTypes.Error, 'Connection', error);
 		}
-		this.channel.type = Domain.Channel.types.callee;
+		this.channel.type = Channel.types.callee;
 		this.peerConnection = null;
-		this.state = Domain.Connection.states.stopped;
+		this.state = Connection.states.stopped;
 	};
 
+	Connection.states = { off: 0, running: 1, connected: 2, stopped: 3 };
 
-	Domain.Connection.states = { off: 0, running: 1, connected: 2, stopped: 3 };
 
-})();
+	return Connection;
+});

@@ -1,8 +1,8 @@
-(function() {
+define(["Core/Service/Log"], function(Log) {
 	'use strict';
 
-	var Service = App.Core.Service;
-	Service.FileService = {};
+	
+	var FileService = {};
 
 	/**
 	 * read file on harddisk
@@ -10,7 +10,7 @@
 	 * @param file: file path
 	 * @param callback: function to call on success
 	 */
-	Service.FileService.readFile = function(file, callback) {
+	FileService.readFile = function(file, callback) {
 		if (file) {
 			var reader = new FileReader();
 			reader.onload = function(event) {
@@ -18,7 +18,7 @@
 			};
 			reader.readAsText(file);
 		} else {
-			Service.Log(Service.Log.logTypes.Error, 'FileService', "Can not read file "+file);
+			Log(Log.logTypes.Error, 'FileService', "Can not read file "+file);
 		}
 	};
 
@@ -28,7 +28,7 @@
 	 * @param files
 	 * @param callback
 	 */
-	Service.FileService.readFiles = function(files, callback) {
+	FileService.readFiles = function(files, callback) {
 		var fileContents = [];
 
 		for(var index=0; index<files.length; index++) {
@@ -45,9 +45,10 @@
 				})(index);
 				reader.readAsText(file);
 			} else {
-				Service.Log(Service.Log.logTypes.Error, 'FileService', "Can not read file "+file);
+				Log(Log.logTypes.Error, 'FileService', "Can not read file "+file);
 			}
 		}
 	};
 
+	return FileService;
 })();
