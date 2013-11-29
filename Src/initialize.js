@@ -13,9 +13,6 @@
 			Handlebars: {
 				exports: "Handlebars"
 			},
-			jQuery: {
-				exports: "jQuery"
-			},
 			angular: {
 				exports: "angular"
 			}
@@ -23,8 +20,13 @@
 	});
 
 
-	define(["angular", "Application/AccountController"], function(ng, AccountController) {
+	define(["angular", "Application/AccountController"], function(angular, AccountController) {
 		'use strict';
+		
+		angular.controllers = {
+			AccountController: AccountController
+		};
+		angular.bootstrap(document, []);
 	});
 
 })();
