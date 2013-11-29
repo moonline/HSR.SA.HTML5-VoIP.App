@@ -13,10 +13,10 @@
 
 </head>
 <body>
-	<div class="page" id="accountView" data-ng-controller="angular.controllers.AccountController as accountController">
+	<div class="page" id="accountView" data-ng-controller="AccountController">
 		<div class="content">
 			<ul class="userList" id="userList">
-				<li data-ng-repeat="user in accountController.accountManager.users">
+				<li data-ng-repeat="user in accountManager.users">
 					<div class="userImage">
 						<span class="image" data-ng-if="user.photo" style="background-image: url(&quot;data:image/png;base64,{{user.photo}}&quot;);"></span>
 						<span class="image" data-ng-if="!user.photo" style="background-image: url(&quot;Resources/Img/person.png&quot;);"></span>
@@ -26,14 +26,14 @@
 						<span class="name">{{user.firstname}} {{user.lastname}}</span>
 					</div>
 					<div class="operations">
-						<button class="button red" data-ng-click="accountController.deleteUser(user)"><span class="icon-batch">&#xf155;</span> Delete</button>
+						<button class="button red" data-ng-click="deleteUser(user)"><span class="icon-batch">&#xf155;</span> Delete</button>
 					</div>
 				</li>
 			</ul>
 		</div>
 		<footer class="operationPanel">
-			<button class="button green" data-ng-click="accountController.addUser()">Add user account</button>
-			<button class="button green" data-ng-click="accountController.resetToDummies()">Reset users to dummy users</button>
+			<button class="button green" data-ng-click="addUser()">Add user account</button>
+			<button class="button green" data-ng-click="resetToDummies()">Reset users to dummy users</button>
 		</footer>
 	</div>
 </body>

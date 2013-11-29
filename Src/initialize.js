@@ -23,10 +23,9 @@
 	define(["angular", "Application/AccountController"], function(angular, AccountController) {
 		'use strict';
 		
-		angular.controllers = {
-			AccountController: AccountController
-		};
-		angular.bootstrap(document, []);
+		var app = angular.module('App', []);
+		app.controller('AccountController', AccountController);
+		angular.bootstrap(document, ['App']);
 	});
 
 })();
