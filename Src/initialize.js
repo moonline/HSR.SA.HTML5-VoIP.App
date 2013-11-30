@@ -7,7 +7,8 @@
 			"Configuration": "../Configuration/appConfiguration",
 			"Handlebars": "Core/Lib/Handlebars/handlebars",
 			"jQuery": "Core/Lib/JQuery/jQuery.2.0.3",
-			"angular": "Core/Lib/AngularJS/angular"
+			"angular": "Core/Lib/AngularJS/angular",
+			"angular-route": "Core/Lib/AngularJS/angular-route"
 		},
 		shim: {
 			Handlebars: {
@@ -15,20 +16,16 @@
 			},
 			angular: {
 				exports: "angular"
-			}
+			},
+			"angular-route": ["angular"]
 		}
 	});
 
-
-	define(["angular", "Application/AccountController"], function(angular, AccountController) {
+	// TODO fix path for Configuration/angularConfig: Folder name clashes with appConfiguration module
+	require(["angular", "../Src/Configuration/angularConfig"], function(angular, angularModule) {
 		'use strict';
-		
-		var app = angular.module('App', []);
-		app.controller('AccountController', AccountController);
-		angular.bootstrap(document, ['App']);
+
+		angular.bootstrap(document, [angularModule.name]);
 	});
 
 })();
-
-
-

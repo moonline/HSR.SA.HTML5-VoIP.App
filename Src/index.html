@@ -8,33 +8,9 @@
 	<link href="Resources/Styles/browserReset.css" 	type="text/css" rel="stylesheet" />
 	<link href="Resources/Styles/styles.less" type="text/css" rel="stylesheet/less"/>
 
-	<script src="Core/Lib/less/less.min.js" ></script>
+	<script src="Core/Lib/less/less.min.js"></script>
 	<script src="Core/Lib/RequireJS/require.js" data-main="initialize.js"></script>
 
 </head>
-<body>
-	<div class="page" id="accountView" data-ng-controller="AccountController">
-		<div class="content">
-			<ul class="userList" id="userList">
-				<li data-ng-repeat="user in accountManager.users">
-					<div class="userImage">
-						<img class="image" data-ng-if="user.photo" data-ng-src="data:image/png;base64,{{user.photo}}" src="Resources/Img/person.png" alt="">
-						<img class="image" data-ng-if="!user.photo" src="Resources/Img/person.png" alt="">
-					</div>
-					<div class="userInfo">
-						<span class="username">{{user.username}}</span>
-						<span class="name">{{user.firstname}} {{user.lastname}}</span>
-					</div>
-					<div class="operations">
-						<button class="button red" data-ng-click="deleteUser(user)"><span class="icon-batch">&#xf155;</span> Delete</button>
-					</div>
-				</li>
-			</ul>
-		</div>
-		<footer class="operationPanel">
-			<button class="button green" data-ng-click="addUser()">Add user account</button>
-			<button class="button green" data-ng-click="resetToDummies()">Reset users to dummy users</button>
-		</footer>
-	</div>
-</body>
+<body data-ng-view></body>
 </html>
