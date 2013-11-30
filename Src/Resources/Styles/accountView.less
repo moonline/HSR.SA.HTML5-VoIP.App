@@ -1,12 +1,13 @@
 #accountView .content {
 	ul.userList {
-		li {
+		& > li > a {
 			.flex; .flex-flow(row); .justify-content(space-between); .align-items(center); .align-content(stretch);
 			padding: @elementPadding;
 			.background-linear-gradient(white, gainsboro);
 			border-bottom: 0.05em solid silver;
+			color: black; text-decoration: none;
 
-			&>div { display: block; }
+			& > div { display: block; }
 
 			img {
 				max-height: 3em; max-width: 3em;
