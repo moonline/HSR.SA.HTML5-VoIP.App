@@ -28,7 +28,7 @@ define([
 	"Test/Model/Domain/Channel/ChannelWebSocketTest",
 	"Test/Model/Domain/Channel/ChannelXHRTest",
 	"Test/Model/Domain/Addressbook/AddressbookVcardTest",
-	"Test/Model/Domain/AddressbookManagerTest",
+	"Test/Model/Domain/ContactbookManagerTest",
 	"Test/Model/Domain/EventManagerTest",
 	"Test/Model/Domain/AccountManagerTest"
 ]);
