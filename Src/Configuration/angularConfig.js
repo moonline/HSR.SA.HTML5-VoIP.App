@@ -1,4 +1,5 @@
-define([ "angular", "Application/AccountController", "angular-route" ], function(angular, AccountController) {
+define([ "angular", "Configuration", "Application/AccountController", "Application/ContactController", "Application/ContactbookImportController", "angular-route" ],
+	function(angular, Configuration, AccountController, ContactController, ContactbookImportController) {
 	'use strict';
 	
 	var app = angular.module('App', [ 'ngRoute' ]);
@@ -12,9 +13,27 @@ define([ "angular", "Application/AccountController", "angular-route" ], function
 		    template: 'Hi {{user}}!',
 		    controller: LoginController
 		});
+
+		$routeProvider.when('/contacts', {
+			templateUrl: 'Resources/Views/contactView.html',
+			controller: 'ContactController'
+		});
+
+		$routeProvider.when('/import/contactbook', {
+			templateUrl: 'Resources/Views/contactbookImportView.html',
+			controller: 'ContactbookImportController'
+		});
+
+		$routeProvider.otherwise({
+			redirectTo:'/'
+		});
 	});
+
 	app.controller('AccountController', AccountController);
-	
+	app.controller('ContactController', ContactController);
+	app.controller('ContactbookImportController', ContactbookImportController);
+
+
 	// TODO temporary
 	function LoginController($scope, $routeParams) {
 		$scope.user = $routeParams.user;

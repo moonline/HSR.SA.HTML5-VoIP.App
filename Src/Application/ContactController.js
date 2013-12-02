@@ -1,42 +1,29 @@
-(function() {
+define(["Configuration","Model/Domain/ContactbookManager"],
+	function (Configuration, ContactbookManager) {
 	'use strict';
 
-	var Controller = App.Controller;
-	var Domain = App.Model.Domain;
-	var Addressbook = Domain.Addressbook;
-	var Configuration = App.Configuration;
-	var Service = App.Core.Service;
+	var ContactbookController = function($scope) {
+		$scope.contactbookManager = new ContactbookManager();
+		$scope.contactbookManager.load();
 
+		$scope.currentContactbook = null;
 
-	Controller.AddressbookController = function() {
-		// Todo: remove with 'this'
-		var self = this;
-		this.addressbookManager = new Domain.AddressbookManager();
-
-		/**
-		 * get addressbooks from local storage
-		 */
-		this.initialize = function() {
-			this.addressbookManager.load();
-			this.importAction();
+		$scope.open = function(contactbook) {
+			$scope.currentContactbook = contactbook;
 		};
+	};
 
-		/**
-		 * list action
-		 *
-		 * create a list of addressbooks
-		 */
-		this.list = function() {
-			this.renderEntryList(this.addressbookManager);
-			this.showAddressbookElements();
-		};
+	return ContactbookController;
+
+});
+
 
 		/**
 		 * import action
 		 *
 		 * import an addressbook
 		 */
-		this.importAction = function() {
+		/*this.importAction = function() {
 			var template = Handlebars.compile(document.getElementById('import-template').textContent);
 			var context = {
 				fileImport: Configuration.contactbookImport.file,
@@ -104,14 +91,14 @@
 			document.getElementById('contactbookNavigation').innerHTML = (Handlebars.compile(self.templates.addressbookTabs.toString()))(context);
 			document.getElementById('addressbookContent').innerHTML = (Handlebars.compile(self.templates.addressbookContent.toString()))(context);
 			self.showAddressbookElements();
-		};
+		};*/
 
 		/**
 		 * compile addressbook navigation and content templates
 		 *
 		 * @param addressbookManager
 		 */
-		this.renderEntryList = function(addressbookManager) {
+		/*this.renderEntryList = function(addressbookManager) {
 			var adressbookContentElement = document.getElementById('addressbookContent-template');
 			var context = { contactbooks: addressbookManager.getAddressbooks() };
 			var addressbookTemplate = Handlebars.compile(adressbookContentElement.textContent);
@@ -125,12 +112,12 @@
 				addressbookTabs: addressbookTabsElement.textContent,
 				addressbookContent:  adressbookContentElement.textContent
 			};
-		};
+		};*/
 
 		/**
 		 * set eventlisteners on tabs, enable first tab and first addressbook
 		 */
-		this.showAddressbookElements = function() {
+		/*this.showAddressbookElements = function() {
 			var addressbooks = document.querySelectorAll('#addressbook .addressbookContent .addressbookSlide');
 			var tabs = document.querySelectorAll('#addressbook nav span');
 			if(addressbooks && addressbooks.length > 0) {
@@ -160,6 +147,5 @@
 				};
 			},this);
 		};
-	};
+	};*/
 
-})();

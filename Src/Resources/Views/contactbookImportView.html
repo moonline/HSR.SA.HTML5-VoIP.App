@@ -1,0 +1,28 @@
+<div class="page" id="contactbookImportView">
+	<header class="operationPanel">
+		<a class="button green" href="#/contacts">Back</a>
+	</header>
+	<div class="content">
+		<form id="import" class="box west">
+			<div class="fileImport" data-ng-repeat="import in contactbookImport.file">
+				<div class="formLine">
+					<label for="{{import.name}}">{{import.name}}</label>
+					<input type="file" id="{{import.type}}" onchange="angular.element(this).scope().importFromFile(this.files)" name="{{import.type}}" value="{{import.name}}" />
+				</div>
+			</div>
+			<div class="directoryImport" data-ng-repeat="import in contactbookImport.directory">
+				<div class="formLine">
+					<label for="{{import.name}}">{{import.name}}</label>
+					<input type="file" id="{{import.type}}" name="{{import.type}}" value="{{import.name}}" multiple />
+				</div>
+			</div>
+			<div class="onlineImport" data-ng-repeat="import in contactbookImport.online">
+				<div class="formLine">
+					<label for="{{import.name}}">{{import.name}}</label>
+					<input id="{{import.type}}Load" type="button" class="button" value="load" />
+				</div>
+			</div>
+			<a download class="button" href="Resources/Data/json/adressbook-221013.json" target="_blank" >download default</a>
+		</form>
+	</div>
+</div>
