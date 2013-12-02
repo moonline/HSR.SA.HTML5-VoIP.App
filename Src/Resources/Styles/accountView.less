@@ -6,18 +6,31 @@
 			.background-linear-gradient(white, gainsboro);
 			border-bottom: 0.05em solid silver;
 			color: black; text-decoration: none;
-
-			img {
-				max-height: 3em; max-width: 3em;
+			
+			.userImage {
+				width: 3em; height: 3em;
+				text-align: center;
+				overflow: hidden;
+				
+				div {
+					width: 20em;
+					margin-left: -8.75em;
+					text-align: center;
+				
+					img {
+						height: 3em;
+						margin: 0 auto;
+					}
+				}
 			}
 			.userInfo {
 				width: 100%; padding: 0.5em; margin-left: 1em;
 				text-align: left;
 
 				span {
-					&.username { font-weight: bold; }
-
 					display: block; padding: 0.1em 0;
+					
+					&.username { font-weight: bold; }
 				}
 			}
 			.operations > button {
