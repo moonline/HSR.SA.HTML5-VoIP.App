@@ -15,11 +15,6 @@ define([
 		    templateUrl: require.toUrl('Resources/Views/accountView.html'),
 		    controller: AccountController
 		});
-		// TODO temporary
-		$routeProvider.when('/login/:user', {
-		    template: 'Hi {{user}}!',
-		    controller: LoginController
-		});
 
 		$routeProvider.when('/contacts', {
 			templateUrl: 'Resources/Views/contactView.html',
@@ -49,19 +44,13 @@ define([
 
 	/* controllers */
 	app.controller('AccountController', AccountController);
-	AccountController.$inject = ['$scope', 'accountService'];
+	AccountController.$inject = ['$scope', '$location', 'accountService'];
 
 	app.controller('ContactController', ContactController);
 	ContactController.$inject = ['$scope', 'accountService'];
 
 	app.controller('ContactbookImportController', ContactbookImportController);
 	ContactbookImportController.$inject = ['$scope', 'accountService'];
-
-	// TODO temporary
-	function LoginController($scope, $routeParams) {
-		$scope.user = $routeParams.user;
-	}
-
 
 	return app;
 });
