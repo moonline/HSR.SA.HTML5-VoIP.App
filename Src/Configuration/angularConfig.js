@@ -1,5 +1,12 @@
-define([ "angular", "Configuration", "Application/AccountController", "Application/ContactController", "Application/ContactbookImportController", "angular-route" ],
-	function(angular, Configuration, AccountController, ContactController, ContactbookImportController) {
+define([
+	"angular",
+	"Configuration",
+	"Application/AccountController",
+	"Application/ContactController",
+	"Application/ContactbookImportController",
+	"Model/Domain/AccountManager",
+	"angular-route" ],
+	function(angular, Configuration, AccountController, ContactController, ContactbookImportController, AccountManager) {
 	'use strict';
 	
 	var app = angular.module('App', [ 'ngRoute' ]);
@@ -29,15 +36,28 @@ define([ "angular", "Configuration", "Application/AccountController", "Applicati
 		});
 	});
 
+
+	/* shared resources */
+	app.factory('accountService', function($rootScope) {
+		var accountService =  {
+			accountManager: new AccountManager()
+		};
+		accountService.accountManager.load();
+		return accountService;
+	});
+
+
+	/* controllers */
 	app.controller('AccountController', AccountController);
 	app.controller('ContactController', ContactController);
 	app.controller('ContactbookImportController', ContactbookImportController);
-
+	ContactbookImportController.$inject = ['$scope', 'accountService'];
 
 	// TODO temporary
 	function LoginController($scope, $routeParams) {
 		$scope.user = $routeParams.user;
 	}
-	
+
+
 	return app;
 });
