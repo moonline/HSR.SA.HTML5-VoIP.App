@@ -2,9 +2,8 @@ define(["Configuration","Model/Domain/ContactbookManager"],
 	function (Configuration, ContactbookManager) {
 	'use strict';
 
-	var ContactbookController = function($scope) {
-		$scope.contactbookManager = new ContactbookManager();
-		$scope.contactbookManager.load();
+	var ContactbookController = function($scope, accountService) {
+		$scope.contactbookManager = accountService.accountManager;
 
 		$scope.currentContactbook = null;
 

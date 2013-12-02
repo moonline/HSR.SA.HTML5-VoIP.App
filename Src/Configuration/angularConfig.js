@@ -49,7 +49,11 @@ define([
 
 	/* controllers */
 	app.controller('AccountController', AccountController);
+	AccountController.$inject = ['$scope', 'accountService'];
+
 	app.controller('ContactController', ContactController);
+	ContactController.$inject = ['$scope', 'accountService'];
+
 	app.controller('ContactbookImportController', ContactbookImportController);
 	ContactbookImportController.$inject = ['$scope', 'accountService'];
 
