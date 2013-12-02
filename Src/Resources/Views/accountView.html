@@ -3,10 +3,8 @@
 		<li data-ng-repeat="user in accountManager.users">
 			<a href="#/login/{{user.username}}">
 				<div class="userImage">
-					<div>
-						<img data-ng-if="user.photo" data-ng-src="data:image/png;base64,{{user.photo}}" src="Resources/Img/person.png" alt="">
-						<img data-ng-if="!user.photo" src="Resources/Img/person.png" alt="">
-					</div>
+					<img data-ng-if="user.photo" data-ng-src="data:image/png;base64,{{user.photo}}" src="Resources/Img/person.png" alt="">
+					<img data-ng-if="!user.photo" src="Resources/Img/person.png" alt="">
 				</div>
 				<div class="userInfo">
 					<span class="username">{{user.username}}</span>
