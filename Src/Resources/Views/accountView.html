@@ -1,23 +1,19 @@
 <div class="page" id="accountView">
-	<div class="content">
-		<ul class="userList" id="userList">
-			<li data-ng-repeat="user in accountManager.users">
-				<a href="#/login/{{user.username}}">
-					<div class="userImage">
-						<img class="image" data-ng-if="user.photo" data-ng-src="data:image/png;base64,{{user.photo}}" src="Resources/Img/person.png" alt="">
-						<img class="image" data-ng-if="!user.photo" src="Resources/Img/person.png" alt="">
-					</div>
-					<div class="userInfo">
-						<span class="username">{{user.username}}</span>
-						<span class="name">{{user.firstname}} {{user.lastname}}</span>
-					</div>
-					<div class="operations">
-						<button class="button red" data-ng-click="deleteUser(user)"><span class="icon-batch">&#xf155;</span> Delete</button>
-					</div>
-				</a>
-			</li>
-		</ul>
-	</div>
+	<ul>
+		<li data-ng-repeat="user in accountManager.users">
+			<a href="#/login/{{user.username}}">
+				<img data-ng-if="user.photo" data-ng-src="data:image/png;base64,{{user.photo}}" src="Resources/Img/person.png" alt="">
+				<img data-ng-if="!user.photo" src="Resources/Img/person.png" alt="">
+				<div class="userInfo">
+					<span class="username">{{user.username}}</span>
+					<span class="name">{{user.firstname}} {{user.lastname}}</span>
+				</div>
+				<div class="operations">
+					<button class="button red" data-ng-click="deleteUser(user)"><span class="icon-batch">&#xf155;</span> Delete</button>
+				</div>
+			</a>
+		</li>
+	</ul>
 	<footer class="operationPanel">
 		<button class="button green" data-ng-click="addUser()">Add user account</button>
 		<button class="button green" data-ng-click="resetToDummies()">Reset users to dummy users</button>
