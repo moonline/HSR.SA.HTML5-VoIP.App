@@ -2,9 +2,8 @@ define(["Configuration","Model/Domain/ContactbookManager"],
 	function (Configuration, ContactbookManager) {
 	'use strict';
 
-	var ContactbookController = function($scope) {
-		$scope.contactbookManager = new ContactbookManager();
-		$scope.contactbookManager.load();
+	var ContactbookController = function($scope, accountService) {
+		$scope.contactbookManager = accountService.accountManager;
 
 		$scope.currentContactbook = null;
 
@@ -118,10 +117,10 @@ define(["Configuration","Model/Domain/ContactbookManager"],
 		 * set eventlisteners on tabs, enable first tab and first addressbook
 		 */
 		/*this.showAddressbookElements = function() {
-			var addressbooks = document.querySelectorAll('#addressbook .addressbookContent .addressbookSlide');
+			var contactbooks = document.querySelectorAll('#addressbook .addressbookContent .addressbookSlide');
 			var tabs = document.querySelectorAll('#addressbook nav span');
-			if(addressbooks && addressbooks.length > 0) {
-				addressbooks[0].className = addressbooks[0].className+" active";
+			if(contactbooks && contactbooks.length > 0) {
+				contactbooks[0].className = contactbooks[0].className+" active";
 				tabs[0].className = "active";
 			}
 			Array.prototype.slice.call(tabs,0).forEach(function(element, index) {
@@ -134,7 +133,7 @@ define(["Configuration","Model/Domain/ContactbookManager"],
 					var slides = document.querySelectorAll('#addressbook .addressbookContent .addressbookSlide');
 					Array.prototype.slice.call(slides).forEach(function(slide, k) {
 						slide.className = "addressbookSlide";
-						if(slide == addressbooks[index]) {
+						if(slide == contactbooks[index]) {
 							slide.className = slide.className+" active";
 						}
 					});

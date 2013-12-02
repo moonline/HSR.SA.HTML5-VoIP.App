@@ -51,4 +51,4 @@ define(["Core/Service/Log"], function(Log) {
 	};
 
 	return FileService;
-})();
+});

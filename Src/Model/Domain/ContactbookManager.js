@@ -2,28 +2,30 @@ define(["Model/Interfaces/AddressbookInterface", "Model/Domain/Addressbook", "Co
 	'use strict';
 
 	var Storage = window.localStorage;
-	var scope = this;
 
 
-	var AddressbookManager = function () {
-		this.addressbooks = new Array();
+	var ContactbookManager = function (user) {
+		this.contactbooks = new Array();
+		this.user = user;
+		this.indexKey = "contactbookIndex."+user.username;
+		this.contactbookKeyPrefix = "contactbook."+user.username+".";
 	};
 
 
 	// Todo: create a prefix for local storage setting which is set by the controller (prevent testing and app collisions)
-	AddressbookManager.prototype.getAddressBookIndex = function () {
-		return (Storage.getItem("addressBookIndex")) ? JSON.parse(Storage.getItem("addressBookIndex")) : [];
+	ContactbookManager.prototype.getContactbookIndex = function () {
+		return (Storage.getItem(this.indexKey)) ? JSON.parse(Storage.getItem(this.indexKey)) : [];
 	};
 
 	/**
-	 * load addressbooks from localstorage
+	 * load contactbooks from localstorage
 	 *
 	 * @type {function(this:AddressbookManager)}
 	 */
-	AddressbookManager.prototype.load = function (loadedCallback) {
+	ContactbookManager.prototype.load = function (loadedCallback) {
 		var barrier = new Barrier(loadedCallback);
 
-		this.getAddressBookIndex().forEach(function (element) {
+		this.getContactbookIndex().forEach(function (element) {
 			if (Storage.getItem(element)) {
 				var tempBook = JSON.parse(Storage.getItem(element));
 
@@ -35,11 +37,11 @@ define(["Model/Interfaces/AddressbookInterface", "Model/Domain/Addressbook", "Co
 						addressBook[key] = tempBook[key];
 					}, this);
 
-					// update online addressbooks
+					// update online contactbooks
 					if(addressBook.dataSourceType === Addressbook.dataSourceTypes.online && addressBook.address) {
 						addressBook.load(addressBook.address);
 					}
-					this.addressbooks.push(addressBook);
+					this.contactbooks.push(addressBook);
 					barrier.taskFinished();
 				}.bind(this));
 			}
@@ -49,19 +51,19 @@ define(["Model/Interfaces/AddressbookInterface", "Model/Domain/Addressbook", "Co
 	/**
 	 * add an addressbook
 	 *
-	 * @param addressbook
+	 * @param contactbook
 	 */
-	AddressbookManager.prototype.add = function (addressbook) {
-		AddressbookInterface.assertImplementedBy(addressbook);
-		var index = this.addressbooks.length;
-		this.addressbooks.push(addressbook);
-		var addressbookKey = "addressbooks." + index + '-' + (new Date()).getMilliseconds();
+	ContactbookManager.prototype.add = function (contactbook) {
+		AddressbookInterface.assertImplementedBy(contactbook);
+		var index = this.contactbooks.length;
+		this.contactbooks.push(contactbook);
+		var addressbookKey = this.contactbookKeyPrefix + index + '-' + (new Date()).getMilliseconds();
 
-		Storage.setItem(addressbookKey, JSON.stringify(addressbook));
+		Storage.setItem(addressbookKey, JSON.stringify(contactbook));
 
-		var newIndex = this.getAddressBookIndex();
+		var newIndex = this.getContactbookIndex();
 		newIndex.push(addressbookKey);
-		Storage.setItem("addressBookIndex", JSON.stringify(newIndex));
+		Storage.setItem(this.indexKey, JSON.stringify(newIndex));
 	};
 
 	/**
@@ -69,9 +71,9 @@ define(["Model/Interfaces/AddressbookInterface", "Model/Domain/Addressbook", "Co
 	 *
 	 * @returns {Array}
 	 */
-	AddressbookManager.prototype.getAddressbooks = function () {
-		return this.addressbooks;
+	ContactbookManager.prototype.getContactbooks = function () {
+		return this.contactbooks;
 	};
 
-	return AddressbookManager;
+	return ContactbookManager;
 });

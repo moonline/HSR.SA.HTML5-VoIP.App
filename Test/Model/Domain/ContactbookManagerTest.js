@@ -1,10 +1,11 @@
 define([
 		"QUnit",
-		"Model/Domain/AddressbookManager",
+		"Model/Domain/User",
+		"Model/Domain/ContactbookManager",
 		"Model/Domain/Addressbook/AddressbookVcard",
 		"Model/Domain/Addressbook/AddressbookJson"
 	],
-	function(QUnit, AddressbookManager, AddressbookVcard, AddressbookJson) {
+	function(QUnit, User, ContactbookManager, AddressbookVcard, AddressbookJson) {
 	'use strict';
 
 
@@ -37,11 +38,12 @@ END:VCARD";
 	];
 
 
-	QUnit.module("AddressbookManager Tests");
-	QUnit.asyncTest("AddressbookManager Test", function () {
+	QUnit.module("ContactbookManager Tests");
+	QUnit.asyncTest("ContactbookManager Test", function () {
 		window.localStorage.clear();
 
-		var manager = new AddressbookManager();
+		var user = new User('testUser', '', 'Test', 'User', '', '');
+		var manager = new ContactbookManager(user);
 
 		var addressBookVCard = new AddressbookVcard();
 		addressBookVCard.addEntry(vcard1);
@@ -52,14 +54,14 @@ END:VCARD";
 		addressbookJson.load(jsonContacts);
 		manager.add(addressbookJson);
 
-		var newManager = new AddressbookManager();
+		var newManager = new ContactbookManager(user);
 		newManager.load(function() {
-			var contactbooks = newManager.getAddressbooks();
+			var contactbooks = newManager.getContactbooks();
 
 			QUnit.strictEqual(contactbooks[0] instanceof AddressbookVcard, true, "check correct class type after restore");
 			QUnit.strictEqual(contactbooks[1] instanceof AddressbookJson, true, "check correct class type after restore");
-			QUnit.strictEqual(newManager.getAddressbooks()[0].getEntries().length, manager.getAddressbooks()[0].getEntries().length, "check correct number of entries restored");
-			QUnit.strictEqual(JSON.stringify(newManager.getAddressbooks()), JSON.stringify(manager.getAddressbooks()), "check correct data restore");
+			QUnit.strictEqual(newManager.getContactbooks()[0].getEntries().length, manager.getContactbooks()[0].getEntries().length, "check correct number of entries restored");
+			QUnit.strictEqual(JSON.stringify(newManager.getContactbooks()), JSON.stringify(manager.getContactbooks()), "check correct data restore");
 			QUnit.start();
 		});
 	});
