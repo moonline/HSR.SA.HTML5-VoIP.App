@@ -1,4 +1,4 @@
-define(["Configuration", "Model/Domain/Account", "Model/Domain/User"], function (Configuration, AccountManager, Account, User) {
+define(["Model/Domain/Account", "Model/Domain/User"], function (Account, User) {
 	'use strict';
 
 	var AccountController = function($scope, $location, accountService) {
