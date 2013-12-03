@@ -7,10 +7,10 @@
 			<div class="fileImport" data-ng-repeat="import in contactbookImport.file">
 				<div class="formLine">
 					<label for="{{import.name}}">{{import.name}}</label>
-					<input type="file" id="{{import.type}}" onchange="angular.element(this).scope().importFromFile(this.files)" name="{{import.type}}" value="{{import.name}}" />
+					<input type="file" id="{{import.type}}" data-importtype="{{import.type}}" onchange="angular.element(this).scope().importFromFile(this.getAttribute('data-importtype'), this.files)" name="{{import.type}}" value="{{import.name}}" />
 				</div>
 			</div>
-			<div class="directoryImport" data-ng-repeat="import in contactbookImport.directory">
+			<!--<div class="directoryImport" data-ng-repeat="import in contactbookImport.directory">
 				<div class="formLine">
 					<label for="{{import.name}}">{{import.name}}</label>
 					<input type="file" id="{{import.type}}" name="{{import.type}}" value="{{import.name}}" multiple />
@@ -22,7 +22,7 @@
 					<input id="{{import.type}}Load" type="button" class="button" value="load" />
 				</div>
 			</div>
-			<a download class="button" href="Resources/Data/json/adressbook-221013.json" target="_blank" >download default</a>
+			<a download class="button" href="Resources/Data/json/adressbook-221013.json" target="_blank" >download default</a>-->
 		</form>
 	</div>
 </div>
