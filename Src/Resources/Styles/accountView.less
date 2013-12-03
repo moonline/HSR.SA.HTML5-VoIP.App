@@ -1,27 +1,31 @@
-#accountView .content {
-	ul.userList {
-		& > li > a {
+#accountView {
+	ul {
+		& > li  {
 			.flex; .flex-flow(row); .justify-content(space-between); .align-items(center); .align-content(stretch);
 			.listElement;
+			cursor: pointer;
 
-			& > div { display: block; }
-
-			img.image {
-				display: block;
+			.userImage {
 				width: 3em; height: 3em;
-				background-size:cover; background-position: top center; background-repeat: no-repeat;
+				text-align: center;
+				overflow: hidden;
+				
+				img {
+					height: 3em;
+					margin: 0 -100%;
+				}
 			}
 			.userInfo {
 				width: 100%; padding: 0.5em; margin-left: 1em;
 				text-align: left;
 
 				span {
-					&.username { font-weight: bold; }
-
 					display: block; padding: 0.1em 0;
+					
+					&.username { font-weight: bold; }
 				}
 			}
-			.operations > * {
+			.operations > button {
 				height: 100%;
 			}
 		}
