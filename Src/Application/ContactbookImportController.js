@@ -1,7 +1,7 @@
 define(["Configuration", "Core/Service/FileService", "Model/Domain/ContactbookManager", "Model/Domain/User"], function(Configuration, FileService, ContactbookManager, User){
 	'use strict';
 
-	var ContactbookImportController = function($scope, accountService){
+	var ContactbookImportController = function($scope, $location, accountService){
 		$scope.contactbookImport = Configuration.contactbookImport;
 
 		if(!accountService.currentUser.contactbookManager) {
@@ -19,6 +19,9 @@ define(["Configuration", "Core/Service/FileService", "Model/Domain/ContactbookMa
 					contactbook.name = prompt('please insert the name of the new contactbook, e.q. business or family');
 
 					accountService.currentUser.contactbookManager.add(contactbook);
+
+					$location.url('/contacts');
+					$scope.$apply();
 				});
 			});
 		}

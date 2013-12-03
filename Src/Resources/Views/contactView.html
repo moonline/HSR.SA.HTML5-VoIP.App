@@ -5,13 +5,18 @@
 				Contactbook {{contactbook.name}}
 			</button>
 		</div>
-		<a class="button green" href="#/import/contactbook">+ Contactbook</a>
-		<a class="button green" href="#/settings">Settings</a>
-		<a class="button green" href="#/">Account</a>
+		<a class="button" href="#/import/contactbook">+ Contactbook</a>
+		<a class="button" href="#/settings">Settings</a>
+		<a class="button" href="#/">Account</a>
 	</header>
 	<div class="content" data-ng-if="currentContactbook">
 		<div class="entry" data-ng-repeat="contact in currentContactbook.data">
 			<span class="name">{{contact.name}}</span>
+			<div class="callOperations">
+				<button data-ng-click="call(channelAccount.channel, channelAccount.userId)" class="call button green" data-ng-repeat="channelAccount in contact.channelAccounts">
+					Call by {{channelAccount.channel.name}}
+				</button>
+			</div>
 		</div>
 	</div>
 </div>

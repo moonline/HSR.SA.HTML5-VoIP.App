@@ -46,10 +46,10 @@ define([
 	AccountController.$inject = ['$scope', '$location', 'accountService'];
 
 	app.controller('ContactController', ContactController);
-	ContactController.$inject = ['$scope', 'accountService'];
+	ContactController.$inject = ['$scope', '$location', 'accountService'];
 
 	app.controller('ContactbookImportController', ContactbookImportController);
-	ContactbookImportController.$inject = ['$scope', 'accountService'];
+	ContactbookImportController.$inject = ['$scope', '$location', 'accountService'];
 
 	return app;
 });

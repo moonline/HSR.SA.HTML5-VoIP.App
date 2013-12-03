@@ -30,7 +30,9 @@ define({
 	"channels" : [
 		{
 			"name": "XHR Messenger",
-			"type": "ChannelXHR"
+			"serviceId": "XHRmessenger",
+			"type": "Model/Domain/Channel/ChannelXHR",
+			"userIdField": "nick"
 		}
 	],
 
