@@ -41,7 +41,6 @@ define([
 		return accountService;
 	});
 
-
 	/* controllers */
 	app.controller('AccountController', AccountController);
 	AccountController.$inject = ['$scope', '$location', 'accountService'];

@@ -1,11 +1,12 @@
-define(["Model/Interfaces/AddressbookInterface", "Model/Domain/Addressbook", "Core/Framework/Barrier"],function(AddressbookInterface, Addressbook, Barrier) {
+define(["Configuration", "Model/Interfaces/AddressbookInterface", "Model/Domain/Addressbook", "Core/Framework/Barrier", "Core/Service/ContactbookLoader"],
+	function(Configuration, AddressbookInterface, Addressbook, Barrier, ContactbookPrototypes) {
 	'use strict';
 
 	var Storage = window.localStorage;
 
 
 	var ContactbookManager = function (user) {
-		this.contactbooks = new Array();
+		this.contactbooks = [];
 		this.user = user;
 		this.indexKey = "contactbookIndex."+user.username;
 		this.contactbookKeyPrefix = "contactbook."+user.username+".";
@@ -18,35 +19,39 @@ define(["Model/Interfaces/AddressbookInterface", "Model/Domain/Addressbook", "Co
 	};
 
 	/**
-	 * load contactbooks from localstorage
+	 * load contactbooks from localstorage without removing the local contactbooks
 	 *
 	 * @type {function(this:AddressbookManager)}
 	 */
-	ContactbookManager.prototype.load = function (loadedCallback) {
-		var barrier = new Barrier(loadedCallback);
-
+	ContactbookManager.prototype.loadFromStorage = function () {
 		this.getContactbookIndex().forEach(function (element) {
 			if (Storage.getItem(element)) {
 				var tempBook = JSON.parse(Storage.getItem(element));
 
-				// restore concrete addressbook by type string using require.js
-				barrier.startTask();
-				require([tempBook.type], function(ConcreteAddressbook){
-					var addressBook = new ConcreteAddressbook();
-					Object.keys(tempBook).forEach(function (key) {
-						addressBook[key] = tempBook[key];
-					}, this);
+				var addressBook = new ContactbookPrototypes[tempBook.type]();
+				Object.keys(tempBook).forEach(function (key) {
+					addressBook[key] = tempBook[key];
+				}, this);
 
-					// update online contactbooks
-					if(addressBook.dataSourceType === Addressbook.dataSourceTypes.online && addressBook.address) {
-						addressBook.load(addressBook.address);
-					}
-					this.contactbooks.push(addressBook);
-					barrier.taskFinished();
-				}.bind(this));
+				// update online contactbooks
+				if(addressBook.dataSourceType === Addressbook.dataSourceTypes.online && addressBook.address) {
+					addressBook.load(addressBook.address);
+				}
+				this.contactbooks.push(addressBook);
 			}
 		}, this);
 	};
+
+	/**
+	 * load contactbooks from storage, replace local contactbooks
+	 *
+	 * @param loadedCallback
+	 */
+	ContactbookManager.prototype.refreshFromStorage = function (loadedCallback) {
+		this.contactbooks = [];
+		this.loadFromStorage(loadedCallback);
+	};
+
 
 	/**
 	 * add an addressbook
@@ -64,7 +69,6 @@ define(["Model/Interfaces/AddressbookInterface", "Model/Domain/Addressbook", "Co
 		var newIndex = this.getContactbookIndex();
 		newIndex.push(contactbookKey);
 		Storage.setItem(this.indexKey, JSON.stringify(newIndex));
-		console.log(this.contactbooks);
 	};
 
 	/**

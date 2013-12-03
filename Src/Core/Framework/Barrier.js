@@ -3,7 +3,9 @@ define(function(){
 
 
 	var Barrier = function(finishedCallback) {
-		this.finishedCallback = finishedCallback;
+		if(finishedCallback) {
+			this.finishedCallback = finishedCallback;
+		}
 		this.numberWaitingFor = 0;
 	};
 
@@ -15,7 +17,9 @@ define(function(){
 	Barrier.prototype.taskFinished = function() {
 		this.numberWaitingFor--;
 		if(this.numberWaitingFor <= 0) {
-			this.finishedCallback();
+			if(this.finishedCallback) {
+				this.finishedCallback();
+			}
 		}
 	};
 
