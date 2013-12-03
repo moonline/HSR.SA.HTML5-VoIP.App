@@ -4,9 +4,10 @@ define([
 	"Application/AccountController",
 	"Application/ContactController",
 	"Application/ContactbookImportController",
+	"Application/Service/requireLoginService",
 	"Model/Domain/AccountManager",
 	"angular-route" ],
-	function(angular, Configuration, AccountController, ContactController, ContactbookImportController, AccountManager) {
+	function(angular, Configuration, AccountController, ContactController, ContactbookImportController, requireLoginService, AccountManager) {
 	'use strict';
 	
 	var app = angular.module('App', [ 'ngRoute' ]);
@@ -40,16 +41,17 @@ define([
 		accountService.accountManager.load();
 		return accountService;
 	});
+	app.factory('requireLogin', requireLoginService);
 
 	/* controllers */
 	app.controller('AccountController', AccountController);
 	AccountController.$inject = ['$scope', '$location', 'accountService'];
 
 	app.controller('ContactController', ContactController);
-	ContactController.$inject = ['$scope', '$location', 'accountService'];
+	ContactController.$inject = ['$scope', '$location', 'accountService', 'requireLogin'];
 
 	app.controller('ContactbookImportController', ContactbookImportController);
-	ContactbookImportController.$inject = ['$scope', '$location', 'accountService'];
+	ContactbookImportController.$inject = ['$scope', '$location', 'accountService', 'requireLogin'];
 
 	return app;
 });

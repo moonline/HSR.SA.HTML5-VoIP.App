@@ -2,7 +2,11 @@ define(["Configuration","Model/Domain/ContactbookManager"],
 	function (Configuration, ContactbookManager) {
 	'use strict';
 
-	var ContactbookController = function($scope, $location, accountService) {
+	var ContactbookController = function($scope, $location, accountService, requireLogin) {
+		if (requireLogin().abort) {
+			return;
+		}
+		
 		$scope.accountService = accountService;
 		$scope.currentUser = accountService.currentUser;
 		$scope.accounts = accountService.currentUser.accounts;
