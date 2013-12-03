@@ -1,6 +1,10 @@
-.entry {
-	.listElement;
-	.image {
-		height: 3em; width: 3em; display: inline-block;
+#contactView{
+	.entry {
+		.flex; .flex-flow(row); .justify-content(flex-start); .align-items(center); .align-content(stretch);
+		.listElement;
+
+		.userImage { margin-right: 0.5em; }
+		.userInfo { padding: 0.25em; }
+		.right { .flex; .flex-flow(column);  }
 	}
 }
