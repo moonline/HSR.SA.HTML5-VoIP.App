@@ -1,6 +1,6 @@
 <div class="page" id="contactView">
 	<header class="operationPanel">
-		<div class="contactbookList dropDown">
+		<div class="dropDown" id="contactbookList">
 			<button class="dropDownIcon"><span class="icon-liga">&#xe12a;</span></button>
 			<ul class="dropDownContent">
 				<li data-ng-click="open(contactbook)" data-ng-repeat="contactbook in contactbooks">
@@ -14,11 +14,20 @@
 	</header>
 	<div class="content" data-ng-if="currentContactbook">
 		<div class="entry" data-ng-repeat="contact in currentContactbook.data">
-			<span class="name">{{contact.name}}</span>
-			<div class="callOperations">
-				<button data-ng-click="call(channelAccount.channel, channelAccount.userId)" class="call button green" data-ng-repeat="channelAccount in contact.channelAccounts">
-					Call by {{channelAccount.channel.name}}
-				</button>
+			<div class="userImage">
+				<img data-ng-if="contact.photo" data-ng-src="data:image/png;base64,{{contact.photo}}" src="Resources/Img/person.png" alt="">
+				<img data-ng-if="!contact.photo" src="Resources/Img/person.png" alt="">
+			</div>
+			<div class="right">
+				<div class="userInfo">
+					<span class="name">{{contact.name}}</span>
+				</div>
+				<div class="callOperations">
+					<button data-ng-click="call(channelAccount.channel, channelAccount.userId)" class="call button green" data-ng-repeat="channelAccount in contact.channelAccounts">
+						Call by {{channelAccount.channel.name}}
+					</button>
+				</div>
+
 			</div>
 		</div>
 	</div>
