@@ -1,11 +1,19 @@
-define(["Configuration","Model/Domain/ContactbookManager"],
-	function (Configuration, ContactbookManager) {
+define(["Configuration","Model/Domain/ContactbookManager", "Model/Domain/User"],
+	function (Configuration, ContactbookManager, User) {
 	'use strict';
 
 	var ContactbookController = function($scope, accountService) {
-		$scope.contactbookManager = accountService.accountManager;
+		console.log(accountService.currentUser);
+		// TODO: remove this when login is implemented
+		if(!accountService.currentUser) {
+			accountService.currentUser = new User('testuser', '', 'Test', 'User', '', '');
+		}
+		if(!accountService.currentUser.contactbookManager) {
+			accountService.currentUser.contactbookManager = new ContactbookManager(accountService.currentUser);
+			accountService.currentUser.contactbookManager.load(function(){});
+		}
 
-		$scope.currentContactbook = null;
+		$scope.contactbookManager = accountService.currentUser.contactbookManager;
 
 		$scope.open = function(contactbook) {
 			$scope.currentContactbook = contactbook;

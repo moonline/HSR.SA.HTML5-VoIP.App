@@ -57,13 +57,14 @@ define(["Model/Interfaces/AddressbookInterface", "Model/Domain/Addressbook", "Co
 		AddressbookInterface.assertImplementedBy(contactbook);
 		var index = this.contactbooks.length;
 		this.contactbooks.push(contactbook);
-		var addressbookKey = this.contactbookKeyPrefix + index + '-' + (new Date()).getMilliseconds();
+		var contactbookKey = this.contactbookKeyPrefix + index + '-' + (new Date()).getMilliseconds();
 
-		Storage.setItem(addressbookKey, JSON.stringify(contactbook));
+		Storage.setItem(contactbookKey, JSON.stringify(contactbook));
 
 		var newIndex = this.getContactbookIndex();
-		newIndex.push(addressbookKey);
+		newIndex.push(contactbookKey);
 		Storage.setItem(this.indexKey, JSON.stringify(newIndex));
+		console.log(this.contactbooks);
 	};
 
 	/**

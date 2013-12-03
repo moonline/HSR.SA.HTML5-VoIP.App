@@ -40,8 +40,7 @@ define([
 	/* shared resources */
 	app.factory('accountService', function($rootScope) {
 		var accountService =  {
-			accountManager: new AccountManager(),
-			currentUser: null
+			accountManager: new AccountManager()
 		};
 		accountService.accountManager.load();
 		return accountService;

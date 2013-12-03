@@ -1,16 +1,14 @@
 <div class="page" id="contactView">
 	<header class="operationPanel">
-		<div class="contactbookList" data-ng-repeat="contactbook in contactbookManager.addressbooks">
-			<a href="#/contacts/{{contactBook}}">
-				Contactbook {{contactBook.name}}
-			</a>
+		<div class="contactbookList" data-ng-repeat="contactbook in contactbookManager.contactbooks">
+			<button data-ng-click="open(contactbook)" >Contactbook {{contactbook.name}}</button>
 		</div>
 		<a class="button green" href="#/import/contactbook">+ Contactbook</a>
 		<a class="button green" href="#/settings">Settings</a>
 		<a class="button green" href="#/">Account</a>
 	</header>
 	<h2>contacts</h2>
-	<div class="content" data-ng-repeat="contact in contactController.currentContactbook">
+	<div class="content" data-ng-if="currentContactbook" data-ng-repeat="contact in currentContactbook">
 		<div class="entry">
 			<img class="image" data-ng-if="contact.photo" style="background-image: url(&quot;data:image/png;base64,{{contact.photo}}&quot;);">
 			<img class="image" data-ng-if="!contact.photo" style="background-image: url(&quot;Resources/Img/person.png&quot;);">
