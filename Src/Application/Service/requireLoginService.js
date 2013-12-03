@@ -1,4 +1,6 @@
 define([], function() {
+	'use strict';
+	
 	var requireLoginService = ['$location', 'accountService', function($location, accountService) {
 		/**
 		 * Redirects user if not logged in
