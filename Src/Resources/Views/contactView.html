@@ -1,9 +1,12 @@
 <div class="page" id="contactView">
 	<header class="operationPanel">
-		<div class="contactbookList">
-			<button data-ng-click="open(contactbook)" data-ng-repeat="contactbook in contactbooks">
-				Contactbook {{contactbook.name}}
-			</button>
+		<div class="contactbookList dropDown">
+			<button class="dropDownIcon"><span class="icon-liga">&#xe12a;</span></button>
+			<ul class="dropDownContent">
+				<li data-ng-click="open(contactbook)" data-ng-repeat="contactbook in contactbooks">
+					Contactbook {{contactbook.name}}
+				</li>
+			</ul>
 		</div>
 		<a class="button" href="#/import/contactbook">+ Contactbook</a>
 		<a class="button" href="#/settings">Settings</a>

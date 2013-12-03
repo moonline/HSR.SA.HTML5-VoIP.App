@@ -53,3 +53,41 @@ input[type="button"].error, .button.error, button.error {
 	background: red;
 	.background-linear-gradient(red,maroon);
 }
+
+
+.dropDown {
+	display: inline-block;
+
+	.dropDownContent {
+		display: none;
+		position: absolute; padding: @elementPadding;
+		background: silver; border: 0.05em solid white; border-width: 0 0 0.05em 0.05em;
+		.box-shadow(0 0.25em 0.25em gray);
+		border-top-right-radius: 0.25em;
+
+		&:hover {
+			display: block;
+		}
+
+		li {
+			padding: @elementPadding;
+			.listElement;
+		}
+	}
+	.dropDownIcon:hover {
+		border: 0.1em solid white; border-radius: 0.5em;
+		.background-linear-gradient(white,silver);
+		color: black; font-weight: bold;
+	}
+	.dropDownIcon:hover + .dropDownContent {
+		display: block;
+	}
+
+	&:hover {
+		.dropDownContent { display: block; }
+		.dropDownIcon {
+			border-bottom-left-radius: 0; border-bottom-right-radius: 0;
+			border-bottom-color: silver;
+		}
+	}
+}
