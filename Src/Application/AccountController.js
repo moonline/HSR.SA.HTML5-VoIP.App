@@ -64,7 +64,11 @@ define(["Model/Domain/Account", "Model/Domain/User"], function (Account, User) {
                 }
                 
                 accountService.currentUser = user;
-                $location.url('/contacts');
+                if (sessionStorage.loginPath) {
+                	$location.url(sessionStorage.loginPath);
+                } else {
+                	$location.url('/contacts');
+                }
             };
     };
 
