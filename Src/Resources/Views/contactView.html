@@ -4,14 +4,16 @@
 			<button class="dropDownIcon"><span class="icon-liga">&#xe12a;</span></button>
 			<ul class="dropDownContent">
 				<li data-ng-click="open(contactbook)" data-ng-repeat="contactbook in contactbooks">
-					Contactbook {{contactbook.name}}
+					<span class="icon-liga">&#xe05c;</span>&nbsp; {{contactbook.name}}
 				</li>
 			</ul>
 		</div>
-		<a class="button" href="#/import/contactbook">+ Contactbook</a>
-		<a class="button" href="#/settings">Settings</a>
-		<a class="button" href="#/">Account</a>
-		<h2 data-ng-if="currentContactbook && currentContactbook.name">{{currentContactbook.name}}</h2>
+		<a class="button" href="#/import/contactbook"><span class="icon-liga">&#xe108;</span> import</a>
+		<a class="button" href="#/settings"><span class="icon-liga">&#xe055;</span></a>
+		<a class="button" href="#/"><span class="icon-liga">&#xe051;</span></a>
+		<h2 data-ng-if="currentContactbook && currentContactbook.name">
+			<span class="icon-liga">&#xe05c;</span>&nbsp;{{currentContactbook.name}}
+		</h2>
 	</header>
 	<div class="content" data-ng-if="currentContactbook">
 		<div class="entry" data-ng-repeat="contact in currentContactbook.data">
@@ -25,7 +27,7 @@
 				</div>
 				<div class="callOperations">
 					<button data-ng-click="call(channelAccount.channel, channelAccount.userId)" class="call button green" data-ng-repeat="channelAccount in contact.channelAccounts">
-						Call by {{channelAccount.channel.name}}
+						<span class="icon-liga">&#xe100;</span>&nbsp;by {{channelAccount.channel.name}}
 					</button>
 				</div>
 
