@@ -1,11 +1,27 @@
 <div class="page" id="accountEditView">
 	<header class="operationPanel">
-		<a class="button blue" href="#/contacts"><span class="icon-liga">&#xe05c;</span>&nbsp; Contacts</a>
-		<h2 data-ng-if="currentContactbook && currentContactbook.name">
-			<span class="icon-liga"></span>&nbsp;{{user.username}} ({{user.firstname}} {{user.lastname}})
+		<a class="button blue" href="#/contacts"><span class="icon-liga">&#xe00c;</span> Back</a>
+		<h2>
+			<span class="icon-liga">&#xe137;</span>&nbsp; {{user.firstname}} {{user.lastname}} ({{user.username}})
 		</h2>
 	</header>
 	<div class="content">
-
+		<form>
+			<div class="channelSettings" data-ng-repeat="channel in channels">
+				<span class="channelName">{{channel.name}}</span>
+				<div class="verticalDivider">&nbsp;</div>
+				<div class="channelAccountData">
+					<div class="formLine">
+						<input type="text" data-ng-model="accounts[channel.serviceId].fields.userId" name="{{channel.serviceId}}-userId" placeholder="useridentity" />
+					</div>
+					<div class="formLine">
+						<input type="password" data-ng-model="accounts[channel.serviceId].fields.password" name="{{channel.serviceId}}-password" placeholder="password" />
+					</div>
+				</div>
+			</div>
+		</form>
 	</div>
+	<footer class="operationPanel">
+		<button class="button green" data-ng-click="update()"><span class="icon-liga">&#xe115;</span> Save</button>
+	</footer>
 </div>

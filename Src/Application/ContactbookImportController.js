@@ -9,10 +9,10 @@ define(["Configuration", "Core/Service/FileService", "Model/Domain/ContactbookMa
 		
 		$scope.contactbookImport = Configuration.contactbookImport;
 
-		if(!accountService.currentUser.contactbookManager) {
-			accountService.currentUser.contactbookManager = new ContactbookManager(accountService.currentUser);
+		if(!accountService.contactbookManager) {
+			accountService.contactbookManager = new ContactbookManager(accountService.currentUser);
 		}
-		accountService.currentUser.contactbookManager.refreshFromStorage();
+		accountService.contactbookManager.refreshFromStorage();
 
 
 		$scope.importFromFile = function(type, files) {
@@ -25,7 +25,7 @@ define(["Configuration", "Core/Service/FileService", "Model/Domain/ContactbookMa
 						contactbook.load(fileContent);
 						contactbook.name = prompt('please insert the name of the new contactbook, e.q. business or family');
 
-						accountService.currentUser.contactbookManager.add(contactbook);
+						accountService.contactbookManager.add(contactbook);
 
 						$location.url('/contacts');
 						$scope.$apply();
@@ -46,7 +46,7 @@ define(["Configuration", "Core/Service/FileService", "Model/Domain/ContactbookMa
 						contactbook.load(fileContents);
 						contactbook.name = prompt('please insert the name of the new contactbook, e.q. business or family');
 
-						accountService.currentUser.contactbookManager.add(contactbook);
+						accountService.contactbookManager.add(contactbook);
 
 						$location.url('/contacts');
 						$scope.$apply();
@@ -69,7 +69,7 @@ define(["Configuration", "Core/Service/FileService", "Model/Domain/ContactbookMa
 
 						contactbook.load(address, function() {
 							contactbook.name = prompt('please insert the name of the new contactbook, e.q. business or family');
-							accountService.currentUser.contactbookManager.add(contactbook);
+							accountService.contactbookManager.add(contactbook);
 
 							$location.url('/contacts');
 							$scope.$apply();

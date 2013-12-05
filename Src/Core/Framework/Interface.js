@@ -9,7 +9,7 @@ define(function() {
 	/**
 	 * check if object implement the interface
 	 *
-	 * @param object: the object which implements the interface
+	 * @param object the object which implements the interface
 	 */
 	Interface.prototype.assertImplementedBy= function(object) {
 		var implementsInterface = true;

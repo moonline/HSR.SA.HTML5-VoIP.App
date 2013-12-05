@@ -47,7 +47,8 @@ define([
 	/* shared resources */
 	app.factory('accountService', function($rootScope) {
 		var accountService =  {
-			accountManager: new AccountManager()
+			accountManager: new AccountManager(),
+			contactbookManager: null
 		};
 		accountService.accountManager.load();
 		return accountService;
@@ -65,7 +66,7 @@ define([
 	ContactbookImportController.$inject = ['$scope', '$location', 'accountService', 'requireLogin'];
 
 	app.controller('AccountEditController', AccountEditController);
-	ContactController.$inject = ['$scope', '$location', 'accountService', 'requireLogin'];
+	AccountEditController.$inject = ['$scope', '$location', 'accountService', 'requireLogin'];
 
 	return app;
 });

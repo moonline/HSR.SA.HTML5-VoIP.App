@@ -1,5 +1,5 @@
-define(["Configuration","Model/Domain/ContactbookManager"],
-	function (Configuration, ContactbookManager) {
+define(["Configuration"],
+	function (Configuration) {
 	'use strict';
 
 	var AccountEditController = function($scope, $location, accountService, requireLogin) {
@@ -11,6 +11,10 @@ define(["Configuration","Model/Domain/ContactbookManager"],
 		$scope.user = accountService.currentUser;
 		$scope.accounts = accountService.currentUser.accounts;
 		$scope.channels = Configuration.channels;
+
+		$scope.update = function() {
+			accountService.accountManager.store();
+		}
 
 	};
 

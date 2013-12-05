@@ -12,12 +12,12 @@ define(["Configuration","Model/Domain/ContactbookManager"],
 		$scope.accounts = accountService.currentUser.accounts;
 		$scope.channels = Configuration.channels;
 
-		if(!accountService.currentUser.contactbookManager) {
-			accountService.currentUser.contactbookManager = new ContactbookManager(accountService.currentUser);
+		if(!accountService.contactbookManager) {
+			accountService.contactbookManager = new ContactbookManager(accountService.currentUser);
 		}
-		accountService.currentUser.contactbookManager.refreshFromStorage();
+		accountService.contactbookManager.refreshFromStorage();
 
-		$scope.contactbooks = accountService.currentUser.contactbookManager.contactbooks;
+		$scope.contactbooks = accountService.contactbookManager.contactbooks;
 		$scope.contactbooks.forEach(function(contactbook){
 			contactbook.data.forEach(function(entry){
 				entry.channelAccounts = [];
@@ -33,8 +33,8 @@ define(["Configuration","Model/Domain/ContactbookManager"],
 			});
 		});
 
-		if(accountService.currentUser.contactbookManager.contactbooks.length > 0) {
-			$scope.currentContactbook = accountService.currentUser.contactbookManager.contactbooks[0];
+		if(accountService.contactbookManager.contactbooks.length > 0) {
+			$scope.currentContactbook = accountService.contactbookManager.contactbooks[0];
 		}
 
 

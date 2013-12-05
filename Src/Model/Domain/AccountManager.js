@@ -42,6 +42,7 @@ define(function() {
 	};
 
 	AccountManager.prototype.store = function() {
+		console.log(this.users);
 		Storage.setItem('accounts',JSON.stringify(this.users));
 	};
 
