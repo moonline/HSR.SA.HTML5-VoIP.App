@@ -79,7 +79,7 @@ END:VCARD\n\
 			"lastname":"Meyer",
 			"firstname":"Hans",
 			"name":"Hans Meyer",
-			"nickname":"hansmeyer",
+			"nick":"hansmeyer",
 			"address":{
 				"street":"Bahnhofstrasse 10",
 				"city":"Uster",
@@ -101,7 +101,7 @@ END:VCARD\n\
 			"lastname":"Müller",
 			"firstname":"Franz",
 			"name":"Franz Müller",
-			"nickname":"franzmueller",
+			"nick":"franzmueller",
 			"address":{
 				"street":"Zenderweg 3",
 				"city":"Bern",
