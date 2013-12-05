@@ -8,9 +8,9 @@
 				</li>
 			</ul>
 		</div>
-		<a class="button" href="#/import/contactbook"><span class="icon-liga">&#xe108;</span> import</a>
-		<a class="button" href="#/settings"><span class="icon-liga">&#xe055;</span></a>
-		<a class="button" href="#/"><span class="icon-liga">&#xe051;</span></a>
+		<a class="button green" href="#/import/contactbook"><span class="icon-liga">&#xe108;</span> import</a>
+		<a class="button blue" href="#/account"><span class="icon-liga">&#xe055;</span></a>
+		<a class="button blue" href="#/"><span class="icon-liga">&#xe051;</span></a>
 		<h2 data-ng-if="currentContactbook && currentContactbook.name">
 			<span class="icon-liga">&#xe05c;</span>&nbsp;{{currentContactbook.name}}
 		</h2>
@@ -26,7 +26,7 @@
 					<span class="name">{{contact.name}}</span>
 				</div>
 				<div class="callOperations">
-					<button data-ng-click="call(channelAccount.channel, channelAccount.userId)" class="call button green" data-ng-repeat="channelAccount in contact.channelAccounts">
+					<button data-ng-click="call(channelAccount.channel, channelAccount.userId)" class="call button blue" data-ng-repeat="channelAccount in contact.channelAccounts">
 						<span class="icon-liga">&#xe100;</span>&nbsp;by {{channelAccount.channel.name}}
 					</button>
 				</div>

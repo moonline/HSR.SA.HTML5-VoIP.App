@@ -1,6 +1,6 @@
 input[type="button"], .button, button {
 	display: inline-block;
-	border: 0.1em solid white; border-radius: 0.5em;
+	border: 0.1em solid gray; border-radius: 0.5em;
 	.background-linear-gradient(white,silver);
 	color: black; font-weight: bold;
 	padding: (@elementPadding / 2) 1em;
@@ -26,6 +26,15 @@ input[type="button"], .button, button {
 
 		&:hover {
 			.background-linear-gradient(brown, rgb(100,0,0));
+		}
+	}
+
+	&.blue {
+		.background-linear-gradient(deepskyblue,rgb(0,75,120));
+		border-color: midnightblue;
+
+		&:hover {
+			.background-linear-gradient(rgb(0,170,240),rgb(0,60,100));
 		}
 	}
 
