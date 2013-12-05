@@ -50,9 +50,35 @@ define(["Configuration", "Core/Service/FileService", "Model/Domain/ContactbookMa
 
 						$location.url('/contacts');
 						$scope.$apply();
+					} else {
+						alert('Missconfiguration. Configured contactbook "'+type+'" not found.');
 					}
 				});
 			});
+		};
+
+		$scope.importFromOnlineSource = function(type) {
+			var address = prompt('Please insert the address of the remote contactbook file.');
+			if(address) {
+				address = (address.indexOf('http://') == 0) ? address : 'http://'+address;
+
+				require([type], function(ConcreteAddressbook){
+					if(ConcreteAddressbook) {
+						var contactbook = new ConcreteAddressbook();
+						AddressbookInterface.assertImplementedBy(contactbook);
+
+						contactbook.load(address, function() {
+							contactbook.name = prompt('please insert the name of the new contactbook, e.q. business or family');
+							accountService.currentUser.contactbookManager.add(contactbook);
+
+							$location.url('/contacts');
+							$scope.$apply();
+						});
+					} else {
+						alert('Missconfiguration. Configured contactbook "'+type+'" not found.');
+					}
+				});
+			}
 		};
 	};
 

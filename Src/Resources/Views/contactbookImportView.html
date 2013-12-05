@@ -16,13 +16,13 @@
 					<input type="file" multiple id="{{import.type}}" data-importtype="{{import.type}}" onchange="angular.element(this).scope().importFromDirectory(this.getAttribute('data-importtype'), this.files)" name="{{import.type}}" value="{{import.name}}" />
 				</div>
 			</div>
-			<!--<div class="onlineImport" data-ng-repeat="import in contactbookImport.online">
+			<div class="onlineImport" data-ng-repeat="import in contactbookImport.online">
 				<div class="formLine">
 					<label for="{{import.name}}">{{import.name}}</label>
-					<input id="{{import.type}}Load" type="button" class="button" value="load" />
+					<button id="{{import.type}}" data-ng-click="importFromOnlineSource(import.type)" class="button" >Load</button>
 				</div>
 			</div>
-			<a download class="button" href="Resources/Data/json/adressbook-221013.json" target="_blank" >download default</a>-->
+			<a download class="button" href="Resources/Data/json/adressbook-221013.json" target="_blank" >download default json</a>
 		</form>
 	</div>
 </div>

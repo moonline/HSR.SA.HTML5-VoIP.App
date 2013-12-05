@@ -17,6 +17,9 @@
 			angular: {
 				exports: "angular"
 			},
+			jQuery: {
+				exports: "jQuery"
+			},
 			"angular-route": ["angular"]
 		}
 	});
