@@ -3,12 +3,11 @@ define(["Configuration", "Model/Domain/Addressbook", "Model/Domain/AddressbookEn
 
 
 	var AddressbookVcard = function () {
-		this.implementInterface = 'AddressbookInterface';
+		this.implementInterface = 'Model/Interfaces/AddressbookInterface';
 		this.type = 'Model/Domain/Addressbook/AddressbookVcard';
 		this.data = new Array();
 		this.dataSourceTypes = Addressbook.dataSourceTypes.file;
 
-		// TODO: move to config
 		this.fieldMapping = (Configuration.contactbookVcardConfig) ? Configuration.contactbookVcardConfig : [
 			{
 				"path": ["VERSION"],
@@ -76,10 +75,8 @@ define(["Configuration", "Model/Domain/Addressbook", "Model/Domain/AddressbookEn
 		];
 	};
 
-
-	// Todo: write a test for load
 	AddressbookVcard.prototype.load = function (vcards) {
-		vcards.forEach(function(vcard, index) {
+		vcards.forEach(function(vcard) {
 			this.addEntry(vcard);
 		},this);
 	};
@@ -87,10 +84,9 @@ define(["Configuration", "Model/Domain/Addressbook", "Model/Domain/AddressbookEn
 
 	/**
 	 * add a vcard entry
-	 * @param string:vcardContent
+	 * @param vcardContent: content of the vcf file as text (img as base64)
 	 */
 	AddressbookVcard.prototype.addEntry = function (vcardContent) {
-		var mapping = this.fieldMapping;
 		var entry = new AddressbookEntry();
 
 		var lines = vcardContent.split('\n');

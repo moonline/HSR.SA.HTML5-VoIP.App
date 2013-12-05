@@ -81,7 +81,7 @@ define({
 			}
 		},{
 			"path": ["NICKNAME"],
-			"mapTo": ['nickname']
+			"mapTo": ['nick']
 		},{
 			"path": ["TEL", "CELL", "VOICE"],
 			"mapTo": ['phone'],

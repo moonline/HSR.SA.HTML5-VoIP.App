@@ -3,7 +3,7 @@ define(["Model/Domain/Addressbook", "Model/Domain/AddressbookEntry"], function(A
 
 
 	var AddressbookJson = function () {
-		this.implementInterface = 'AddressbookInterface';
+		this.implementInterface = 'Model/Interfaces/AddressbookInterface';
 		this.type = 'Model/Domain/Addressbook/AddressbookJson';
 		this.data = new Array();
 

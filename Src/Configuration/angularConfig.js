@@ -6,7 +6,11 @@ define([
 	"Application/ContactbookImportController",
 	"Application/Service/requireLoginService",
 	"Model/Domain/AccountManager",
-	"angular-route" ],
+
+	"angular-route",
+	"Core/Service/ArrayService",
+	"Core/Service/StringService"
+	],
 	function(angular, Configuration, AccountController, ContactController, ContactbookImportController, requireLoginService, AccountManager) {
 	'use strict';
 	

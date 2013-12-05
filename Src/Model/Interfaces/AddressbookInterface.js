@@ -3,7 +3,7 @@ define(["Core/Framework/Interface"],function(Interface) {
 
 
 	var AddressbookInterface = new Interface(
-		'AddressbookInterface',
+		'Model/Interfaces/AddressbookInterface',
 		['getEntries', 'count', 'load']
 	);
 

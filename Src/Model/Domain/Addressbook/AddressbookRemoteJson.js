@@ -4,7 +4,7 @@ define(["Configuration", "Model/Domain/Addressbook", "Model/Domain/AddressbookEn
 
 
 	var AddressbookRemoteJson = function () {
-		this.implementInterface = 'AddressbookInterface';
+		this.implementInterface = 'Model/Interfaces/AddressbookInterface';
 		this.type = 'Model/Domain/Addressbook/AddressbookRemoteJson';
 		this.data = new Array();
 
