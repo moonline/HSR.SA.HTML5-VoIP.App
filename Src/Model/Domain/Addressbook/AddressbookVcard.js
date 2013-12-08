@@ -19,6 +19,66 @@ define(["Config/ContactbookConfiguration/Vcard", "Model/Domain/Addressbook", "Mo
 	};
 
 
+	AddressbookVcard.prototype.parseSimpleField = function(entry, field, values) {
+		var parentField = entry;
+		var currentKey;
+
+		field.mapTo.forEach(function (segment) {
+			if (!currentKey) {
+				currentKey = segment;
+			} else {
+				if (!parentField[currentKey]) {
+					parentField[currentKey] = new Object();
+				}
+				parentField = parentField[currentKey];
+				currentKey = segment;
+			}
+		}, this);
+
+		if (field.mappingRule === 'list') {
+			if (parentField[currentKey] instanceof Array) {
+				parentField[currentKey] = parentField[currentKey].concat(values);
+			} else {
+				parentField[currentKey] = values;
+			}
+		} else {
+			parentField[currentKey] = values[0];
+		}
+	};
+
+
+	AddressbookVcard.prototype.parseFieldWithMultipleValues = function(field, entry, values) {
+		Object.keys(field.mapTo).forEach(function (key) {
+			var parentField = entry;
+			var currentKey;
+
+			field.mapTo[key].forEach(function (segment) {
+				if (!currentKey) {
+					currentKey = segment;
+				} else {
+					if (!parentField[currentKey]) {
+						parentField[currentKey] = new Object();
+					}
+					parentField = parentField[currentKey];
+					currentKey = segment;
+				}
+			}, this);
+			parentField[currentKey] = values[key];
+		}, this);
+	};
+
+	AddressbookVcard.prototype.parseVcardAndMapFields = function(data, entry, values) {
+		this.fieldMapping.forEach(function (field) {
+			if (JSON.stringify(field.path) === JSON.stringify(data.path)) {
+				if (field.mapTo instanceof Array) {
+					this.parseSimpleField(entry, field, values);
+				} else if (typeof(field.mapTo) === 'object') {
+					this.parseFieldWithMultipleValues(field, entry, values);
+				}
+			}
+		}, this);
+	};
+
 	/**
 	 * @param vcardContent content of the vcf file as text (img as base64)
 	 */
@@ -53,54 +113,7 @@ define(["Config/ContactbookConfiguration/Vcard", "Model/Domain/Addressbook", "Mo
 					}
 				});
 
-				this.fieldMapping.forEach(function(field){
-					if(JSON.stringify(field.path) === JSON.stringify(data.path)) {
-						if(field.mapTo instanceof Array) {
-							var parentField = entry;
-							var currentKey;
-
-							field.mapTo.forEach(function(segment){
-								if(!currentKey) {
-									currentKey = segment;
-								} else {
-									if(!parentField[currentKey]) {
-										parentField[currentKey] = new Object();
-									}
-									parentField = parentField[currentKey];
-									currentKey = segment;
-								}
-							},this);
-
-							if(field.mappingRule === 'list') {
-								if(parentField[currentKey] instanceof Array) {
-									parentField[currentKey] = parentField[currentKey].concat(values);
-								} else {
-									parentField[currentKey] = values;
-								}
-							} else {
-								parentField[currentKey] = values[0];
-							}
-						} else if(typeof(field.mapTo) === 'object') {
-							Object.keys(field.mapTo).forEach(function(key){
-								var parentField = entry;
-								var currentKey;
-
-								field.mapTo[key].forEach(function(segment){
-									if(!currentKey) {
-										currentKey = segment;
-									} else {
-										if(!parentField[currentKey]) {
-											parentField[currentKey] = new Object();
-										}
-										parentField = parentField[currentKey];
-										currentKey = segment;
-									}
-								},this);
-								parentField[currentKey] = values[key];
-							},this);
-						}
-					}
-				},this);
+				this.parseVcardAndMapFields(data, entry, values);
 			}
 		}, this);
 		if (!entry.name && entry.firstName && entry.lastName) {
