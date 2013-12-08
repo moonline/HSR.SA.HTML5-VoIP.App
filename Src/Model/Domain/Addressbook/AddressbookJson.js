@@ -5,26 +5,22 @@ define(["Model/Domain/Addressbook", "Model/Domain/AddressbookEntry"], function(A
 	var AddressbookJson = function () {
 		this.implementInterface = 'Model/Interfaces/AddressbookInterface';
 		this.type = 'Model/Domain/Addressbook/AddressbookJson';
-		this.data = new Array();
+		this.data = [];
 
 		this.dataSourceTypes = Addressbook.dataSourceTypes.file;
 	};
 
 
 	/**
-	 * load contactbook from json struct
-	 *
-	 * @param jsonData a string with a json struct or a javascript object
+	 * @param data json object
 	 */
-	AddressbookJson.prototype.load = function (jsonData) {
-		var inputData;
-		if (typeof jsonData === 'object') {
-			inputData = jsonData;
-		} else {
-			inputData = JSON.parse(jsonData);
+	AddressbookJson.prototype.load = function (data) {
+		if (typeof data !== 'string') {
+			throw new Error("Input for AddressbookJson must be a string containing json.");
 		}
 
-		inputData.forEach(function (dataRow, i) {
+		var jsonData = JSON.parse(data);
+		jsonData.forEach(function (dataRow, i) {
 			if (dataRow.hasOwnProperty('name')) {
 				var entry = new AddressbookEntry();
 				Object.keys(dataRow).forEach(function (key) {

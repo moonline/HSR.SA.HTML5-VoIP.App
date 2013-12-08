@@ -51,7 +51,7 @@ END:VCARD";
 		manager.add(addressBookVCard);
 
 		var addressbookJson = new AddressbookJson();
-		addressbookJson.load(jsonContacts);
+		addressbookJson.load(JSON.stringify(jsonContacts));
 		manager.add(addressbookJson);
 
 		var newManager = new ContactbookManager(user);
