@@ -1,4 +1,4 @@
-define(function() {
+define(["Configuration"], function(Configuration) {
 	'use strict';
 
 	var Storage = window.localStorage;
@@ -6,11 +6,12 @@ define(function() {
 
 	var AccountManager = function() {
 		this.users = {};
+		this.accountsStorageKey = Configuration.storagePrefix+'accounts';
 	};
 
 
 	AccountManager.prototype.load = function() {
-		var users = JSON.parse(Storage.getItem('accounts'));
+		var users = JSON.parse(Storage.getItem(this.accountsStorageKey));
 		if(users) {
 			this.users = users;
 		}
@@ -42,7 +43,7 @@ define(function() {
 
 	AccountManager.prototype.store = function() {
 		console.log(this.users);
-		Storage.setItem('accounts',JSON.stringify(this.users));
+		Storage.setItem(this.accountsStorageKey,JSON.stringify(this.users));
 	};
 
 

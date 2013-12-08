@@ -1,6 +1,8 @@
 define({
 	"user":null, // this setting ist set by the accountManager
 
+	"storagePrefix": "app-pro-",
+
 	"connection" : {
 		"connectTimeout": 60, // sec
 		// used but does not work -  browser do not support yet

@@ -8,12 +8,11 @@ define(["Configuration", "Model/Interfaces/AddressbookInterface", "Model/Domain/
 	var ContactbookManager = function (user) {
 		this.contactbooks = [];
 		this.user = user;
-		this.indexKey = "contactbookIndex."+user.username;
-		this.contactbookKeyPrefix = "contactbook."+user.username+".";
+		this.indexKey = Configuration.storagePrefix+"contactbookIndex."+user.username;
+		this.contactbookKeyPrefix = Configuration.storagePrefix+"contactbook."+user.username+".";
 	};
 
 
-	// Todo: create a prefix for local storage setting which is set by the controller (prevent testing and app collisions)
 	ContactbookManager.prototype.getContactbookIndex = function () {
 		return (Storage.getItem(this.indexKey)) ? JSON.parse(Storage.getItem(this.indexKey)) : [];
 	};

@@ -3,7 +3,7 @@ define(["Configuration","Core/Service/Log", "Core/Service/ArrayService"], functi
 
 
 	/**
-	 * @param videoFrame: dom element to attach the local media stream
+	 * @param videoFrame dom element to attach the local media stream
 	 */
 	var Host = function (videoFrame) {
 		this.constraints = {
