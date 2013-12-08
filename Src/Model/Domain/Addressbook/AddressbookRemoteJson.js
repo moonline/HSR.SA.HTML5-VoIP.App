@@ -15,7 +15,7 @@ define(["Configuration", "Model/Domain/Addressbook", "Model/Domain/AddressbookEn
 	/**
 	 * load contactbook from json struct
 	 *
-	 * @param address
+	 * @param address web address like http://online-contactbook.com/me
 	 * @param doneSuccessCallback method called on data load success
 	 */
 	AddressbookRemoteJson.prototype.load = function(address,doneSuccessCallback) {
@@ -46,13 +46,16 @@ define(["Configuration", "Model/Domain/Addressbook", "Model/Domain/AddressbookEn
 			});
 	};
 
+
 	AddressbookRemoteJson.prototype.getEntries = function () {
 		return this.data;
 	};
 
+
 	AddressbookRemoteJson.prototype.count = function () {
 		return this.data.length;
 	};
+
 
 	return AddressbookRemoteJson;
 });

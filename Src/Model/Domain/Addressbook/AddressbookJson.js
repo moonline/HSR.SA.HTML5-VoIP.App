@@ -14,7 +14,7 @@ define(["Model/Domain/Addressbook", "Model/Domain/AddressbookEntry"], function(A
 	/**
 	 * load contactbook from json struct
 	 *
-	 * @param jsonData: a string with a json struct or a javascript object
+	 * @param jsonData a string with a json struct or a javascript object
 	 */
 	AddressbookJson.prototype.load = function (jsonData) {
 		var inputData;
@@ -35,13 +35,16 @@ define(["Model/Domain/Addressbook", "Model/Domain/AddressbookEntry"], function(A
 		}, this);
 	};
 
+
 	AddressbookJson.prototype.getEntries = function () {
 		return this.data;
 	};
 
+
 	AddressbookJson.prototype.count = function () {
 		return this.data.length;
 	};
+
 
 	return AddressbookJson;
 });

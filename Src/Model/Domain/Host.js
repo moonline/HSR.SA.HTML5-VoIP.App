@@ -3,13 +3,8 @@ define(["Configuration","Core/Service/Log", "Core/Service/ArrayService"], functi
 
 
 	/**
-	 * Host
-	 *
-	 * @param videoFrame: dom element to attach the local media stram
-	 * @param hostReadyCallback: will be called on ready media stream
-	 * @constructor
+	 * @param videoFrame: dom element to attach the local media stream
 	 */
-	// Todo: How to test? -> Refactor?
 	var Host = function (videoFrame) {
 		this.constraints = {
 			video: Configuration.connection.quality.video,

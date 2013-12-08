@@ -4,8 +4,6 @@ define(function () {
 	// Todo: is this class used jet outside tests? -> otherwise: remove
 
 	/**
-	 * Addressbook
-	 *
 	 * @param entries: list of AddressbookEntry
 	 * @constructor
 	 */

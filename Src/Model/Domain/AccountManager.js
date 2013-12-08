@@ -8,6 +8,7 @@ define(function() {
 		this.users = {};
 	};
 
+
 	AccountManager.prototype.load = function() {
 		var users = JSON.parse(Storage.getItem('accounts'));
 		if(users) {
@@ -15,9 +16,8 @@ define(function() {
 		}
 	};
 
+
 	/**
-	 * add a new user
-	 *
 	 * @param user
 	 * @returns {boolean} true if adding was successful
 	 */
@@ -30,10 +30,9 @@ define(function() {
 			return false;
 		}
 	};
-	
+
+
 	/**
-	 * remove user
-	 * 
 	 * @param user
 	 */
 	AccountManager.prototype.remove = function(user) {
@@ -46,11 +45,10 @@ define(function() {
 		Storage.setItem('accounts',JSON.stringify(this.users));
 	};
 
+
 	/**
-	 * find a user by it's username
-	 *
 	 * @param username
-	 * @returns {null}
+	 * @returns {null} if no user was found
 	 */
 	AccountManager.prototype.findByUsername = function(username) {
 		if(this.users[username]) {
@@ -60,13 +58,15 @@ define(function() {
 		}
 	};
 
+
 	AccountManager.prototype.getUsers = function() {
-		var users = new Array();
+		var users = [];
 		Object.keys(this.users).forEach(function(key){
 			users.push(this.users[key]);
 		},this);
 		return users;
 	};
+
 
 	return AccountManager;
 });

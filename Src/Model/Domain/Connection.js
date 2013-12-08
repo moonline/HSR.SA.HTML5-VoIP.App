@@ -4,23 +4,25 @@ define([
 		"SDPService",
 		"Model/Domain/Channel",
 		"Model/Domain/EventManager"
-	], function (Configuration, Log, SDPService, Channel, EventManager) {
+	], function (
+		Configuration,
+		Log,
+		SDPService,
+		Channel,
+		EventManager) {
 	'use strict';
 
 
 	/**
-	 * Connection
-	 *
-	 * @param localstream: local media stream from camera / microphone
-	 * @param channel: channel, used to signal the other peer(s)
-	 * @param videoFrame: dom element to attach the mediastream
+	 * @param localstream local media stream from camera / microphone
+	 * @param channel channel, used to signal the other peer(s)
+	 * @param videoFrame dom element to attach the mediastream
 	 * @param receiver receiver of channel messages
 	 * @param streamReady callback when stream is ready
 	 * @param receiveCandidates early received candidates
 	 * @constructor
 	 */
 	var Connection = function (localstream, channel, videoFrame, receiver, streamReady, receiveCandidates) {
-		// Todo: How to test? -> Refactor?
 		this.localstream = localstream;
 		this.channel = channel;
 		this.videoFrame = videoFrame;
@@ -32,10 +34,9 @@ define([
 		this.receiveCandidates = receiveCandidates;
 	};
 
+
 	/**
-	 * sending sdp helper
-	 *
-	 * @param sdp
+	 * @param sdp example { sdp: { ... }, type: ... }
 	 */
 	Connection.prototype.setLocalAndSendSDP = function (sdp) {
 		sdp.sdp = SDPService.preferOpus(sdp.sdp);
@@ -51,11 +52,7 @@ define([
 		this.channel.send(message);
 	};
 
-	/**
-	 * sending ice candidate helper
-	 *
-	 * @param event
-	 */
+
 	Connection.prototype.sendIceCandidate = function (event) {
 		if (event.candidate) {
 			var message = {
@@ -73,10 +70,8 @@ define([
 		}
 	};
 
-	/**
-	 * receive stream helper
-	 * @type {function(this:*)}
-	 */
+
+
 	Connection.prototype.receiveStream = function (event) {
 		this.state = Connection.states.connected;
 		Log.log(Log.logTypes.Info, 'Connection', 'stream added to p2p connection, attach remote stream');
@@ -85,9 +80,6 @@ define([
 	};
 
 
-	/**
-	 * caller create offer
-	 */
 	Connection.prototype.callerCreateOffer = function () {
 		Log.log(Log.logTypes.Info, 'Connection', 'caller create offer');
 
@@ -127,10 +119,9 @@ define([
 		});
 	};
 
+
 	/**
-	 * callee create answer
-	 *
-	 * @param offer: session description answer
+	 * @param offer session description answer
 	 */
 	Connection.prototype.calleeCreateAnswer = function (offer) {
 		this.receiver = offer.sender;
@@ -174,10 +165,9 @@ define([
 		});
 	};
 
+
 	/**
-	 * caller receive answer
-	 *
-	 * @param sdpAnswer: json answer containing a session description
+	 * @param sdpAnswer json answer containing a session description
 	 */
 	Connection.prototype.callerReceiveAnswer = function(sdpAnswer) {
 		Log.log(Log.logTypes.Info, 'Connection', 'caller receive answer');
@@ -187,6 +177,7 @@ define([
 			this.hangUp();
 		}
 	};
+
 
 	Connection.prototype.hangUp = function (notifyClient) {
 		this.localstream.stop();
@@ -213,6 +204,7 @@ define([
 		this.peerConnection = null;
 		this.state = Connection.states.stopped;
 	};
+
 
 	Connection.states = { off: 0, running: 1, connected: 2, stopped: 3 };
 

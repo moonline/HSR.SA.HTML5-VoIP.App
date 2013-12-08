@@ -3,13 +3,9 @@ define(["Configuration", "Core/Service/Log", "Model/Domain/Channel", "jQuery"], 
 
 
 	/**
-	 * ChannelHXR
-	 *
 	 * @param webServer: e.q. http://colvarim.ch/service/messageQueue/messageQueue.php
-	 * @constructor
 	 */
 	var ChannelXHR = function (webServer) {
-		// Todo fix problem with 'var Configuration = Configuration;
 		this.nick = Configuration.user.accounts['ChannelXHR']['fields']['nick'];
 
 		this.listeners = [];
@@ -34,9 +30,6 @@ define(["Configuration", "Core/Service/Log", "Model/Domain/Channel", "jQuery"], 
 	];
 
 
-	/**
-	 * receive
-	 */
 	ChannelXHR.prototype.receive = function (receiver) {
 		var response = '';
 
@@ -50,9 +43,7 @@ define(["Configuration", "Core/Service/Log", "Model/Domain/Channel", "jQuery"], 
 		return response;
 	};
 
-	/**
-	 * fetch message from server
-	 */
+
 	ChannelXHR.prototype.receiveMessage = function () {
 		var response = this.receive();
 		if (response != "0") {
@@ -60,6 +51,7 @@ define(["Configuration", "Core/Service/Log", "Model/Domain/Channel", "jQuery"], 
 			this.notify(response);
 		}
 	};
+
 
 	/**
 	 * call receiveMessage from time to time
@@ -75,10 +67,11 @@ define(["Configuration", "Core/Service/Log", "Model/Domain/Channel", "jQuery"], 
 		}
 	};
 
+
 	/**
 	 * notify listeners
 	 *
-	 * @param message: the received message
+	 * @param message the received message
 	 */
 	ChannelXHR.prototype.notify = function (message) {
 		this.listeners.forEach(function (listener) {
@@ -88,8 +81,10 @@ define(["Configuration", "Core/Service/Log", "Model/Domain/Channel", "jQuery"], 
 		}, this);
 	};
 
+
 	/**
-	 * empty channel
+	 * clear channel
+	 * this is used to remove old messages from not succeeded calls
 	 */
 	ChannelXHR.prototype.emptyChannel = function () {
 		var channelEmpty = false;
@@ -101,6 +96,7 @@ define(["Configuration", "Core/Service/Log", "Model/Domain/Channel", "jQuery"], 
 		}
 	};
 
+
 	/**
 	 * open the channel connection
 	 */
@@ -111,6 +107,7 @@ define(["Configuration", "Core/Service/Log", "Model/Domain/Channel", "jQuery"], 
 		this.receiveLoop();
 	};
 
+
 	/**
 	 * close the channel connection and remove all listeners
 	 */
@@ -119,20 +116,20 @@ define(["Configuration", "Core/Service/Log", "Model/Domain/Channel", "jQuery"], 
 		this.listeners = [];
 	};
 
+
 	/**
-	 * send a message
-	 *
-	 * @param message: a message like { "receiver": "frank", "message": "theMessage" }
+	 * @param message a message like { "receiver": "frank", "message": "theMessage" }
 	 */
 	ChannelXHR.prototype.send = function (message) {
 		Log.log(Log.logTypes.Info, 'ChannelXHR', 'send message: ' + message.message + ' to ' + message.receiver);
 		jQuery.post(this.configuration.server + "?setMessage&receiverType=" + message.receiver, { message: message.message });
 	};
 
+
 	/**
 	 * add a listener to receive messages if it's not registered jet
 	 *
-	 * @param listener: an object implementing a notify(message) method
+	 * @param listener an object implementing a notify(message) method
 	 */
 	ChannelXHR.prototype.addReceiveListener = function (listener) {
 		if (this.listeners.contains(listener) === false) {
@@ -143,17 +140,14 @@ define(["Configuration", "Core/Service/Log", "Model/Domain/Channel", "jQuery"], 
 		}
 	};
 
-	/**
-	 * remove a listener from the list
-	 *
-	 * @param listener
-	 */
+
 	ChannelXHR.prototype.removeReceiveListener = function (listener) {
 		var position = this.listeners.indexOf(listener);
 		if (position !== -1) {
 			this.listeners[position] = null;
 		}
 	};
+
 
 	return ChannelXHR;
 });

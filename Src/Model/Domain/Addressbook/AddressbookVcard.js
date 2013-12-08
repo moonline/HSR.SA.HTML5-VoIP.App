@@ -11,6 +11,7 @@ define(["ContactbookConfiguration/Vcard", "Model/Domain/Addressbook", "Model/Dom
 		this.fieldMapping = VcardConfig.fieldMapping;
 	};
 
+
 	AddressbookVcard.prototype.load = function (vcards) {
 		vcards.forEach(function(vcard) {
 			this.addEntry(vcard);
@@ -110,13 +111,16 @@ define(["ContactbookConfiguration/Vcard", "Model/Domain/Addressbook", "Model/Dom
 		}
 	};
 
+
 	AddressbookVcard.prototype.getEntries = function () {
 		return this.data;
 	};
 
+
 	AddressbookVcard.prototype.count = function () {
 		return this.data.length;
 	};
+
 
 	return AddressbookVcard;
 });

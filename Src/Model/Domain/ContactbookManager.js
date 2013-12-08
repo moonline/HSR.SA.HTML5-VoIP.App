@@ -18,10 +18,9 @@ define(["Configuration", "Model/Interfaces/AddressbookInterface", "Model/Domain/
 		return (Storage.getItem(this.indexKey)) ? JSON.parse(Storage.getItem(this.indexKey)) : [];
 	};
 
+
 	/**
 	 * load contactbooks from localstorage without removing the local contactbooks
-	 *
-	 * @type {function(this:AddressbookManager)}
 	 */
 	ContactbookManager.prototype.loadFromStorage = function () {
 		this.getContactbookIndex().forEach(function (element) {
@@ -42,10 +41,9 @@ define(["Configuration", "Model/Interfaces/AddressbookInterface", "Model/Domain/
 		}, this);
 	};
 
+
 	/**
 	 * load contactbooks from storage, replace local contactbooks
-	 *
-	 * @param loadedCallback
 	 */
 	ContactbookManager.prototype.refreshFromStorage = function (loadedCallback) {
 		this.contactbooks = [];
@@ -54,9 +52,7 @@ define(["Configuration", "Model/Interfaces/AddressbookInterface", "Model/Domain/
 
 
 	/**
-	 * add an addressbook
-	 *
-	 * @param contactbook
+	 * @param contactbook must implement the contactbook interface
 	 */
 	ContactbookManager.prototype.add = function (contactbook) {
 		AddressbookInterface.assertImplementedBy(contactbook);
@@ -71,14 +67,11 @@ define(["Configuration", "Model/Interfaces/AddressbookInterface", "Model/Domain/
 		Storage.setItem(this.indexKey, JSON.stringify(newIndex));
 	};
 
-	/**
-	 * get a list of contactbooks
-	 *
-	 * @returns {Array}
-	 */
+
 	ContactbookManager.prototype.getContactbooks = function () {
 		return this.contactbooks;
 	};
+
 
 	return ContactbookManager;
 });
