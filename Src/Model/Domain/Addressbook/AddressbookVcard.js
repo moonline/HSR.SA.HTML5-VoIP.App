@@ -1,4 +1,4 @@
-define(["ContactbookConfiguration/Vcard", "Model/Domain/Addressbook", "Model/Domain/AddressbookEntry"], function(VcardConfig, Addressbook, AddressbookEntry) {
+define(["Config/ContactbookConfiguration/Vcard", "Model/Domain/Addressbook", "Model/Domain/AddressbookEntry"], function(VcardConfig, Addressbook, AddressbookEntry) {
 	'use strict';
 
 

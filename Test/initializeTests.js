@@ -2,7 +2,8 @@ require.config({
 	baseUrl: "../Src",
 	paths: {
 		"Configuration": "../Configuration/appConfiguration",
-		"ContactbookConfiguration/Vcard": "../Configuration/vcardConfig",
+		"Config/ContactbookConfiguration/Vcard": "../Configuration/vcardConfig",
+		"Config/channelConfig": "../Configuration/channelConfig",
 		"Test": "../Test",
 		"QUnit": "../Test/Lib/QUnit/qunit-1.12.0",
 		"jQuery": "Core/Lib/JQuery/jQuery.2.0.3"

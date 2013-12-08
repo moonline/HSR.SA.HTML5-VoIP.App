@@ -1,12 +1,13 @@
-define(["Configuration", "Core/Service/Log", "Model/Domain/Channel", "jQuery"], function(Configuration, Log, Channel, jQuery) {
+define(["Configuration", "Config/channelConfig","Core/Service/Log", "Model/Domain/Channel", "jQuery"], function(Configuration, ChannelConfig, Log, Channel, jQuery) {
 	'use strict';
 
 
 	/**
-	 * @param webServer: e.q. http://colvarim.ch/service/messageQueue/messageQueue.php
+	 * @param webServer e.q. http://colvarim.ch/service/messageQueue/messageQueue.php
 	 */
 	var ChannelXHR = function (webServer) {
 		this.nick = Configuration.user.accounts['ChannelXHR']['fields']['nick'];
+		this.receiveInterval = ChannelConfig.channelXHR.receiveInterval;
 
 		this.listeners = [];
 		this.state = Channel.states.waiting;
@@ -59,10 +60,8 @@ define(["Configuration", "Core/Service/Log", "Model/Domain/Channel", "jQuery"], 
 	ChannelXHR.prototype.receiveLoop = function () {
 		if (this.state === Channel.states.connected || this.state === Channel.states.waiting) {
 			this.receiveMessage();
-			setTimeout(function () {
-				this.receiveLoop();
-			}.bind(this), 1000);
 		} else {
+			clearInterval(this.receiveLoopId);
 			Log.log(Log.logTypes.Info, 'ChannelXHR', 'stop receiving loop');
 		}
 	};
@@ -104,7 +103,7 @@ define(["Configuration", "Core/Service/Log", "Model/Domain/Channel", "jQuery"], 
 		this.state = Channel.states.connected;
 		Log.log(Log.logTypes.Info, 'ChannelXHR', 'start receiving loop');
 		this.emptyChannel();
-		this.receiveLoop();
+		this.receiveLoopId = setInterval(function() { this.receiveLoop(); }.bind(this), this.receiveInterval);
 	};
 
 
