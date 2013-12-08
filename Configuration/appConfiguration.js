@@ -3,7 +3,7 @@ define({
 
 	"connection" : {
 		"connectTimeout": 60, // sec
-		// Does not work -  browser do not support yet
+		// used but does not work -  browser do not support yet
 		"quality": {
 			"video": {
 				/** standardisized resolutions
