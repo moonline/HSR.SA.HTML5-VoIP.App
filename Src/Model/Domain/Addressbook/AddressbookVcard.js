@@ -1,78 +1,14 @@
-define(["Configuration", "Model/Domain/Addressbook", "Model/Domain/AddressbookEntry"], function(Configuration, Addressbook, AddressbookEntry) {
+define(["ContactbookConfiguration/Vcard", "Model/Domain/Addressbook", "Model/Domain/AddressbookEntry"], function(VcardConfig, Addressbook, AddressbookEntry) {
 	'use strict';
 
 
 	var AddressbookVcard = function () {
 		this.implementInterface = 'Model/Interfaces/AddressbookInterface';
 		this.type = 'Model/Domain/Addressbook/AddressbookVcard';
-		this.data = new Array();
+		this.data = [];
 		this.dataSourceTypes = Addressbook.dataSourceTypes.file;
 
-		this.fieldMapping = (Configuration.contactbookVcardConfig) ? Configuration.contactbookVcardConfig : [
-			{
-				"path": ["VERSION"],
-				"mapTo": ['version']
-			},{
-				"path": ["N"],
-				"mapTo": {
-					0: ['lastname'],
-					1: ['firstname']
-				}
-			},{
-				"path": ["FN"],
-				"mapTo": ['name']
-			},{
-				"path": ["ADR", "HOME", "POSTAL"],
-				"mapTo": {
-					2: ['address','street'],
-					3: ['address','city'],
-					4: ['address','region'],
-					5: ['address','postcode'],
-					6: ['address','country']
-				}
-			},{
-				"path": ["NICKNAME"],
-				"mapTo": ['nickname']
-			},{
-				"path": ["TEL", "CELL", "VOICE"],
-				"mapTo": ['phone'],
-				"mappingRule": 'list'
-			},{
-				"path": ["TEL", "HOME","VOICE"],
-				"mapTo": ['phone'],
-				"mappingRule": 'list'
-			},{
-				"path": ["TEL"],
-				"mapTo": ['phone'],
-				"mappingRule": 'list'
-			},{
-				"path": ["EMAIL", "PREF", "INTERNET"],
-				"mapTo": ['email'],
-				"mappingRule": 'list'
-			},{
-				"path": ["EMAIL", "INTERNET"],
-				"mapTo": ['email'],
-				"mappingRule": 'list'
-			},{
-				"path": ["BDAY"],
-				"mapTo": ['birthdate']
-			},{
-				"path": ["X-SIP"],
-				"mapTo": ["sip"]
-			},{
-				"path": ["X-SIP"],
-				"mapTo": ["sip"]
-			},{
-				"path": ["PHOTO"],
-				"mapTo": ["photo"]
-			},{
-				"path": ["ORG"],
-				"mapTo": ["organisation"]
-			},{
-				"path": ["URL"],
-				"mapTo": ["website"]
-			}
-		];
+		this.fieldMapping = VcardConfig.fieldMapping;
 	};
 
 	AddressbookVcard.prototype.load = function (vcards) {
@@ -83,8 +19,7 @@ define(["Configuration", "Model/Domain/Addressbook", "Model/Domain/AddressbookEn
 
 
 	/**
-	 * add a vcard entry
-	 * @param vcardContent: content of the vcf file as text (img as base64)
+	 * @param vcardContent content of the vcf file as text (img as base64)
 	 */
 	AddressbookVcard.prototype.addEntry = function (vcardContent) {
 		var entry = new AddressbookEntry();
