@@ -1,4 +1,4 @@
-define(["Configuration","Core/Service/Log", "Core/Service/ArrayService"], function (Configuration, Log, ArrayService) {
+define(["Configuration","Core/Service/Log", "Core/Service/ArrayService", "Core/Lib/AdapterJS/Adapter"], function (Configuration, Log, ArrayService) {
 	'use strict';
 
 

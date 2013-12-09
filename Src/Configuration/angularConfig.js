@@ -5,6 +5,7 @@ define([
 	"Application/ContactController",
 	"Application/ContactbookImportController",
 	"Application/AccountEditController",
+	"Application/PhoneController",
 	"Application/Service/requireLoginService",
 	"Model/Domain/AccountManager",
 
@@ -12,7 +13,7 @@ define([
 	"Core/Service/ArrayService",
 	"Core/Service/StringService"
 	],
-	function(angular, Configuration, AccountController, ContactController, ContactbookImportController, AccountEditController, requireLoginService, AccountManager) {
+	function(angular, Configuration, AccountController, ContactController, ContactbookImportController, AccountEditController, PhoneController, requireLoginService, AccountManager) {
 	'use strict';
 
 	
@@ -36,6 +37,11 @@ define([
 		$routeProvider.when('/account', {
 			templateUrl: 'Resources/Views/accountEditView.html',
 			controller: 'AccountEditController'
+		});
+
+		$routeProvider.when('/phone/:operation/:channelId/:userId', {
+			templateUrl: 'Resources/Views/phoneView.html',
+			controller: 'PhoneController'
 		});
 
 		$routeProvider.otherwise({
@@ -68,6 +74,9 @@ define([
 
 	app.controller('AccountEditController', AccountEditController);
 	AccountEditController.$inject = ['$scope', '$location', 'accountService', 'requireLogin'];
+
+	app.controller('PhoneController', PhoneController);
+	PhoneController.$inject = ['$scope', '$location', '$routeParams','accountService', 'requireLogin'];
 
 	return app;
 });
