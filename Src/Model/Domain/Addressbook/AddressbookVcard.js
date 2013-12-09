@@ -109,7 +109,7 @@ define(["Config/ContactbookConfiguration/Vcard", "Model/Domain/Addressbook", "Mo
 					if(property.indexOf('=') < 0) {
 						data.path.push(property);
 					} else {
-						data.properties.push({ "property": property.splitOnce('=')[0], "value": property.splitOnce('=')[1] })
+						data.properties.push({ "property": property.splitOnce('=')[0], "value": property.splitOnce('=')[1] });
 					}
 				});
 

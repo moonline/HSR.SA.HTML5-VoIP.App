@@ -27,7 +27,7 @@ define(["QUnit", "Core/Framework/Interface"], function(QUnit, Interface) {
 
 		var exceptionState = true;
 		try {
-			carInterface.assertImplementedBy(vehicle)
+			carInterface.assertImplementedBy(vehicle);
 		} catch (e) {
 			exceptionState = false;
 		}

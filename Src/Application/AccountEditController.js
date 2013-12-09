@@ -14,7 +14,7 @@ define(["Configuration"],
 
 		$scope.update = function() {
 			accountService.accountManager.store();
-		}
+		};
 
 	};
 

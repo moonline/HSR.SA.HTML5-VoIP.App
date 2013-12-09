@@ -38,7 +38,7 @@ define(["Core/Service/Log", "Core/Service/ArrayService"], function(Log, ArraySer
 			this.state = "connected";
 			this.waiters.forEach(function (waiterMessage) {
 				this.channel.send(waiterMessage);
-			},this)
+			},this);
 		}.bind(this);
 
 		this.channel.onclose = function () {
