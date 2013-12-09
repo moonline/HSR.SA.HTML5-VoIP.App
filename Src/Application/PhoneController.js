@@ -1,25 +1,21 @@
-(function() {
+define(["Model/Domain/Host", "Model/Domain/Channel/ChannelXHR", "Model/Domain/EventManager", "Model/Domain/Connection"], function(Host, ChannelXHR, EventManager, Connection) {
 	'use strict';
 
-	var Controller = App.Controller;
-	var Domain = App.Model.Domain;
-	var Channel = Domain.Channel;
-	var Configuration = App.Configuration;
-	var Service = App.Core.Service;
-
-
-	Controller.PhoneController = function() {
-		// Todo: fix 'this' problem
+	var PhoneController = function($scope, $location, $routeParams, accountService, requireLogin) {
+		if (requireLogin().abort) {
+			return;
+		}
+		
 		var self = this;
-
+		
 		this.localVideoFrame = document.getElementById('localVideo');
 		this.remoteVideoFrame = document.getElementById('remoteVideo');
 
 		this.receiveCandidates = new Array();
 
-		this.host = new Domain.Host(this.localVideoFrame);
+		this.host = new Host(this.localVideoFrame);
 
-		this.channel = new Channel.ChannelXHR("http://colvarim.ch/service/messageQueue/messageQueue.php");
+		this.channel = new ChannelXHR("http://colvarim.ch/service/messageQueue/messageQueue.php");
 		var listener = {
 			notify: function(channelMessage) {
 				if(channelMessage) {
@@ -57,21 +53,24 @@
 		this.channel.addReceiveListener(listener);
 		this.channel.start();
 
-		/**
+		/*
 		 * messaging
 		 */
-		document.getElementById('sendButton').onclick = function() {
+		$scope.chatmessages = [];
+		
+		$scope.sendMessage = function(event) {
+			event.preventDefault();
 			this.connection.dataChannel.send(JSON.stringify({
 				"messageType": "user",
-				"message": document.getElementById('localMessage').value
+				"message": $scope.chatmessage
 			}));
-			document.getElementById('localMessage').value = '';
+			$scope.chatmessage = '';
 		}.bind(this);
 
-		Domain.EventManager.addListener({
+		EventManager.addListener({
 				"notify": function(event, sender) {
 					if(event.messageType === 'user') {
-						this.printReceiveMessage(event.message);
+						this.receiveMessage(event.message);
 					}
 					if(event.messageType === 'system' && event.message === 'bye') {
 						self.connection.hangUp(false);
@@ -82,7 +81,7 @@
 			'dataChannelMessageReceive'
 		);
 
-		Domain.EventManager.addListener({
+		EventManager.addListener({
 				notify: function(event, sender) {
 					if(event.receiver) {
 						this.call(event.receiver);
@@ -92,8 +91,8 @@
 			'startCall'
 		);
 
-		document.querySelector('.fullScreen').onclick = function() {
-			var element = document.getElementById('remoteVideo');
+		$scope.fullscreen = function() {
+			var element = document.getElementById('videoPanel');
 			if (element.requestFullscreen) {
 				element.requestFullscreen();
 			} else if (element.mozRequestFullScreen) {
@@ -103,16 +102,14 @@
 			}
 		};
 
-		document.getElementById('hangUp').onclick = function(event) {
+		$scope.hangup = function(event) {
 			if(!event.target.hasAttribute('disable')) {
 				this.connection.hangUp(true);
 				this.hangUp();
 			}
 		}.bind(this);
-
-		document.getElementById('fancyTestButton').onclick = function() {
-			Domain.EventManager.notify('startCall', { "receiver": prompt('Please insert the nickname you want to call.') }, 'addressbookEntry');
-		};
+		
+		this.call($routeParams.userId);
 	};
 
 
@@ -121,10 +118,10 @@
 	 *
 	 * @param message
 	 */
-	Controller.PhoneController.prototype.receiveCall = function(message) {
+	PhoneController.prototype.receiveCall = function(message) {
 		this.host.startLocalMedia(function() {
-			this.connection = new Domain.Connection(this.host.localstream,this.channel, this.remoteVideoFrame, null, function() {
-				document.getElementById('hangUp').removeAttribute('disable');
+			this.connection = new Domain.Connection(this.host.localstream, this.channel, this.remoteVideoFrame, null, function() {
+				$scope.startTime = new Date();
 			}.bind(this), this.receiveCandidates);
 			this.connection.calleeCreateAnswer(message);
 		}.bind(this));
@@ -136,20 +133,22 @@
 	 *
 	 * @param message
 	 */
-	Controller.PhoneController.prototype.printReceiveMessage = function(message) {
+	PhoneController.prototype.receiveMessage = function(message) {
+		$scope.chatmessages.push({
+			time: new Date(),
+			text: message
+		});
 		var messageBox = document.createElement('p');
 		var date = new Date();
-		messageBox.innerHTML = '<span class="time">'+date.getHours()+':'+date.getMinutes()+':'+date.getSeconds()+'</span><span class="messageContent">'+message+'</span>';
-		document.getElementById('messageReceiveBox').insertBefore(messageBox,document.getElementById('messageReceiveBox').firstChild);
 	};
 
 	/**
 	 * call action
 	 */
-	Controller.PhoneController.prototype.call = function(receiver) {
+	PhoneController.prototype.call = function(receiver) {
 		this.host.startLocalMedia(function() {
 			this.connection = new Domain.Connection(this.host.localstream, this.channel, this.remoteVideoFrame, receiver, function() {
-				document.getElementById('hangUp').removeAttribute('disable');
+				$scope.startTime = new Date();
 			}.bind(this),this.receiveCandidates);
 			this.connection.callerCreateOffer();
 		}.bind(this));
@@ -159,14 +158,14 @@
 	/**
 	 * wait for some seconds, if connection is not etablished, hang up and clean up
 	 */
-	Controller.PhoneController.prototype.timeOutIfConnectionNotEtablished = function() {
+	PhoneController.prototype.timeOutIfConnectionNotEtablished = function() {
 		setTimeout(function() {
 			if(this.connection && this.connection.state < Domain.Connection.states.connected) {
 				this.connection.hangUp(true);
 				this.hangUp();
-				alert('could no connection etablish.');
+				alert('could not etablish connection.');
 			}
-		}.bind(this),1000*Configuration.connection.connectTimeout);
+		}.bind(this), 1000 * Configuration.connection.connectTimeout);
 	};
 
 	/**
@@ -174,11 +173,11 @@
 	 *
 	 * @type {function(this:App.Controller.PhoneController)}
 	 */
-	Controller.PhoneController.prototype.hangUp = function() {
+	PhoneController.prototype.hangUp = function() {
 		Service.Log.log(Service.Log.logTypes.Info,'PhoneController','hang up');
 		this.remoteVideoFrame.pause(); this.remoteVideoFrame.setAttribute('src','');
 		this.localVideoFrame.pause(); this.localVideoFrame.setAttribute('src','');
-		document.getElementById('hangUp').setAttribute('disable', 'disable');
 	};
 
-})();
+	return PhoneController;
+});

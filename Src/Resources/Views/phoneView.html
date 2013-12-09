@@ -1,0 +1,25 @@
+<div class="page" id="phoneView">
+	<div id="videoPanel">
+		<video id="localVideo" autoplay muted></video>
+		<video id="remoteVideo" autoplay></video>
+		<div id="chat">
+			<p data-ng-repeat="message in chatmessages">
+				<span class="time">{{message.time}}</span>
+				<span class="message">{{message.text}}</span>
+			</p>
+			<form data-ng-submit="sendmessage()">
+				<input data-ng-model="{{chatmessage}}">
+				<input type="submit" value="send">
+			</form>
+		</div>
+	</div>
+	<div id="controlPanel">
+		<button data-ng-click="fullscreen()">Fullscreen</button>
+		<button data-ng-click="hangup()">Hangup</button>
+		<button>Chat</button>
+		<h2>duration</h2>
+		12min 5sec
+		<h2>started</h2>
+		16:35
+	</div>
+</div>

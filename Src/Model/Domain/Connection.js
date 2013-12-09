@@ -1,7 +1,7 @@
 define([
 		"Configuration",
 		"Core/Service/Log",
-		"SDPService",
+		"Core/Service/SDPService",
 		"Model/Domain/Channel",
 		"Model/Domain/EventManager"
 	], function (Configuration, Log, SDPService, Channel, EventManager) {

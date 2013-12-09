@@ -4,10 +4,11 @@ define([
 	"Application/AccountController",
 	"Application/ContactController",
 	"Application/ContactbookImportController",
+	"Application/PhoneController",
 	"Application/Service/requireLoginService",
 	"Model/Domain/AccountManager",
 	"angular-route" ],
-	function(angular, Configuration, AccountController, ContactController, ContactbookImportController, requireLoginService, AccountManager) {
+	function(angular, Configuration, AccountController, ContactController, ContactbookImportController, PhoneController, requireLoginService, AccountManager) {
 	'use strict';
 	
 	var app = angular.module('App', [ 'ngRoute' ]);
@@ -25,6 +26,11 @@ define([
 		$routeProvider.when('/import/contactbook', {
 			templateUrl: 'Resources/Views/contactbookImportView.html',
 			controller: 'ContactbookImportController'
+		});
+
+		$routeProvider.when('/call/:channelId/:userId', {
+			templateUrl: 'Resources/Views/phoneView.html',
+			controller: 'PhoneController'
 		});
 
 		$routeProvider.otherwise({
@@ -52,6 +58,9 @@ define([
 
 	app.controller('ContactbookImportController', ContactbookImportController);
 	ContactbookImportController.$inject = ['$scope', '$location', 'accountService', 'requireLogin'];
+
+	app.controller('PhoneController', PhoneController);
+	ContactController.$inject = ['$scope', '$location', '$routeParams', 'accountService', 'requireLogin'];
 
 	return app;
 });
