@@ -1,5 +1,5 @@
-define(["Configuration", "Model/Interfaces/AddressbookInterface", "Model/Domain/Addressbook", "Core/Framework/Barrier", "Core/Service/ContactbookLoader"],
-	function(Configuration, AddressbookInterface, Addressbook, Barrier, ContactbookPrototypes) {
+define(["Configuration", "Model/Interfaces/AddressbookInterface", "Model/Domain/Addressbook", "Core/Loader/ContactbookLoader"],
+	function(Configuration, AddressbookInterface, Addressbook, ContactbookPrototypes) {
 	'use strict';
 
 	var Storage = window.localStorage;

@@ -1,34 +1,22 @@
-define(["Configuration", "Config/channelConfig","Core/Service/Log", "Model/Domain/Channel", "jQuery"], function(Configuration, ChannelConfig, Log, Channel, jQuery) {
+define(["Config/channelConfig","Core/Service/Log", "Model/Domain/Channel", "jQuery"], function(ChannelConfig, Log, Channel, jQuery) {
 	'use strict';
 
 
 	/**
-	 * @param webServer e.q. http://colvarim.ch/service/messageQueue/messageQueue.php
+	 * @param account an channelAccount of a user
 	 */
-	var ChannelXHR = function (webServer) {
-		this.nick = Configuration.user.accounts['ChannelXHR']['fields']['nick'];
+	var ChannelXHR = function (account) {
+		this.implementInterface = 'Model/Interfaces/ChannelInterface';
+		this.nick = account['fields']['userId'];
 		this.receiveInterval = ChannelConfig.channelXHR.receiveInterval;
 
 		this.listeners = [];
 		this.state = Channel.states.waiting;
 		this.type = Channel.types.callee;
 		this.configuration = {
-			server: webServer
+			server: ChannelConfig.channelXHR.serviceURL
 		};
 	};
-
-
-	ChannelXHR.accountFields = [
-		{
-			"name": "username",
-			"type": "text"
-
-		},
-		{
-			"name": "password",
-			"type": "password"
-		}
-	];
 
 
 	ChannelXHR.prototype.receive = function (receiver) {

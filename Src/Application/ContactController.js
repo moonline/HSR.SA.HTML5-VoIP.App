@@ -43,6 +43,7 @@ define(["Configuration","Model/Domain/ContactbookManager"],
 		};
 
 		$scope.call = function(service, userId) {
+			console.log('/call/'+service.serviceId+'/'+userId);
 			$location.url('/call/'+service.serviceId+'/'+userId);
 		}
 	};

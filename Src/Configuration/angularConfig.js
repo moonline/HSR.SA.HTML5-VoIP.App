@@ -48,7 +48,8 @@ define([
 	app.factory('accountService', function($rootScope) {
 		var accountService =  {
 			accountManager: new AccountManager(),
-			contactbookManager: null
+			contactbookManager: null,
+			activeChannels: {}
 		};
 		accountService.accountManager.load();
 		return accountService;

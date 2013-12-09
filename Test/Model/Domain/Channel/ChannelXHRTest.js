@@ -5,11 +5,11 @@ define(["QUnit", "Configuration", "Model/Domain/Channel/ChannelXHR", "Model/Doma
 	QUnit.module("Channel Tests");
 
 	var bruce = new User('bruce', '', 'Bruce', 'Willis', null, null);
-	bruce.setAccount(new Account('ChannelXHR',{ "nick": 'bruce' }));
+	bruce.setAccount(new Account('XHRmessenger',{ "userId": 'bruce' }));
+	console.log(bruce);
 
-	Configuration.user = bruce;
 	QUnit.asyncTest("ChannelXHR echo test", function () {
-		var channel = new ChannelXHR("http://colvarim.ch/service/messageQueue/messageQueue.php");
+		var channel = new ChannelXHR(bruce.accounts.XHRmessenger);
 		channel.nick = 'testUser';
 		channel.start();
 

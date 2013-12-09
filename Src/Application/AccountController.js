@@ -1,4 +1,5 @@
-define(["Model/Domain/Account", "Model/Domain/User", "Model/Domain/ContactbookManager"], function (Account, User, ContactbookManager) {
+define(["Configuration", "Model/Domain/Account", "Model/Domain/User", "Model/Domain/ContactbookManager", "Core/Loader/ChannelLoader", "Model/Interfaces/ChannelInterface"],
+	function (Configuration, Account, User, ContactbookManager, ChannelLoader, ChannelInterface) {
 	'use strict';
 
     var AccountController = function($scope, $location, accountService) {
@@ -64,12 +65,34 @@ define(["Model/Domain/Account", "Model/Domain/User", "Model/Domain/ContactbookMa
 			}
 
 			accountService.currentUser = user;
+
+			$scope.stopAndRemoveChannels();
+			$scope.startChannels();
+
 			accountService.contactbookManager = new ContactbookManager(accountService.currentUser);
 			if (sessionStorage.loginPath) {
 				$location.url(sessionStorage.loginPath);
 			} else {
 				$location.url('/contacts');
 			}
+		};
+
+		$scope.startChannels = function() {
+			Configuration.channels.forEach(function(channelConfig) {
+				if(accountService.currentUser.accounts[channelConfig.serviceId]) {
+					var channel = new ChannelLoader[channelConfig.type](accountService.currentUser.accounts[channelConfig.serviceId]);
+					ChannelInterface.assertImplementedBy(channel);
+					channel.start();
+					accountService.activeChannels[channelConfig.serviceId] = channel;
+				}
+			});
+		};
+
+		$scope.stopAndRemoveChannels = function() {
+			Object.keys(accountService.activeChannels).forEach(function(channelServiceId) {
+				accountService.activeChannels[channelServiceId].stop();
+			});
+			accountService.activeChannels = {};
 		};
     };
 
