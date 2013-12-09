@@ -1,5 +1,19 @@
-define(["Configuration", "Model/Domain/Account", "Model/Domain/User", "Model/Domain/ContactbookManager", "Core/Loader/ChannelLoader", "Model/Interfaces/ChannelInterface"],
-	function (Configuration, Account, User, ContactbookManager, ChannelLoader, ChannelInterface) {
+define([
+		"Configuration",
+		"Model/Domain/Account",
+		"Model/Domain/User",
+		"Model/Domain/ContactbookManager",
+		"Core/Loader/ChannelLoader",
+		"Model/Interfaces/ChannelInterface",
+		"Model/Domain/Channel"
+	], function (
+		Configuration,
+		Account, User,
+		ContactbookManager,
+		ChannelLoader,
+		ChannelInterface,
+		Channel
+	) {
 	'use strict';
 
     var AccountController = function($scope, $location, accountService) {
@@ -83,6 +97,27 @@ define(["Configuration", "Model/Domain/Account", "Model/Domain/User", "Model/Dom
 					var channel = new ChannelLoader[channelConfig.type](accountService.currentUser.accounts[channelConfig.serviceId]);
 					ChannelInterface.assertImplementedBy(channel);
 					channel.start();
+
+					var listener = {
+						notify: function(channelMessage) {
+							if(channelMessage) {
+								var message = JSON.parse(channelMessage);
+
+								if (message.type === 'offer') {
+									if (!channel.type !== Channel.types.caller) { // && (!self.connection || self.connection.state === Domain.Connection.states.off || self.connection.state === Domain.Connection.states.stopped)) {
+										var accept = confirm(message.sender+' want\'s to call you. Receive?');
+										if(accept) {
+											// TODO: $location is already dead if called -> fix
+											$location.url('/phone/receive/'+channelConfig.serviceId+'/'+message.sender);
+											// TODO: message has to be submitted to phoneView too
+											//self.receiveCall(message);
+										}
+									}
+								}
+							}
+						}
+					};
+					channel.addReceiveListener(listener);
 					accountService.activeChannels[channelConfig.serviceId] = channel;
 				}
 			});
