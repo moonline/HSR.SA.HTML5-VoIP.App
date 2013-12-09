@@ -9,5 +9,6 @@ define(function () {
 		if(photo) { this.photo = photo; }
 	};
 
+
 	return AddressbookEntry;
 });

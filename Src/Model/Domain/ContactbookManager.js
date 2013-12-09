@@ -1,5 +1,5 @@
-define(["Configuration", "Model/Interfaces/AddressbookInterface", "Model/Domain/Addressbook", "Core/Framework/Barrier", "Core/Service/ContactbookLoader"],
-	function(Configuration, AddressbookInterface, Addressbook, Barrier, ContactbookPrototypes) {
+define(["Configuration", "Model/Interfaces/AddressbookInterface", "Model/Domain/Addressbook", "Core/Loader/ContactbookLoader"],
+	function(Configuration, AddressbookInterface, Addressbook, ContactbookPrototypes) {
 	'use strict';
 
 	var Storage = window.localStorage;
@@ -8,20 +8,18 @@ define(["Configuration", "Model/Interfaces/AddressbookInterface", "Model/Domain/
 	var ContactbookManager = function (user) {
 		this.contactbooks = [];
 		this.user = user;
-		this.indexKey = "contactbookIndex."+user.username;
-		this.contactbookKeyPrefix = "contactbook."+user.username+".";
+		this.indexKey = Configuration.storagePrefix+"contactbookIndex."+user.username;
+		this.contactbookKeyPrefix = Configuration.storagePrefix+"contactbook."+user.username+".";
 	};
 
 
-	// Todo: create a prefix for local storage setting which is set by the controller (prevent testing and app collisions)
 	ContactbookManager.prototype.getContactbookIndex = function () {
 		return (Storage.getItem(this.indexKey)) ? JSON.parse(Storage.getItem(this.indexKey)) : [];
 	};
 
+
 	/**
 	 * load contactbooks from localstorage without removing the local contactbooks
-	 *
-	 * @type {function(this:AddressbookManager)}
 	 */
 	ContactbookManager.prototype.loadFromStorage = function () {
 		this.getContactbookIndex().forEach(function (element) {
@@ -42,10 +40,9 @@ define(["Configuration", "Model/Interfaces/AddressbookInterface", "Model/Domain/
 		}, this);
 	};
 
+
 	/**
 	 * load contactbooks from storage, replace local contactbooks
-	 *
-	 * @param loadedCallback
 	 */
 	ContactbookManager.prototype.refreshFromStorage = function (loadedCallback) {
 		this.contactbooks = [];
@@ -54,9 +51,7 @@ define(["Configuration", "Model/Interfaces/AddressbookInterface", "Model/Domain/
 
 
 	/**
-	 * add an addressbook
-	 *
-	 * @param contactbook
+	 * @param contactbook must implement the contactbook interface
 	 */
 	ContactbookManager.prototype.add = function (contactbook) {
 		AddressbookInterface.assertImplementedBy(contactbook);
@@ -71,14 +66,11 @@ define(["Configuration", "Model/Interfaces/AddressbookInterface", "Model/Domain/
 		Storage.setItem(this.indexKey, JSON.stringify(newIndex));
 	};
 
-	/**
-	 * get a list of contactbooks
-	 *
-	 * @returns {Array}
-	 */
+
 	ContactbookManager.prototype.getContactbooks = function () {
 		return this.contactbooks;
 	};
+
 
 	return ContactbookManager;
 });

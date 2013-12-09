@@ -1,4 +1,4 @@
-define(function() {
+define(["Configuration"], function(Configuration) {
 	'use strict';
 
 	var Storage = window.localStorage;
@@ -6,18 +6,19 @@ define(function() {
 
 	var AccountManager = function() {
 		this.users = {};
+		this.accountsStorageKey = Configuration.storagePrefix+'accounts';
 	};
 
+
 	AccountManager.prototype.load = function() {
-		var users = JSON.parse(Storage.getItem('accounts'));
+		var users = JSON.parse(Storage.getItem(this.accountsStorageKey));
 		if(users) {
 			this.users = users;
 		}
 	};
 
+
 	/**
-	 * add a new user
-	 *
 	 * @param user
 	 * @returns {boolean} true if adding was successful
 	 */
@@ -30,10 +31,9 @@ define(function() {
 			return false;
 		}
 	};
-	
+
+
 	/**
-	 * remove user
-	 * 
 	 * @param user
 	 */
 	AccountManager.prototype.remove = function(user) {
@@ -42,14 +42,14 @@ define(function() {
 	};
 
 	AccountManager.prototype.store = function() {
-		Storage.setItem('accounts',JSON.stringify(this.users));
+		console.log(this.users);
+		Storage.setItem(this.accountsStorageKey,JSON.stringify(this.users));
 	};
 
+
 	/**
-	 * find a user by it's username
-	 *
 	 * @param username
-	 * @returns {null}
+	 * @returns {null} if no user was found
 	 */
 	AccountManager.prototype.findByUsername = function(username) {
 		if(this.users[username]) {
@@ -59,13 +59,15 @@ define(function() {
 		}
 	};
 
+
 	AccountManager.prototype.getUsers = function() {
-		var users = new Array();
+		var users = [];
 		Object.keys(this.users).forEach(function(key){
 			users.push(this.users[key]);
 		},this);
 		return users;
 	};
+
 
 	return AccountManager;
 });

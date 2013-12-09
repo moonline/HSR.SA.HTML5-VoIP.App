@@ -3,7 +3,7 @@ define(["Core/Framework/Interface"],function(Interface) {
 
 
 	var ChannelInterface = new Interface(
-		'ChannelInterface',
+		'Model/Interfaces/ChannelInterface',
 		['start', 'stop', 'send', 'addReceiveListener', 'removeReceiveListener']
 	);
 

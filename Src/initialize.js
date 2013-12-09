@@ -5,6 +5,8 @@
 		baseUrl: ".",
 		paths: {
 			"Configuration": "../Configuration/appConfiguration",
+			"Config/ContactbookConfiguration/Vcard": "../Configuration/vcardConfig",
+			"Config/channelConfig": "../Configuration/channelConfig",
 			"Handlebars": "Core/Lib/Handlebars/handlebars",
 			"jQuery": "Core/Lib/JQuery/jQuery.2.0.3",
 			"angular": "Core/Lib/AngularJS/angular",
@@ -16,6 +18,9 @@
 			},
 			angular: {
 				exports: "angular"
+			},
+			jQuery: {
+				exports: "jQuery"
 			},
 			"angular-route": ["angular"]
 		}

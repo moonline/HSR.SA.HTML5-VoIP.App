@@ -1,28 +1,33 @@
 <div class="page" id="contactbookImportView">
 	<header class="operationPanel">
-		<a class="button green" href="#/contacts">Back</a>
+		<a class="button blue" href="#/contacts"><span class="icon-liga">&#xe00c;</span> Back</a>
 	</header>
 	<div class="content">
 		<form id="import" class="box west">
 			<div class="fileImport" data-ng-repeat="import in contactbookImport.file">
 				<div class="formLine">
+					<span class="icon-liga">&#xe048;</span>&nbsp;
 					<label for="{{import.name}}">{{import.name}}</label>
 					<input type="file" id="{{import.type}}" data-importtype="{{import.type}}" onchange="angular.element(this).scope().importFromFile(this.getAttribute('data-importtype'), this.files)" name="{{import.type}}" value="{{import.name}}" />
 				</div>
 			</div>
-			<!--<div class="directoryImport" data-ng-repeat="import in contactbookImport.directory">
+			<div class="directoryImport" data-ng-repeat="import in contactbookImport.directory">
 				<div class="formLine">
+					<span class="icon-liga">&#xe101;</span>&nbsp;
 					<label for="{{import.name}}">{{import.name}}</label>
-					<input type="file" id="{{import.type}}" name="{{import.type}}" value="{{import.name}}" multiple />
+					<input type="file" multiple id="{{import.type}}" data-importtype="{{import.type}}" onchange="angular.element(this).scope().importFromDirectory(this.getAttribute('data-importtype'), this.files)" name="{{import.type}}" value="{{import.name}}" />
 				</div>
 			</div>
 			<div class="onlineImport" data-ng-repeat="import in contactbookImport.online">
 				<div class="formLine">
+					<span class="icon-liga">&#xe058;</span>&nbsp;
 					<label for="{{import.name}}">{{import.name}}</label>
-					<input id="{{import.type}}Load" type="button" class="button" value="load" />
+					<button id="{{import.type}}" data-ng-click="importFromOnlineSource(import.type)" class="button" >
+						<span class="icon-liga">&#xe125;</span> Load
+					</button>
 				</div>
 			</div>
-			<a download class="button" href="Resources/Data/json/adressbook-221013.json" target="_blank" >download default</a>-->
+			<a download class="button" href="Resources/Data/json/adressbook-221013.json" target="_blank" >download default json</a>
 		</form>
 	</div>
 </div>

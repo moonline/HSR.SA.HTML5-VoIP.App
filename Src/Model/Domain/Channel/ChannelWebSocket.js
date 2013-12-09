@@ -15,6 +15,7 @@ define(["Core/Service/Log", "Core/Service/ArrayService"], function(Log, ArraySer
 		};
 	};
 
+
 	ChannelWebSocket.prototype.notify = function (message) {
 		this.listeners.forEach(function (listener) {
 			if (typeof(listener.notify) === 'function') {
@@ -23,9 +24,7 @@ define(["Core/Service/Log", "Core/Service/ArrayService"], function(Log, ArraySer
 		},this);
 	};
 
-	/**
-	 * open the channel connection
-	 */
+
 	ChannelWebSocket.prototype.start = function () {
 		this.channel = new WebSocket(this.configuration.server);
 
@@ -47,6 +46,7 @@ define(["Core/Service/Log", "Core/Service/ArrayService"], function(Log, ArraySer
 		}.bind(this);
 	};
 
+
 	/**
 	 * close the channel connection and remove all listeners
 	 */
@@ -55,10 +55,9 @@ define(["Core/Service/Log", "Core/Service/ArrayService"], function(Log, ArraySer
 		this.listeners = [];
 	};
 
+
 	/**
-	 * send a message
-	 *
-	 * @param message: plain text message
+	 * @param message plain text message
 	 */
 	ChannelWebSocket.prototype.send = function (message) {
 		if (this.state !== "connected") {
@@ -69,10 +68,9 @@ define(["Core/Service/Log", "Core/Service/ArrayService"], function(Log, ArraySer
 		}
 	};
 
+
 	/**
-	 * add a listener to receive messages
-	 *
-	 * @param listener: an object implementing a notify(message) method
+	 * @param listener an object implementing a notify(message) method
 	 */
 	ChannelWebSocket.prototype.addReceiveListener = function (listener) {
 		if (ArrayService.listContains(this.listeners, listener) === false) {
@@ -80,17 +78,14 @@ define(["Core/Service/Log", "Core/Service/ArrayService"], function(Log, ArraySer
 		}
 	};
 
-	/**
-	 * remove a listener from the list
-	 *
-	 * @param listener
-	 */
+
 	ChannelWebSocket.prototype.removeReceiveListener = function (listener) {
 		var position = this.listeners.indexOf(listener);
 		if (position !== -1) {
 			this.listeners[position] = null;
 		}
 	};
+
 
 	return ChannelWebSocket;
 });

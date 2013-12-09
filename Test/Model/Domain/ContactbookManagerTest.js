@@ -39,7 +39,7 @@ END:VCARD";
 
 
 	QUnit.module("ContactbookManager Tests");
-	QUnit.asyncTest("ContactbookManager Test", function () {
+	QUnit.test("ContactbookManager Test", function () {
 		window.localStorage.clear();
 
 		var user = new User('testUser', '', 'Test', 'User', '', '');
@@ -51,19 +51,18 @@ END:VCARD";
 		manager.add(addressBookVCard);
 
 		var addressbookJson = new AddressbookJson();
-		addressbookJson.load(jsonContacts);
+		addressbookJson.load(JSON.stringify(jsonContacts));
 		manager.add(addressbookJson);
 
 		var newManager = new ContactbookManager(user);
-		newManager.load(function() {
-			var contactbooks = newManager.getContactbooks();
+		newManager.loadFromStorage();
+		var contactbooks = newManager.getContactbooks();
 
-			QUnit.strictEqual(contactbooks[0] instanceof AddressbookVcard, true, "check correct class type after restore");
-			QUnit.strictEqual(contactbooks[1] instanceof AddressbookJson, true, "check correct class type after restore");
-			QUnit.strictEqual(newManager.getContactbooks()[0].getEntries().length, manager.getContactbooks()[0].getEntries().length, "check correct number of entries restored");
-			QUnit.strictEqual(JSON.stringify(newManager.getContactbooks()), JSON.stringify(manager.getContactbooks()), "check correct data restore");
-			QUnit.start();
-		});
+		QUnit.strictEqual(contactbooks[0] instanceof AddressbookVcard, true, "check correct class type after restore");
+		QUnit.strictEqual(contactbooks[1] instanceof AddressbookJson, true, "check correct class type after restore");
+		QUnit.strictEqual(newManager.getContactbooks()[0].getEntries().length, manager.getContactbooks()[0].getEntries().length, "check correct number of entries restored");
+		QUnit.strictEqual(JSON.stringify(newManager.getContactbooks()), JSON.stringify(manager.getContactbooks()), "check correct data restore");
+
 	});
 
 });

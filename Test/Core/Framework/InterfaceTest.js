@@ -24,7 +24,15 @@ define(["QUnit", "Core/Framework/Interface"], function(QUnit, Interface) {
 			leavePerson: function () {
 			}
 		};
-		QUnit.strictEqual(carInterface.assertImplementedBy(vehicle), true, "Interface implemented correctly");
+
+		var exceptionState = true;
+		try {
+			carInterface.assertImplementedBy(vehicle)
+		} catch (e) {
+			exceptionState = false;
+		}
+		QUnit.ok(exceptionState, "Interface implemented correctly");
+
 	});
 
 });

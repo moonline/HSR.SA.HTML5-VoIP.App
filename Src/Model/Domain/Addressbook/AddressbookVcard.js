@@ -1,96 +1,88 @@
-define(["Configuration", "Model/Domain/Addressbook", "Model/Domain/AddressbookEntry"], function(Configuration, Addressbook, AddressbookEntry) {
+define(["Config/ContactbookConfiguration/Vcard", "Model/Domain/Addressbook", "Model/Domain/AddressbookEntry"], function(VcardConfig, Addressbook, AddressbookEntry) {
 	'use strict';
 
 
 	var AddressbookVcard = function () {
-		this.implementInterface = 'AddressbookInterface';
+		this.implementInterface = 'Model/Interfaces/AddressbookInterface';
 		this.type = 'Model/Domain/Addressbook/AddressbookVcard';
-		this.data = new Array();
+		this.data = [];
 		this.dataSourceTypes = Addressbook.dataSourceTypes.file;
 
-		// TODO: move to config
-		this.fieldMapping = (Configuration.contactbookVcardConfig) ? Configuration.contactbookVcardConfig : [
-			{
-				"path": ["VERSION"],
-				"mapTo": ['version']
-			},{
-				"path": ["N"],
-				"mapTo": {
-					0: ['lastname'],
-					1: ['firstname']
-				}
-			},{
-				"path": ["FN"],
-				"mapTo": ['name']
-			},{
-				"path": ["ADR", "HOME", "POSTAL"],
-				"mapTo": {
-					2: ['address','street'],
-					3: ['address','city'],
-					4: ['address','region'],
-					5: ['address','postcode'],
-					6: ['address','country']
-				}
-			},{
-				"path": ["NICKNAME"],
-				"mapTo": ['nickname']
-			},{
-				"path": ["TEL", "CELL", "VOICE"],
-				"mapTo": ['phone'],
-				"mappingRule": 'list'
-			},{
-				"path": ["TEL", "HOME","VOICE"],
-				"mapTo": ['phone'],
-				"mappingRule": 'list'
-			},{
-				"path": ["TEL"],
-				"mapTo": ['phone'],
-				"mappingRule": 'list'
-			},{
-				"path": ["EMAIL", "PREF", "INTERNET"],
-				"mapTo": ['email'],
-				"mappingRule": 'list'
-			},{
-				"path": ["EMAIL", "INTERNET"],
-				"mapTo": ['email'],
-				"mappingRule": 'list'
-			},{
-				"path": ["BDAY"],
-				"mapTo": ['birthdate']
-			},{
-				"path": ["X-SIP"],
-				"mapTo": ["sip"]
-			},{
-				"path": ["X-SIP"],
-				"mapTo": ["sip"]
-			},{
-				"path": ["PHOTO"],
-				"mapTo": ["photo"]
-			},{
-				"path": ["ORG"],
-				"mapTo": ["organisation"]
-			},{
-				"path": ["URL"],
-				"mapTo": ["website"]
-			}
-		];
+		this.fieldMapping = VcardConfig.fieldMapping;
 	};
 
 
-	// Todo: write a test for load
 	AddressbookVcard.prototype.load = function (vcards) {
-		vcards.forEach(function(vcard, index) {
+		vcards.forEach(function(vcard) {
 			this.addEntry(vcard);
 		},this);
 	};
 
 
+	AddressbookVcard.prototype.parseSimpleField = function(entry, field, values) {
+		var parentField = entry;
+		var currentKey;
+
+		field.mapTo.forEach(function (segment) {
+			if (!currentKey) {
+				currentKey = segment;
+			} else {
+				if (!parentField[currentKey]) {
+					parentField[currentKey] = new Object();
+				}
+				parentField = parentField[currentKey];
+				currentKey = segment;
+			}
+		}, this);
+
+		if (field.mappingRule === 'list') {
+			if (parentField[currentKey] instanceof Array) {
+				parentField[currentKey] = parentField[currentKey].concat(values);
+			} else {
+				parentField[currentKey] = values;
+			}
+		} else {
+			parentField[currentKey] = values[0];
+		}
+	};
+
+
+	AddressbookVcard.prototype.parseFieldWithMultipleValues = function(field, entry, values) {
+		Object.keys(field.mapTo).forEach(function (key) {
+			var parentField = entry;
+			var currentKey;
+
+			field.mapTo[key].forEach(function (segment) {
+				if (!currentKey) {
+					currentKey = segment;
+				} else {
+					if (!parentField[currentKey]) {
+						parentField[currentKey] = new Object();
+					}
+					parentField = parentField[currentKey];
+					currentKey = segment;
+				}
+			}, this);
+			parentField[currentKey] = values[key];
+		}, this);
+	};
+
+	AddressbookVcard.prototype.parseVcardAndMapFields = function(data, entry, values) {
+		this.fieldMapping.forEach(function (field) {
+			if (JSON.stringify(field.path) === JSON.stringify(data.path)) {
+				if (field.mapTo instanceof Array) {
+					this.parseSimpleField(entry, field, values);
+				} else if (typeof(field.mapTo) === 'object') {
+					this.parseFieldWithMultipleValues(field, entry, values);
+				}
+			}
+		}, this);
+	};
+
 	/**
-	 * add a vcard entry
-	 * @param string:vcardContent
+	 * @param vcardContent content of the vcf file as text (img as base64)
 	 */
 	AddressbookVcard.prototype.addEntry = function (vcardContent) {
-		var mapping = this.fieldMapping;
 		var entry = new AddressbookEntry();
 
 		var lines = vcardContent.split('\n');
@@ -121,54 +113,7 @@ define(["Configuration", "Model/Domain/Addressbook", "Model/Domain/AddressbookEn
 					}
 				});
 
-				this.fieldMapping.forEach(function(field){
-					if(JSON.stringify(field.path) === JSON.stringify(data.path)) {
-						if(field.mapTo instanceof Array) {
-							var parentField = entry;
-							var currentKey;
-
-							field.mapTo.forEach(function(segment){
-								if(!currentKey) {
-									currentKey = segment;
-								} else {
-									if(!parentField[currentKey]) {
-										parentField[currentKey] = new Object();
-									}
-									parentField = parentField[currentKey];
-									currentKey = segment;
-								}
-							},this);
-
-							if(field.mappingRule === 'list') {
-								if(parentField[currentKey] instanceof Array) {
-									parentField[currentKey] = parentField[currentKey].concat(values);
-								} else {
-									parentField[currentKey] = values;
-								}
-							} else {
-								parentField[currentKey] = values[0];
-							}
-						} else if(typeof(field.mapTo) === 'object') {
-							Object.keys(field.mapTo).forEach(function(key){
-								var parentField = entry;
-								var currentKey;
-
-								field.mapTo[key].forEach(function(segment){
-									if(!currentKey) {
-										currentKey = segment;
-									} else {
-										if(!parentField[currentKey]) {
-											parentField[currentKey] = new Object();
-										}
-										parentField = parentField[currentKey];
-										currentKey = segment;
-									}
-								},this);
-								parentField[currentKey] = values[key];
-							},this);
-						}
-					}
-				},this);
+				this.parseVcardAndMapFields(data, entry, values);
 			}
 		}, this);
 		if (!entry.name && entry.firstName && entry.lastName) {
@@ -179,13 +124,16 @@ define(["Configuration", "Model/Domain/Addressbook", "Model/Domain/AddressbookEn
 		}
 	};
 
+
 	AddressbookVcard.prototype.getEntries = function () {
 		return this.data;
 	};
 
+
 	AddressbookVcard.prototype.count = function () {
 		return this.data.length;
 	};
+
 
 	return AddressbookVcard;
 });
