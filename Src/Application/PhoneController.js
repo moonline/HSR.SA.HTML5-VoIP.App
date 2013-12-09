@@ -1,4 +1,4 @@
-define(["Configuration", "Model/Domain/Connection", "Model/Domain/Host", "Core/Service/Log"],
+define(["Configuration", "Model/Domain/Connection", "Model/Domain/Host", "Core/Service/Log", "Core/Lib/AdapterJS/Adapter"],
 	function (Configuration, Connection, Host, Log) {
 	'use strict';
 
@@ -17,7 +17,39 @@ define(["Configuration", "Model/Domain/Connection", "Model/Domain/Host", "Core/S
 		$scope.host = new Host($scope.localVideoFrame);
 
 		$scope.receiveCandidates = [];
+		$scope.connection = {};
 
+
+		$scope.channelAddMessageProcessor = function(channel, connection, receiveCandidates) {
+			var listener = {
+				notify: function(channelMessage) {
+					if(channelMessage) {
+						var message = JSON.parse(channelMessage);
+
+						if (message.type === 'answer' && connection.state > Connection.states.off) {
+							connection.callerReceiveAnswer(message);
+						} else if (message.type === 'candidate') {
+							channel.receiveMessage();
+							var candidate = new RTCIceCandidate({ sdpMLineIndex:message.label, candidate:message.candidate });
+							if(connection && connection.peerConnection && connection.state > Connection.states.off) {
+								Log.log(Log.logTypes.Info,'PhoneController','add candidate');
+								connection.peerConnection.addIceCandidate(candidate);
+							} else {
+								Log.log(Log.logTypes.Info,'PhoneController','toEarlyReceived candidate');
+								receiveCandidates.push(candidate);
+							}
+						} else if (message.type === 'bye') {
+							if(connection) { connection.hangUp(false); }
+							$scope.hangUpVideo();
+						} else {
+							Log.log(Log.logTypes.Info,'PhoneController','unhandled message');
+						}
+					}
+				}
+			};
+
+			channel.addReceiveListener(listener);
+		};
 
 		$scope.call = function() {
 			$scope.host.startLocalMedia(function() {
@@ -31,6 +63,7 @@ define(["Configuration", "Model/Domain/Connection", "Model/Domain/Host", "Core/S
 					$scope.receiveCandidates
 				);
 				$scope.connection.callerCreateOffer();
+				$scope.channelAddMessageProcessor($scope.channel, $scope.connection, $scope.receiveCandidates);
 			}.bind(this));
 			//this.timeOutIfConnectionNotEtablished();
 		};
@@ -47,6 +80,7 @@ define(["Configuration", "Model/Domain/Connection", "Model/Domain/Host", "Core/S
 					function() { /* document.getElementById('hangUp').removeAttribute('disable'); */ }.bind(this),
 					$scope.receiveCandidates
 				);
+				$scope.channelAddMessageProcessor($scope.channel, $scope.connection, $scope.receiveCandidates);
 				$scope.connection.calleeCreateAnswer(message);
 			}.bind(this));
 			//this.timeOutIfConnectionNotEtablished();
@@ -56,6 +90,11 @@ define(["Configuration", "Model/Domain/Connection", "Model/Domain/Host", "Core/S
 		$scope.hangUp = function() {
 			$scope.connection.hangUp(true);
 			Log.log(Log.logTypes.Info,'PhoneController','hang up');
+			$scope.hangUpVideo();
+			$location.url('/contacts');
+		};
+
+		$scope.hangUpVideo = function() {
 			$scope.remoteVideoFrame.pause(); $scope.remoteVideoFrame.setAttribute('src','');
 			$scope.localVideoFrame.pause(); $scope.localVideoFrame.setAttribute('src','');
 		};
@@ -63,6 +102,7 @@ define(["Configuration", "Model/Domain/Connection", "Model/Domain/Host", "Core/S
 
 		if($routeParams.operation == 'call') {
 			$scope.call();
+
 		}
 		if($routeParams.operation == 'receive') {
 			$scope.receiveCall();
