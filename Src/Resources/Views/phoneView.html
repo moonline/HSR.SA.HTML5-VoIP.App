@@ -18,8 +18,8 @@
 		<button data-ng-click="hangup()">Hangup</button>
 		<button>Chat</button>
 		<h2>duration</h2>
-		12min 5sec
+		{{passedTime}}
 		<h2>started</h2>
-		16:35
+		{{startTime | date:'HH:mm'}}
 	</footer>
 </div>

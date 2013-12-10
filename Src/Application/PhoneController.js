@@ -16,6 +16,7 @@ define(["Model/Domain/Host", "Core/Service/Log", "Model/Domain/EventManager"], f
 			Log.log(Log.logTypes.Info, 'PhoneController', 'hang up');
 			document.getElementById('localVideo').pause(); document.getElementById('localVideo').setAttribute('src', '');
 			document.getElementById('remoteVideo').pause(); document.getElementById('remoteVideo').setAttribute('src', '');
+			this.stopTimer();
 			$location.url('/contacts');
 		}.bind(this);
 		
@@ -62,7 +63,7 @@ define(["Model/Domain/Host", "Core/Service/Log", "Model/Domain/EventManager"], f
 					}
 					if(event.messageType === 'system' && event.message === 'bye') {
 						this.connection.hangUp(false);
-						this.hangUp();
+						$scope.hangup();
 					}
 				}.bind(this)
 			},
@@ -75,7 +76,7 @@ define(["Model/Domain/Host", "Core/Service/Log", "Model/Domain/EventManager"], f
 	 */
 	PhoneController.prototype.call = function(channel, calleeId, userId) {
 		this.phoneService.call(this.host, channel, document.getElementById('remoteVideo'), calleeId, userId, function() {
-			this.$scope.startTime = new Date();
+			this.startTimer();
 		}.bind(this));
 	};
 
@@ -84,7 +85,7 @@ define(["Model/Domain/Host", "Core/Service/Log", "Model/Domain/EventManager"], f
 	 */
 	PhoneController.prototype.receiveCall = function(channel, userId) {
 		this.phoneService.receiveCall(this.host, channel, document.getElementById('remoteVideo'), userId, function() {
-			this.$scope.startTime = new Date();
+			this.startTimer();
 		}.bind(this));
 	};
 
@@ -98,6 +99,35 @@ define(["Model/Domain/Host", "Core/Service/Log", "Model/Domain/EventManager"], f
 			time: new Date(),
 			text: message
 		});
+	};
+	
+	PhoneController.prototype.startTimer = function() {
+		this.$scope.startTime = new Date();
+		this.passedTimeInterval = setInterval(function() {
+			var differenceMilliseconds = (new Date()).getTime() - this.$scope.startTime.getTime();
+			var seconds = Math.floor(differenceMilliseconds / 1000) % 60;
+			var minutes = Math.floor(differenceMilliseconds / (60 * 1000)) % 60;
+			var hours = Math.floor(differenceMilliseconds / (60 * 60 * 1000));
+			
+			var display = '';
+			if (hours) {
+				display += hours + ':';
+			}
+			if (minutes < 10) {
+				display += '0';
+			}
+			display += minutes + ':';
+			if (seconds < 10) {
+				display += '0';
+			}
+			display += seconds;
+			this.$scope.passedTime = display;
+			this.$scope.$apply();
+		}.bind(this), 1000);
+	};
+	
+	PhoneController.prototype.stopTimer = function() {
+		clearInterval(this.passedTimeInterval);
 	};
 
 	return PhoneController;
