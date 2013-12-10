@@ -73,13 +73,13 @@ define([
 		return accountService;
 	});
 	app.factory('requireLogin', requireLoginService);
-	app.factory('phoneService', function($rootScope) {
-		return new PhoneService();
-	});
+	app.factory('phoneService', ['$rootScope', '$location', 'accountService', function($rootScope, $location, accountService) {
+		return new PhoneService($rootScope, $location, accountService);
+	}]);
 
 	/* controllers */
 	app.controller('AccountController', AccountController);
-	AccountController.$inject = ['$scope', '$location', '$rootScope', 'accountService', 'phoneService'];
+	AccountController.$inject = ['$scope', '$location', 'accountService', 'phoneService'];
 
 	app.controller('ContactController', ContactController);
 	ContactController.$inject = ['$scope', '$location', 'accountService', 'requireLogin'];
@@ -91,7 +91,7 @@ define([
 	AccountEditController.$inject = ['$scope', '$location', 'accountService', 'requireLogin'];
 
 	app.controller('PhoneController', PhoneController);
-	PhoneController.$inject = ['$scope', '$rootScope', '$location', '$routeParams', 'accountService', 'requireLogin', 'phoneService'];
+	PhoneController.$inject = ['$scope', '$location', '$routeParams', 'accountService', 'requireLogin', 'phoneService'];
 
 	return app;
 });
