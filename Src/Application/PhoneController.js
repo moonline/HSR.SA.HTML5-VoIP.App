@@ -1,58 +1,43 @@
-define(["Configuration", "Model/Domain/Connection", "Model/Domain/Host", "Core/Service/Log", "Core/Lib/AdapterJS/Adapter"],
-	function (Configuration, Connection, Host, Log) {
+define(["Model/Domain/Host", "Core/Service/Log", "Model/Domain/EventManager"], function(Host, Log, EventManager) {
 	'use strict';
 
-	var PhoneController = function($scope, $location, $routeParams, accountService, requireLogin) {
+	var PhoneController = function($scope, $rootScope, $location, $routeParams, accountService, requireLogin, phoneService) {
 		if (requireLogin().abort) {
 			return;
 		}
-		var self = this;
+
+		this.host = new Host(document.getElementById('localVideo'));
+
+		$scope.hangup = function(event) {
+			phoneService.hangUp(true);
+			Log.log(Log.logTypes.Info, 'PhoneController', 'hang up');
+			document.getElementById('localVideo').pause(); document.getElementById('localVideo').setAttribute('src', '');
+			document.getElementById('remoteVideo').pause(); document.getElementById('remoteVideo').setAttribute('src', '');
+			$location.url('/contacts');
+		}.bind(this);
 		
-		this.localVideoFrame = document.getElementById('localVideo');
-		this.remoteVideoFrame = document.getElementById('remoteVideo');
-
-		this.receiveCandidates = new Array();
-
-		this.host = new Host(this.localVideoFrame);
-
-		this.channel = new ChannelXHR("http://colvarim.ch/service/messageQueue/messageQueue.php");
-		var listener = {
-			notify: function(channelMessage) {
-				if(channelMessage) {
-					var message = JSON.parse(channelMessage);
-
-					if (message.type === 'offer') {
-						if (!self.channel.type !== Domain.Channel.types.caller && (!self.connection || self.connection.state === Domain.Connection.states.off || self.connection.state === Domain.Connection.states.stopped)) {
-							var accept = confirm(message.sender+' want\'s to call you. Receive?');
-							if(accept) {
-								self.receiveCall(message);
-							}
-						}
-					} else if (message.type === 'answer' && self.connection.state > Domain.Connection.states.off) {
-						self.connection.callerReceiveAnswer(message);
-					} else if (message.type === 'candidate') {
-						self.channel.receiveMessage();
-						var candidate = new RTCIceCandidate({ sdpMLineIndex:message.label, candidate:message.candidate });
-						if(self.connection && self.connection.peerConnection && self.connection.state > Domain.Connection.states.off) {
-							console.log('add candidate');
-							self.connection.peerConnection.addIceCandidate(candidate);
-						} else {
-							console.log('toEarlyReceived candidate');
-							self.receiveCandidates.push(candidate);
-						}
-					} else if (message.type === 'bye') {
-						if(self.connection) { self.connection.hangUp(false); }
-						self.hangUp();
-					} else {
-						console.log('unhandled message');
-					}
-				}
+		$scope.fullscreen = function() {
+			var element = document.getElementById('videoPanel');
+			if (element.requestFullscreen) {
+				element.requestFullscreen();
+			} else if (element.mozRequestFullScreen) {
+				element.mozRequestFullScreen();
+			} else if (element.webkitRequestFullscreen) {
+				element.webkitRequestFullscreen();
 			}
 		};
-
-		this.channel.addReceiveListener(listener);
-		this.channel.start();
-
+		
+		var userId = accountService.currentUser.accounts[$routeParams.channelId].fields.userId;
+		var channel = phoneService.activeChannels[$routeParams.channelId];
+		if ($routeParams.operation == 'accept' && phoneService.callerMessage) {
+			this.receiveCall($scope, phoneService, channel, userId);
+		} else if ($routeParams.operation == 'call') {
+			this.call($scope, phoneService, channel, $routeParams.userId, userId);
+		} else {
+			Log.log(Log.logTypes.Info, 'PhoneController', 'receiveCall without call');
+			$location.url('/contacts');
+		}
+		
 		/*
 		 * messaging
 		 */
@@ -66,66 +51,38 @@ define(["Configuration", "Model/Domain/Connection", "Model/Domain/Host", "Core/S
 			}));
 			$scope.chatmessage = '';
 		}.bind(this);
-
+		
 		EventManager.addListener({
 				"notify": function(event, sender) {
 					if(event.messageType === 'user') {
-						this.receiveMessage(event.message);
+						this.receiveMessage($scope, event.message);
 					}
 					if(event.messageType === 'system' && event.message === 'bye') {
-						self.connection.hangUp(false);
-						self.hangUp();
+						this.connection.hangUp(false);
+						this.hangUp();
 					}
 				}.bind(this)
 			},
 			'dataChannelMessageReceive'
 		);
-
-		EventManager.addListener({
-				notify: function(event, sender) {
-					if(event.receiver) {
-						this.call(event.receiver);
-					}
-				}.bind(this)
-			},
-			'startCall'
-		);
-
-		$scope.fullscreen = function() {
-			var element = document.getElementById('videoPanel');
-			if (element.requestFullscreen) {
-				element.requestFullscreen();
-			} else if (element.mozRequestFullScreen) {
-				element.mozRequestFullScreen();
-			} else if (element.webkitRequestFullscreen) {
-				element.webkitRequestFullscreen();
-			}
-		};
-
-		$scope.hangup = function(event) {
-			if(!event.target.hasAttribute('disable')) {
-				this.connection.hangUp(true);
-				this.hangUp();
-			}
-		}.bind(this);
-		
-		this.call($routeParams.userId);
 	};
 
+	/**
+	 * call action
+	 */
+	PhoneController.prototype.call = function($scope, phoneService, channel, calleeId, userId) {
+		phoneService.call(this.host, channel, document.getElementById('remoteVideo'), calleeId, userId, function() {
+			$scope.startTime = new Date();
+		});
+	};
 
 	/**
 	 * receive a call
-	 *
-	 * @param message
 	 */
-	PhoneController.prototype.receiveCall = function(message) {
-		this.host.startLocalMedia(function() {
-			this.connection = new Domain.Connection(this.host.localstream, this.channel, this.remoteVideoFrame, null, function() {
-				$scope.startTime = new Date();
-			}.bind(this), this.receiveCandidates);
-			this.connection.calleeCreateAnswer(message);
-		}.bind(this));
-		this.timeOutIfConnectionNotEtablished();
+	PhoneController.prototype.receiveCall = function($scope, phoneService, channel, userId) {
+		phoneService.receiveCall(this.host, channel, document.getElementById('remoteVideo'), userId, function() {
+			$scope.startTime = new Date();
+		});
 	};
 
 	/**
@@ -133,48 +90,11 @@ define(["Configuration", "Model/Domain/Connection", "Model/Domain/Host", "Core/S
 	 *
 	 * @param message
 	 */
-	PhoneController.prototype.receiveMessage = function(message) {
+	PhoneController.prototype.receiveMessage = function($scope, message) {
 		$scope.chatmessages.push({
 			time: new Date(),
 			text: message
 		});
-	};
-
-	/**
-	 * call action
-	 */
-	PhoneController.prototype.call = function(receiver) {
-		this.host.startLocalMedia(function() {
-			this.connection = new Domain.Connection(this.host.localstream, this.channel, this.remoteVideoFrame, receiver, function() {
-				$scope.startTime = new Date();
-			}.bind(this),this.receiveCandidates);
-			this.connection.callerCreateOffer();
-		}.bind(this));
-		this.timeOutIfConnectionNotEtablished();
-	};
-
-	/**
-	 * wait for some seconds, if connection is not etablished, hang up and clean up
-	 */
-	PhoneController.prototype.timeOutIfConnectionNotEtablished = function() {
-		setTimeout(function() {
-			if(this.connection && this.connection.state < Domain.Connection.states.connected) {
-				this.connection.hangUp(true);
-				this.hangUp();
-				alert('could not etablish connection.');
-			}
-		}.bind(this), 1000 * Configuration.connection.connectTimeout);
-	};
-
-	/**
-	 * hang up
-	 *
-	 * @type {function(this:App.Controller.PhoneController)}
-	 */
-	PhoneController.prototype.hangUp = function() {
-		Service.Log.log(Service.Log.logTypes.Info,'PhoneController','hang up');
-		this.remoteVideoFrame.pause(); this.remoteVideoFrame.setAttribute('src','');
-		this.localVideoFrame.pause(); this.localVideoFrame.setAttribute('src','');
 	};
 
 	return PhoneController;
