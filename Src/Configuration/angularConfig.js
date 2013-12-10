@@ -5,6 +5,7 @@ define([
 	"Application/ContactController",
 	"Application/ContactbookImportController",
 	"Application/AccountEditController",
+	"Application/Service/PhoneService",
 	"Application/PhoneController",
 	"Application/Service/requireLoginService",
 	"Model/Domain/AccountManager",
@@ -13,7 +14,7 @@ define([
 	"Core/Service/ArrayService",
 	"Core/Service/StringService"
 	],
-	function(angular, Configuration, AccountController, ContactController, ContactbookImportController, AccountEditController, PhoneController, requireLoginService, AccountManager) {
+	function(angular, Configuration, AccountController, ContactController, ContactbookImportController, AccountEditController, PhoneService, PhoneController, requireLoginService, AccountManager) {
 	'use strict';
 
 	
@@ -39,7 +40,7 @@ define([
 			controller: 'AccountEditController'
 		});
 
-		$routeProvider.when('/call/:channelId/:userId', {
+		$routeProvider.when('/call/:serviceId/:userId', {
 			templateUrl: 'Resources/Views/phoneView.html',
 			controller: 'PhoneController'
 		});
@@ -61,10 +62,13 @@ define([
 		return accountService;
 	});
 	app.factory('requireLogin', requireLoginService);
+	app.factory('phoneService', function($rootScope) {
+		return new PhoneService();
+	});
 
 	/* controllers */
 	app.controller('AccountController', AccountController);
-	AccountController.$inject = ['$scope', '$location', 'accountService'];
+	AccountController.$inject = ['$scope', '$location', 'accountService', 'phoneService'];
 
 	app.controller('ContactController', ContactController);
 	ContactController.$inject = ['$scope', '$location', 'accountService', 'requireLogin'];
@@ -76,7 +80,7 @@ define([
 	AccountEditController.$inject = ['$scope', '$location', 'accountService', 'requireLogin'];
 
 	app.controller('PhoneController', PhoneController);
-	ContactController.$inject = ['$scope', '$location', '$routeParams', 'accountService', 'requireLogin'];
+	ContactController.$inject = ['$scope', '$location', '$routeParams', 'accountService', 'requireLogin', 'phoneService'];
 
 	return app;
 });

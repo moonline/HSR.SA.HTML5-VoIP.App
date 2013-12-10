@@ -91,7 +91,7 @@ define(["Config/channelConfig","Core/Service/Log", "Model/Domain/Channel", "jQue
 		this.state = Channel.states.connected;
 		Log.log(Log.logTypes.Info, 'ChannelXHR', 'start receiving loop');
 		this.emptyChannel();
-		this.receiveLoopId = setInterval(function() { this.receiveLoop(); }.bind(this), this.receiveInterval);
+		this.receiveLoopId = setInterval(this.receiveLoop.bind(this), this.receiveInterval);
 	};
 
 
