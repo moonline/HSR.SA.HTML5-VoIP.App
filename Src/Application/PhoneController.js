@@ -76,7 +76,7 @@ define(["Model/Domain/Host", "Core/Service/Log", "Model/Domain/EventManager"], f
 	PhoneController.prototype.call = function(channel, calleeId, userId) {
 		this.phoneService.call(this.host, channel, document.getElementById('remoteVideo'), calleeId, userId, function() {
 			this.$scope.startTime = new Date();
-		});
+		}.bind(this));
 	};
 
 	/**
@@ -85,7 +85,7 @@ define(["Model/Domain/Host", "Core/Service/Log", "Model/Domain/EventManager"], f
 	PhoneController.prototype.receiveCall = function(channel, userId) {
 		this.phoneService.receiveCall(this.host, channel, document.getElementById('remoteVideo'), userId, function() {
 			this.$scope.startTime = new Date();
-		});
+		}.bind(this));
 	};
 
 	/**

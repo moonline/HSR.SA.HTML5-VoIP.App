@@ -1,4 +1,4 @@
-define(["Configuration", "Model/Domain/Channel/ChannelXHR", "Model/Domain/EventManager", "Model/Domain/Connection", "Core/Loader/ChannelLoader", "Model/Interfaces/ChannelInterface", "Model/Domain/Channel"], function(Configuration, ChannelXHR, EventManager, Connection, ChannelLoader, ChannelInterface, Channel) {
+define(["Configuration", "Model/Domain/Channel/ChannelXHR", "Model/Domain/EventManager", "Model/Domain/Connection", "Core/Loader/ChannelLoader", "Model/Interfaces/ChannelInterface", "Model/Domain/Channel", "Core/Service/Log"], function(Configuration, ChannelXHR, EventManager, Connection, ChannelLoader, ChannelInterface, Channel, Log) {
 	'use strict';
 	
 	var PhoneService = function($rootScope, $location, accountService) {
@@ -12,7 +12,7 @@ define(["Configuration", "Model/Domain/Channel/ChannelXHR", "Model/Domain/EventM
 	PhoneService.prototype.stopAndRemoveChannels = function() {
 		Object.keys(this.activeChannels).forEach(function(channelServiceId) {
 			this.activeChannels[channelServiceId].stop();
-		});
+		}, this);
 		this.activeChannels = {};
 	};
 	
