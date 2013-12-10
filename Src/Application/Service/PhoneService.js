@@ -2,22 +2,8 @@ define(["Configuration", "Model/Domain/Channel/ChannelXHR", "Model/Domain/EventM
 	'use strict';
 	
 	var PhoneService = function() {
-		this.receiveCandidates = new Array();
-	};
-	
-	PhoneService.prototype.startChannels = function(accountService) {
-		Configuration.channels.forEach(function(channelConfig) {
-			if(accountService.currentUser.accounts[channelConfig.serviceId]) {
-				var channel = new ChannelLoader[channelConfig.type](accountService.currentUser.accounts[channelConfig.serviceId]);
-				ChannelInterface.assertImplementedBy(channel);
-				
-				channel.addReceiveListener({
-					notify: this.listener.bind(this)
-				});
-				channel.start();
-				accountService.activeChannels[channelConfig.serviceId] = channel;
-			}
-		}, this);
+		this.receiveCandidates = [];
+		this.activeChannels = {};
 	};
 	
 	PhoneService.prototype.stopAndRemoveChannels = function(accountService) {
@@ -27,7 +13,22 @@ define(["Configuration", "Model/Domain/Channel/ChannelXHR", "Model/Domain/EventM
 		accountService.activeChannels = {};
 	};
 	
-	PhoneService.prototype.listener = function(channelMessage) {
+	PhoneService.prototype.startChannels = function($rootScope, accountService) {
+		Configuration.channels.forEach(function(channelConfig) {
+			if(accountService.currentUser.accounts[channelConfig.serviceId]) {
+				var channel = new ChannelLoader[channelConfig.type](accountService.currentUser.accounts[channelConfig.serviceId]);
+				ChannelInterface.assertImplementedBy(channel);
+				channel.start();
+				
+				channel.addReceiveListener({
+					notify: this.listener.bind(this, $rootScope, channelConfig.serviceId)
+				});
+				this.activeChannels[channelConfig.serviceId] = channel;
+			}
+		}, this);
+	};
+	
+	PhoneService.prototype.listener = function(serviceId, $rootScope, channelMessage) {
 		if(channelMessage) {
 			var message = JSON.parse(channelMessage);
 
@@ -35,7 +36,8 @@ define(["Configuration", "Model/Domain/Channel/ChannelXHR", "Model/Domain/EventM
 				if (!this.channel.type !== Domain.Channel.types.caller && (!this.connection || this.connection.state === Domain.Connection.states.off || this.connection.state === Domain.Connection.states.stopped)) {
 					var accept = confirm(message.sender + ' want\'s to call you. Receive?');
 					if(accept) {
-						$location.url('/call/accept/' + message.sender);
+						$location.url('/phone/accept/' +  serviceId + '/' + message.sender);
+						$rootScope.apply();
 					}
 				}
 			} else if (message.type === 'answer' && self.connection.state > Domain.Connection.states.off) {
@@ -44,43 +46,45 @@ define(["Configuration", "Model/Domain/Channel/ChannelXHR", "Model/Domain/EventM
 				this.channel.receiveMessage();
 				var candidate = new RTCIceCandidate({ sdpMLineIndex:message.label, candidate:message.candidate });
 				if(this.connection && this.connection.peerConnection && this.connection.state > Domain.Connection.states.off) {
-					console.log('add candidate');
+                    Log.log(Log.logTypes.Info,'PhoneService','add candidate');
 					this.connection.peerConnection.addIceCandidate(candidate);
 				} else {
-					console.log('toEarlyReceived candidate');
+                    Log.log(Log.logTypes.Info,'PhoneService','toEarlyReceived candidate');
 					this.receiveCandidates.push(candidate);
 				}
 			} else if (message.type === 'bye') {
 				if(self.connection) { self.connection.hangUp(false); }
 				self.hangUp();
 			} else {
-				console.log('unhandled message');
+                Log.log(Log.logTypes.Info,'PhoneService','unhandled message');
 			}
 		}
 	};
 
 	/**
-	 * receive a call
-	 *
-	 * @param message
+	 * call action
 	 */
-	PhoneService.prototype.receiveCall = function(host, remoteVideoFrame, callback) {
+	PhoneService.prototype.call = function(host, channel, remoteVideoFrame, calleeId, userId, callback) {
 		host.startLocalMedia(function() {
-			this.connection = new Connection(host.localstream, this.channel, remoteVideoFrame, null, callback, this.receiveCandidates);
-			this.connection.calleeCreateAnswer(message);
+			this.connection = new Connection(host.localstream, channel, remoteVideoFrame, calleeId, userId, callback, this.receiveCandidates);
+			this.connection.callerCreateOffer();
 		}.bind(this));
 		this.timeOutIfConnectionNotEtablished();
 	};
 
 	/**
-	 * call action
+	 * receive a call
 	 */
-	PhoneService.prototype.call = function(host, remoteVideoFrame, receiver, callback) {
+	PhoneService.prototype.receiveCall = function(host, channel, remoteVideoFrame, userId, callback) {
 		host.startLocalMedia(function() {
-			this.connection = new Domain.Connection(host.localstream, this.channel, remoteVideoFrame, receiver, callback, this.receiveCandidates);
-			this.connection.callerCreateOffer();
+			this.connection = new Connection(host.localstream, channel, remoteVideoFrame, null, userId, callback, this.receiveCandidates);
+			this.connection.calleeCreateAnswer(message);
 		}.bind(this));
 		this.timeOutIfConnectionNotEtablished();
+	};
+	
+	PhoneService.prototype.hangUp = function() {
+		this.connection.hangUp(true);
 	};
 
 	/**
@@ -89,15 +93,10 @@ define(["Configuration", "Model/Domain/Channel/ChannelXHR", "Model/Domain/EventM
 	PhoneService.prototype.timeOutIfConnectionNotEtablished = function() {
 		setTimeout(function() {
 			if(this.connection && this.connection.state < Domain.Connection.states.connected) {
-				this.connection.hangUp(true);
 				this.hangUp();
 				alert('could not etablish connection.');
 			}
 		}.bind(this), 1000 * Configuration.connection.connectTimeout);
-	};
-	
-	PhoneService.prototype.hangUp = function() {
-		this.connection.hangUp(true);
 	};
 	
 	return PhoneService;

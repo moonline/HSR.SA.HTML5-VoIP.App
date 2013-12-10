@@ -10,7 +10,7 @@ define([
 	) {
 	'use strict';
 
-    var AccountController = function($scope, $location, accountService, phoneService) {
+    var AccountController = function($scope, $location, $rootScope, accountService, phoneService) {
 		$scope.accountManager = accountService.accountManager;
 		$scope.accountManager.load();
 
@@ -57,7 +57,7 @@ define([
 			accountService.currentUser = user;
 
 			phoneService.stopAndRemoveChannels(accountService);
-			phoneService.startChannels(accountService);
+			phoneService.startChannels($rootScope, accountService);
 
 			accountService.contactbookManager = new ContactbookManager(accountService.currentUser);
 			if (sessionStorage.loginPath) {

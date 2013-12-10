@@ -14,7 +14,18 @@ define([
 	"Core/Service/ArrayService",
 	"Core/Service/StringService"
 	],
-	function(angular, Configuration, AccountController, ContactController, ContactbookImportController, AccountEditController, PhoneService, PhoneController, requireLoginService, AccountManager) {
+	function(
+			angular,
+			Configuration,
+			AccountController,
+			ContactController,
+			ContactbookImportController,
+			AccountEditController,
+			PhoneService,
+			PhoneController,
+			requireLoginService,
+			AccountManager
+		) {
 	'use strict';
 
 	
@@ -68,7 +79,7 @@ define([
 
 	/* controllers */
 	app.controller('AccountController', AccountController);
-	AccountController.$inject = ['$scope', '$location', 'accountService', 'phoneService'];
+	AccountController.$inject = ['$scope', '$location', '$rootScope', 'accountService', 'phoneService'];
 
 	app.controller('ContactController', ContactController);
 	ContactController.$inject = ['$scope', '$location', 'accountService', 'requireLogin'];
@@ -80,7 +91,7 @@ define([
 	AccountEditController.$inject = ['$scope', '$location', 'accountService', 'requireLogin'];
 
 	app.controller('PhoneController', PhoneController);
-	PhoneController.$inject = ['$scope', '$location', '$routeParams','accountService', 'requireLogin', 'phoneService'];
+	PhoneController.$inject = ['$scope', '$location', '$routeParams', 'accountService', 'requireLogin', 'phoneService'];
 
 	return app;
 });

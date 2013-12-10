@@ -1,17 +1,40 @@
-define(["Model/Domain/Host", "Core/Service/Log"], function(Host, Log) {
+define(["Model/Domain/Host", "Core/Service/Log", "Model/Domain/EventManager"], function(Host, Log, EventManager) {
 	'use strict';
 
 	var PhoneController = function($scope, $location, $routeParams, accountService, requireLogin, phoneService) {
 		if (requireLogin().abort) {
 			return;
 		}
-		var self = this;
+
+		this.host = new Host(document.getElementById('localVideo'));
+
+		$scope.hangup = function(event) {
+			phoneService.hangUp(event);
+			Log.log(Log.logTypes.Info, 'PhoneController', 'hang up');
+			document.getElementById('localVideo').pause(); document.getElementById('localVideo').setAttribute('src', '');
+			document.getElementById('remoteVideo').pause(); document.getElementById('remoteVideo').setAttribute('src', '');
+			$location.url('/contacts');
+		}.bind(this);
 		
-		this.localVideoFrame = document.getElementById('localVideo');
-		this.remoteVideoFrame = document.getElementById('remoteVideo');
-
-		this.host = new Host(this.localVideoFrame);
-
+		$scope.fullscreen = function() {
+			var element = document.getElementById('videoPanel');
+			if (element.requestFullscreen) {
+				element.requestFullscreen();
+			} else if (element.mozRequestFullScreen) {
+				element.mozRequestFullScreen();
+			} else if (element.webkitRequestFullscreen) {
+				element.webkitRequestFullscreen();
+			}
+		};
+		
+		var userId = accountService.currentUser.accounts[$routeParams.channelId].fields.userId;
+		var channel = phoneService.activeChannels[$routeParams.channelId];
+		if ($routeParams.operation == 'accept') {
+			this.receiveCall(channel, userId);
+		} else {
+			this.call(channel, $routeParams.userId, userId, phoneService);
+		}
+		
 		/*
 		 * messaging
 		 */
@@ -25,64 +48,36 @@ define(["Model/Domain/Host", "Core/Service/Log"], function(Host, Log) {
 			}));
 			$scope.chatmessage = '';
 		}.bind(this);
-
-		$scope.fullscreen = function() {
-			var element = document.getElementById('videoFrame');
-			if (element.requestFullscreen) {
-				element.requestFullscreen();
-			} else if (element.mozRequestFullScreen) {
-				element.mozRequestFullScreen();
-			} else if (element.webkitRequestFullscreen) {
-				element.webkitRequestFullscreen();
-			}
-		};
-
-		$scope.hangup = function(event) {
-			phoneSevice.hangUp(event);
-			Service.Log.log(Service.Log.logTypes.Info,'PhoneController','hang up');
-			this.remoteVideoFrame.pause(); this.remoteVideoFrame.setAttribute('src','');
-			this.localVideoFrame.pause(); this.localVideoFrame.setAttribute('src','');
-		}.bind(this);
-
+		
 		EventManager.addListener({
 				"notify": function(event, sender) {
 					if(event.messageType === 'user') {
 						this.receiveMessage(event.message);
 					}
 					if(event.messageType === 'system' && event.message === 'bye') {
-						self.connection.hangUp(false);
-						self.hangUp();
+						this.connection.hangUp(false);
+						this.hangUp();
 					}
 				}.bind(this)
 			},
 			'dataChannelMessageReceive'
 		);
-
-		EventManager.addListener({
-				notify: function(event, sender) {
-					if(event.receiver) {
-						this.call(event.receiver);
-					}
-				}.bind(this)
-			},
-			'startCall'
-		);
-		
-		if ($routeParams.serviceId == 'accept') {
-			this.receiveCall();
-		} else {
-			this.call($routeParams.userId);
-		}
 	};
 
+	/**
+	 * call action
+	 */
+	PhoneController.prototype.call = function(channel, calleeId, userId, phoneService) {
+		phoneService.call(this.host, channel, document.getElementById('remoteVideo'), calleeId, userId, function() {
+			$scope.startTime = new Date();
+		});
+	};
 
 	/**
 	 * receive a call
-	 *
-	 * @param message
 	 */
-	PhoneController.prototype.receiveCall = function(message) {
-		phoneService.receiveCall(message, this.host, this.remoteVideoFrame, function() {
+	PhoneController.prototype.receiveCall = function(channel, userId) {
+		phoneService.receiveCall(this.host, channel, document.getElementById('remoteVideo'), userId, function() {
 			$scope.startTime = new Date();
 		});
 	};
@@ -96,15 +91,6 @@ define(["Model/Domain/Host", "Core/Service/Log"], function(Host, Log) {
 		$scope.chatmessages.push({
 			time: new Date(),
 			text: message
-		});
-	};
-
-	/**
-	 * call action
-	 */
-	PhoneController.prototype.call = function(receiver) {
-		phoneService.call(this.host, remoteVideoFrame, receiver, function() {
-			$scope.startTime = new Date();
 		});
 	};
 
