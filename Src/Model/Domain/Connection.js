@@ -142,7 +142,7 @@ define([
 
 			this.dataChannel.onmessage = function(event) {
 				var message = JSON.parse(event.data);
-				EventManager.notify('dataChannelMessageReceive',message, Connection);
+				EventManager.notify('dataChannelMessageReceive', message, Connection);
 				Log.log(Log.logTypes.Info, 'Connection','DataChannel message received: '+message.message);
 			}.bind(this);
 

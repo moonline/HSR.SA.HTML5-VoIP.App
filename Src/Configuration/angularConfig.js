@@ -91,7 +91,7 @@ define([
 	AccountEditController.$inject = ['$scope', '$location', 'accountService', 'requireLogin'];
 
 	app.controller('PhoneController', PhoneController);
-	PhoneController.$inject = ['$scope', '$location', '$routeParams', 'accountService', 'requireLogin', 'phoneService'];
+	PhoneController.$inject = ['$scope', '$rootScope', '$location', '$routeParams', 'accountService', 'requireLogin', 'phoneService'];
 
 	return app;
 });

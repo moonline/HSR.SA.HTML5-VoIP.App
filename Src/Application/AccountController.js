@@ -57,7 +57,7 @@ define([
 			accountService.currentUser = user;
 
 			phoneService.stopAndRemoveChannels(accountService);
-			phoneService.startChannels($rootScope, accountService);
+			phoneService.startChannels($rootScope, $location, accountService);
 
 			accountService.contactbookManager = new ContactbookManager(accountService.currentUser);
 			if (sessionStorage.loginPath) {

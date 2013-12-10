@@ -1,7 +1,7 @@
 define(["Model/Domain/Host", "Core/Service/Log", "Model/Domain/EventManager"], function(Host, Log, EventManager) {
 	'use strict';
 
-	var PhoneController = function($scope, $location, $routeParams, accountService, requireLogin, phoneService) {
+	var PhoneController = function($scope, $rootScope, $location, $routeParams, accountService, requireLogin, phoneService) {
 		if (requireLogin().abort) {
 			return;
 		}
@@ -9,7 +9,7 @@ define(["Model/Domain/Host", "Core/Service/Log", "Model/Domain/EventManager"], f
 		this.host = new Host(document.getElementById('localVideo'));
 
 		$scope.hangup = function(event) {
-			phoneService.hangUp(event);
+			phoneService.hangUp(true);
 			Log.log(Log.logTypes.Info, 'PhoneController', 'hang up');
 			document.getElementById('localVideo').pause(); document.getElementById('localVideo').setAttribute('src', '');
 			document.getElementById('remoteVideo').pause(); document.getElementById('remoteVideo').setAttribute('src', '');
@@ -29,10 +29,13 @@ define(["Model/Domain/Host", "Core/Service/Log", "Model/Domain/EventManager"], f
 		
 		var userId = accountService.currentUser.accounts[$routeParams.channelId].fields.userId;
 		var channel = phoneService.activeChannels[$routeParams.channelId];
-		if ($routeParams.operation == 'accept') {
-			this.receiveCall(channel, userId);
+		if ($routeParams.operation == 'accept' && phoneService.callerMessage) {
+			this.receiveCall($scope, phoneService, channel, userId);
+		} else if ($routeParams.operation == 'call') {
+			this.call($scope, phoneService, channel, $routeParams.userId, userId);
 		} else {
-			this.call(channel, $routeParams.userId, userId, phoneService);
+			Log.log(Log.logTypes.Info, 'PhoneController', 'receiveCall without call');
+			$location.url('/contacts');
 		}
 		
 		/*
@@ -52,7 +55,7 @@ define(["Model/Domain/Host", "Core/Service/Log", "Model/Domain/EventManager"], f
 		EventManager.addListener({
 				"notify": function(event, sender) {
 					if(event.messageType === 'user') {
-						this.receiveMessage(event.message);
+						this.receiveMessage($scope, event.message);
 					}
 					if(event.messageType === 'system' && event.message === 'bye') {
 						this.connection.hangUp(false);
@@ -67,7 +70,7 @@ define(["Model/Domain/Host", "Core/Service/Log", "Model/Domain/EventManager"], f
 	/**
 	 * call action
 	 */
-	PhoneController.prototype.call = function(channel, calleeId, userId, phoneService) {
+	PhoneController.prototype.call = function($scope, phoneService, channel, calleeId, userId) {
 		phoneService.call(this.host, channel, document.getElementById('remoteVideo'), calleeId, userId, function() {
 			$scope.startTime = new Date();
 		});
@@ -76,7 +79,7 @@ define(["Model/Domain/Host", "Core/Service/Log", "Model/Domain/EventManager"], f
 	/**
 	 * receive a call
 	 */
-	PhoneController.prototype.receiveCall = function(channel, userId) {
+	PhoneController.prototype.receiveCall = function($scope, phoneService, channel, userId) {
 		phoneService.receiveCall(this.host, channel, document.getElementById('remoteVideo'), userId, function() {
 			$scope.startTime = new Date();
 		});
@@ -87,7 +90,7 @@ define(["Model/Domain/Host", "Core/Service/Log", "Model/Domain/EventManager"], f
 	 *
 	 * @param message
 	 */
-	PhoneController.prototype.receiveMessage = function(message) {
+	PhoneController.prototype.receiveMessage = function($scope, message) {
 		$scope.chatmessages.push({
 			time: new Date(),
 			text: message
