@@ -46,7 +46,7 @@ define(["Configuration", "Model/Domain/Channel/ChannelXHR", "Model/Domain/EventM
 			} else if (message.type === 'answer' && this.connection.state > Connection.states.off) {
 				this.connection.callerReceiveAnswer(message);
 			} else if (message.type === 'candidate') {
-				this.channel.receiveMessage();
+				this.activeChannels[serviceId].receiveMessage();
 				var candidate = new RTCIceCandidate({ sdpMLineIndex:message.label, candidate:message.candidate });
 				if(this.connection && this.connection.peerConnection && this.connection.state > Connection.states.off) {
                     Log.log(Log.logTypes.Info,'PhoneService','add candidate');
