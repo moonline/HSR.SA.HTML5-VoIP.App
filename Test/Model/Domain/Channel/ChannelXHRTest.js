@@ -6,7 +6,6 @@ define(["QUnit", "Configuration", "Model/Domain/Channel/ChannelXHR", "Model/Doma
 
 	var bruce = new User('bruce', '', 'Bruce', 'Willis', null, null);
 	bruce.setAccount(new Account('XHRmessenger',{ "userId": 'bruce' }));
-	console.log(bruce);
 
 	QUnit.asyncTest("ChannelXHR echo test", function () {
 		var channel = new ChannelXHR(bruce.accounts.XHRmessenger);

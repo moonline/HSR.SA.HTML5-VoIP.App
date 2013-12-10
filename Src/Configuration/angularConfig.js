@@ -40,7 +40,7 @@ define([
 			controller: 'AccountEditController'
 		});
 
-		$routeProvider.when('/call/:serviceId/:userId', {
+		$routeProvider.when('/phone/:operation/:channelId/:userId', {
 			templateUrl: 'Resources/Views/phoneView.html',
 			controller: 'PhoneController'
 		});
@@ -80,7 +80,7 @@ define([
 	AccountEditController.$inject = ['$scope', '$location', 'accountService', 'requireLogin'];
 
 	app.controller('PhoneController', PhoneController);
-	ContactController.$inject = ['$scope', '$location', '$routeParams', 'accountService', 'requireLogin', 'phoneService'];
+	PhoneController.$inject = ['$scope', '$location', '$routeParams','accountService', 'requireLogin', 'phoneService'];
 
 	return app;
 });

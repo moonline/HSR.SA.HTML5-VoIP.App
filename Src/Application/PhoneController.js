@@ -1,10 +1,11 @@
-define(["Model/Domain/Host"], function(Host) {
+define(["Model/Domain/Host", "Core/Service/Log"], function(Host, Log) {
 	'use strict';
 
 	var PhoneController = function($scope, $location, $routeParams, accountService, requireLogin, phoneService) {
 		if (requireLogin().abort) {
 			return;
 		}
+		var self = this;
 		
 		this.localVideoFrame = document.getElementById('localVideo');
 		this.remoteVideoFrame = document.getElementById('remoteVideo');
@@ -26,7 +27,7 @@ define(["Model/Domain/Host"], function(Host) {
 		}.bind(this);
 
 		$scope.fullscreen = function() {
-			var element = document.getElementById('videoPanel');
+			var element = document.getElementById('videoFrame');
 			if (element.requestFullscreen) {
 				element.requestFullscreen();
 			} else if (element.mozRequestFullScreen) {
