@@ -1,11 +1,11 @@
-define(["Model/Domain/Host", "Model/Domain/Channel/ChannelXHR", "Model/Domain/EventManager", "Model/Domain/Connection"], function(Host, ChannelXHR, EventManager, Connection) {
+define(["Configuration", "Model/Domain/Connection", "Model/Domain/Host", "Core/Service/Log", "Core/Lib/AdapterJS/Adapter"],
+	function (Configuration, Connection, Host, Log) {
 	'use strict';
 
 	var PhoneController = function($scope, $location, $routeParams, accountService, requireLogin) {
 		if (requireLogin().abort) {
 			return;
 		}
-		
 		var self = this;
 		
 		this.localVideoFrame = document.getElementById('localVideo');
@@ -138,8 +138,6 @@ define(["Model/Domain/Host", "Model/Domain/Channel/ChannelXHR", "Model/Domain/Ev
 			time: new Date(),
 			text: message
 		});
-		var messageBox = document.createElement('p');
-		var date = new Date();
 	};
 
 	/**

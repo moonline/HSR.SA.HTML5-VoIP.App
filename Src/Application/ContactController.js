@@ -1,4 +1,4 @@
-define(["Configuration","Model/Domain/ContactbookManager"],
+define(["Configuration", "Model/Domain/ContactbookManager"],
 	function (Configuration, ContactbookManager) {
 	'use strict';
 
@@ -17,6 +17,7 @@ define(["Configuration","Model/Domain/ContactbookManager"],
 		}
 		accountService.contactbookManager.refreshFromStorage();
 
+		// Todo: check if currentUser has a account for this channel
 		$scope.contactbooks = accountService.contactbookManager.contactbooks;
 		$scope.contactbooks.forEach(function(contactbook){
 			contactbook.data.forEach(function(entry){
@@ -43,8 +44,7 @@ define(["Configuration","Model/Domain/ContactbookManager"],
 		};
 
 		$scope.call = function(service, userId) {
-			console.log('/call/'+service.serviceId+'/'+userId);
-			$location.url('/call/'+service.serviceId+'/'+userId);
+			$location.url('/phone/call/'+service.serviceId+'/'+userId);
 		};
 	};
 

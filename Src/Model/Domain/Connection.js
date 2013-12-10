@@ -3,7 +3,8 @@ define([
 		"Core/Service/Log",
 		"Core/Service/SDPService",
 		"Model/Domain/Channel",
-		"Model/Domain/EventManager"
+		"Model/Domain/EventManager",
+		"Core/Lib/AdapterJS/Adapter"
 	], function (
 		Configuration,
 		Log,
@@ -17,16 +18,17 @@ define([
 	 * @param localstream local media stream from camera / microphone
 	 * @param channel channel, used to signal the other peer(s)
 	 * @param videoFrame dom element to attach the mediastream
-	 * @param receiver receiver of channel messages
+	 * @param receiver receiverId of channel messages
 	 * @param streamReady callback when stream is ready
 	 * @param receiveCandidates early received candidates
 	 * @constructor
 	 */
-	var Connection = function (localstream, channel, videoFrame, receiver, streamReady, receiveCandidates) {
+	var Connection = function (localstream, channel, videoFrame, receiver, sender, streamReady, receiveCandidates) {
 		this.localstream = localstream;
 		this.channel = channel;
 		this.videoFrame = videoFrame;
 		this.receiver = receiver;
+		this.sender = sender;
 		this.state = Connection.states.off;
 		this.peerConnection = null;
 		this.config = null;
@@ -46,7 +48,7 @@ define([
 			"message": JSON.stringify({
 				type: sdp.type,
 				sdp: sdp.sdp,
-				sender: Configuration.user.username
+				sender: this.sender
 			})
 		};
 		this.channel.send(message);
