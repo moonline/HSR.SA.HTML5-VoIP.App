@@ -48,11 +48,11 @@ define(["Model/Domain/Host", "Core/Service/Log", "Model/Domain/EventManager"], f
 		$scope.chatmessages = [];
 		
 		$scope.sendMessage = function(event) {
-			event.preventDefault();
 			this.connection.dataChannel.send(JSON.stringify({
 				"messageType": "user",
 				"message": $scope.chatmessage
 			}));
+			this.receiveMessage($scope.chatmessage);
 			$scope.chatmessage = '';
 		}.bind(this);
 		
