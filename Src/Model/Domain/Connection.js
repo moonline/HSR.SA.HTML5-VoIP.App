@@ -101,8 +101,8 @@ define([
 
 			this.dataChannel.onmessage = function(event) {
 				var message = JSON.parse(event.data);
-				EventManager.notify('dataChannelMessageReceive',message, Connection);
-				Log.log(Log.logTypes.Info, 'Connection','DataChannel message received: '+message.message);
+				EventManager.notify('dataChannelMessageReceive', message, Connection);
+				Log.log(Log.logTypes.Info, 'Connection', 'DataChannel message received: ' + message.message);
 			}.bind(this);
 
 			this.dataChannel.onopen = function(){
@@ -111,6 +111,10 @@ define([
 					"message": 'caller: hello data channel'
 				}));
 			}.bind(this);
+			
+			this.dataChannel.onerror = function(error) {
+				Log.log(Log.logTypes.Error, 'Connection', 'DataChannel error: ' + error);
+			};
 		} catch (e) {
 			Log.log(Log.logTypes.error, 'Connection', e);
 		}
@@ -143,7 +147,7 @@ define([
 			this.dataChannel.onmessage = function(event) {
 				var message = JSON.parse(event.data);
 				EventManager.notify('dataChannelMessageReceive', message, Connection);
-				Log.log(Log.logTypes.Info, 'Connection','DataChannel message received: '+message.message);
+				Log.log(Log.logTypes.Info, 'Connection', 'DataChannel message received: ' + message.message);
 			}.bind(this);
 
 			this.dataChannel.onopen = function(){
@@ -152,6 +156,10 @@ define([
 					"message": 'callee: hello data channel'
 				}));
 			}.bind(this);
+			
+			this.dataChannel.onerror = function(error) {
+				Log.log(Log.logTypes.Error, 'Connection', 'DataChannel error: ' + error);
+			};
 		}.bind(this);
 
 		this.peerConnection.setRemoteDescription(new RTCSessionDescription(offer));

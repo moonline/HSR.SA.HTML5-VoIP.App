@@ -96,7 +96,6 @@ define(["Model/Domain/Host", "Core/Service/Log", "Model/Domain/EventManager"], f
 			time: new Date(),
 			text: message
 		});
-		setTimeout(function() { this.$rootScope.$apply(); }.bind(this)); // defer to next tick
 	};
 	
 	PhoneController.prototype.startTimer = function() {

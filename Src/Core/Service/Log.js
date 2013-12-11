@@ -25,7 +25,7 @@ define(function() {
 				if(logType === Log.logTypes.Info) {
 					console.info(causer+': '+message);
 				} else if (logType === Log.logTypes.Error) {
-					console.warn(causer+': '+message);
+					console.error(causer+': '+message);
 				} else {
 					console.log(causer+': '+message);
 				}

@@ -95,6 +95,9 @@ define(["Configuration", "Model/Domain/Channel/ChannelXHR", "Model/Domain/EventM
 			"messageType": "user",
 			"message": message
 		}));
+		Log.log(Log.logTypes.Info, 'PhoneController', 'Sent chat message: ' + message);
+		Log.log(Log.logTypes.Info, 'PhoneController', 'Negotiated: ' + this.connection.dataChannel.negotiated);
+		Log.log(Log.logTypes.Info, 'PhoneController', 'Ready state: ' + this.connection.dataChannel.readyState);
 	};
 	
 	PhoneService.prototype.hangUp = function(notifyOtherUser) {
