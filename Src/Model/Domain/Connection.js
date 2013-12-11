@@ -198,13 +198,13 @@ define([
 				});
 			}
 		}
-		//if (this.peerConnection) {
+		if (this.peerConnection) {
 			try {
 				this.peerConnection.close();
 			} catch (error) {
 				Log.log(Log.logTypes.Error, 'Connection', error);
 			}
-		//}
+		}
 		this.channel.type = Channel.types.callee;
 		this.peerConnection = null;
 		this.state = Connection.states.stopped;
