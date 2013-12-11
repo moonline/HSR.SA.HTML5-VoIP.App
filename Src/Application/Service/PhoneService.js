@@ -87,6 +87,16 @@ define(["Configuration", "Model/Domain/Channel/ChannelXHR", "Model/Domain/EventM
 		this.timeOutIfConnectionNotEstablished();
 	};
 	
+	/**
+	 * Send chat message
+	 */
+	PhoneService.prototype.sendMessage = function(message) {
+		this.connection.dataChannel.send(JSON.stringify({
+			"messageType": "user",
+			"message": message
+		}));
+	};
+	
 	PhoneService.prototype.hangUp = function(notifyOtherUser) {
 		if (this.connection) {
 			this.connection.hangUp(notifyOtherUser);

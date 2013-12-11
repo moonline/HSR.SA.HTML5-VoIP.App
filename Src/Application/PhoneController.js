@@ -7,6 +7,7 @@ define(["Model/Domain/Host", "Core/Service/Log", "Model/Domain/EventManager"], f
 		}
 		
 		this.$scope = $scope;
+		this.$rootScope = $rootScope;
 		this.phoneService = phoneService;
 
 		this.host = new Host(document.getElementById('localVideo'));
@@ -48,10 +49,7 @@ define(["Model/Domain/Host", "Core/Service/Log", "Model/Domain/EventManager"], f
 		$scope.chatmessages = [];
 		
 		$scope.sendMessage = function(event) {
-			this.connection.dataChannel.send(JSON.stringify({
-				"messageType": "user",
-				"message": $scope.chatmessage
-			}));
+			this.phoneService.sendMessage($scope.chatmessage);
 			this.receiveMessage($scope.chatmessage);
 			$scope.chatmessage = '';
 		}.bind(this);
@@ -98,6 +96,7 @@ define(["Model/Domain/Host", "Core/Service/Log", "Model/Domain/EventManager"], f
 			time: new Date(),
 			text: message
 		});
+		setTimeout(function() { this.$rootScope.$apply(); }.bind(this)); // defer to next tick
 	};
 	
 	PhoneController.prototype.startTimer = function() {
