@@ -1,25 +1,49 @@
 <div class="page" id="phoneView">
-	<div class="content videoFrame" id="videoPanel">
-		<video id="localVideo" autoplay muted></video>
-		<video id="remoteVideo" autoplay></video>
+	<div class="content" id="contentPanel">
+		<div class="videoFrame" id="videoPanel">
+			<video id="localVideo" autoplay muted></video>
+			<video id="remoteVideo" autoplay></video>
+		</div>
 		<div id="chat">
-			<p data-ng-repeat="message in chatmessages">
-				<span class="time">{{message.time}}</span>
-				<span class="message">{{message.text}}</span>
-			</p>
+			<div class="chatMessages">
+				<p>
+					<span class="time">time</span>
+					<span class="message">message.text</span>
+				</p>
+				<p>
+					<span class="time">time</span>
+					<span class="message">message.text</span>
+				</p>
+				<p>
+					<span class="time">time</span>
+					<span class="message">message.text</span>
+				</p>
+				<p data-ng-repeat="message in chatmessages">
+					<span class="time">{{message.time}}</span>
+					<span class="message">{{message.text}}</span>
+				</p>
+			</div>
 			<form data-ng-submit="sendmessage()">
-				<input data-ng-model="chatmessage">
-				<input type="submit" value="send">
+				<input data-ng-model="chatmessage" type="text" />
+				<input class="button green" type="submit" value="send" />
 			</form>
 		</div>
 	</div>
-	<footer id="operationPanel">
-		<button data-ng-click="fullscreen()">Fullscreen</button>
-		<button data-ng-click="hangup()">Hangup</button>
-		<button>Chat</button>
-		<h2>duration</h2>
-		{{passedTime}}
-		<h2>started</h2>
-		{{startTime | date:'HH:mm'}}
+	<footer>
+		<div class="operations">
+			<button class="button blue" data-ng-click="fullscreen()">
+				<span class="icon-liga">&#xe053;</span>
+			</button>
+			<button class="button red" data-ng-click="hangup()">
+				<span class="icon-liga">&#xe100;</span>
+			</button>
+			<!--<button class="button blue">Chat</button>-->
+		</div>
+		<dl class="informationPanel">
+			<dt>duration</dt>
+			<dd>{{passedTime}}</dd>
+			<dt>started</dt>
+			<dd>{{startTime | date:'HH:mm'}}</dd>
+		</dl>
 	</footer>
 </div>

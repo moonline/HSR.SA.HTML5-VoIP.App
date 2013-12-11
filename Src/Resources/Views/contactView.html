@@ -11,6 +11,7 @@
 		<a class="button green" href="#/import/contactbook"><span class="icon-liga">&#xe108;</span> import</a>
 		<a class="button blue" href="#/account"><span class="icon-liga">&#xe055;</span></a>
 		<a class="button blue" href="#/"><span class="icon-liga">&#xe051;</span></a>
+		<span class="userName">{{currentUser.firstname}} {{currentUser.lastname}}</span>
 		<h2 data-ng-if="currentContactbook && currentContactbook.name">
 			<span class="icon-liga">&#xe05c;</span>&nbsp;{{currentContactbook.name}}
 		</h2>
@@ -18,8 +19,8 @@
 	<div class="content" data-ng-if="currentContactbook">
 		<div class="entry" data-ng-repeat="contact in currentContactbook.data">
 			<div class="userImage">
-				<img data-ng-if="contact.photo" data-ng-src="data:image/png;base64,{{contact.photo}}" src="Resources/Img/person.png" alt="">
-				<img data-ng-if="!contact.photo" src="Resources/Img/person.png" alt="">
+				<span data-ng-if="contact.photo" style="background-image: url(&quot;data:image/png;base64,{{contact.photo}}&quot;);">&nbsp;</span>
+				<span data-ng-if="!contact.photo" style="background-image: url(&quot;Resources/Img/person.png&quot;);">&nbsp;</span>
 			</div>
 			<div class="right">
 				<div class="userInfo">

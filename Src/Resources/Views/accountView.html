@@ -2,8 +2,8 @@
 	<ul>
 		<li data-ng-repeat="user in accountManager.users" data-ng-click="login(user)">
 			<div class="userImage">
-				<img data-ng-if="user.photo" data-ng-src="data:image/png;base64,{{user.photo}}" src="Resources/Img/person.png" alt="">
-				<img data-ng-if="!user.photo" src="Resources/Img/person.png" alt="">
+				<span data-ng-if="user.photo" style="background-image: url(&quot;data:image/png;base64,{{user.photo}}&quot;);">&nbsp;</span>
+				<span data-ng-if="!user.photo" style="background-image: url(&quot;Resources/Img/person.png&quot;);">&nbsp;</span>
 			</div>
 			<div class="userInfo">
 				<span class="username">{{user.username}}</span>
