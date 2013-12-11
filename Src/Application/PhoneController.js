@@ -1,7 +1,7 @@
 define(["Model/Domain/Host", "Core/Service/Log", "Model/Domain/EventManager"], function(Host, Log, EventManager) {
 	'use strict';
 
-	var PhoneController = function($scope, $location, $routeParams, accountService, requireLogin, phoneService) {
+	var PhoneController = function($scope, $rootScope, $location, $routeParams, accountService, requireLogin, phoneService) {
 		if (requireLogin().abort) {
 			return;
 		}
@@ -11,13 +11,13 @@ define(["Model/Domain/Host", "Core/Service/Log", "Model/Domain/EventManager"], f
 
 		this.host = new Host(document.getElementById('localVideo'));
 
-		$scope.hangup = function(event) {
-			phoneService.hangUp(true);
-			Log.log(Log.logTypes.Info, 'PhoneController', 'hang up');
+		$scope.hangup = function(doNotNotifyOtherUser) {
+			phoneService.hangUp(!doNotNotifyOtherUser);
 			document.getElementById('localVideo').pause(); document.getElementById('localVideo').setAttribute('src', '');
 			document.getElementById('remoteVideo').pause(); document.getElementById('remoteVideo').setAttribute('src', '');
 			this.stopTimer();
 			$location.url('/contacts');
+			setTimeout(function() { $rootScope.$apply(); }); // defer to next tick
 		}.bind(this);
 		
 		$scope.fullscreen = function() {
@@ -62,8 +62,7 @@ define(["Model/Domain/Host", "Core/Service/Log", "Model/Domain/EventManager"], f
 						this.receiveMessage(event.message);
 					}
 					if(event.messageType === 'system' && event.message === 'bye') {
-						this.connection.hangUp(false);
-						$scope.hangup();
+						$scope.hangup(true);
 					}
 				}.bind(this)
 			},

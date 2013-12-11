@@ -181,10 +181,11 @@ define([
 	};
 
 
-	Connection.prototype.hangUp = function (notifyClient) {
+	Connection.prototype.hangUp = function (notifyOtherClient) {
 		this.localstream.stop();
-		if (notifyClient) {
+		if (notifyOtherClient) {
 			if(this.dataChannel && this.dataChannel.readyState === 'open') {
+				Log.log(Log.logTypes.Info, 'Connection', 'send bye over dataChannel');
 				this.dataChannel.send(JSON.stringify({
 						"messageType": 'system',
 						"message": 'bye'
@@ -197,13 +198,13 @@ define([
 				});
 			}
 		}
-		if (this.peerConnection) {
+		//if (this.peerConnection) {
 			try {
 				this.peerConnection.close();
 			} catch (error) {
 				Log.log(Log.logTypes.Error, 'Connection', error);
 			}
-		}
+		//}
 		this.channel.type = Channel.types.callee;
 		this.peerConnection = null;
 		this.state = Connection.states.stopped;
