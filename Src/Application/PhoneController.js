@@ -50,14 +50,14 @@ define(["Model/Domain/Host", "Core/Service/Log", "Model/Domain/EventManager"], f
 		
 		$scope.sendMessage = function(event) {
 			this.phoneService.sendMessage($scope.chatmessage);
-			this.receiveMessage($scope.chatmessage);
+			this.receiveMessage(phoneService.connection.sender, $scope.chatmessage);
 			$scope.chatmessage = '';
 		}.bind(this);
 		
 		EventManager.addListener({
 				"notify": function(event, sender) {
 					if(event.messageType === 'user') {
-						this.receiveMessage(event.message);
+						this.receiveMessage(phoneService.connection.receiver, event.message);
 					}
 					if(event.messageType === 'system' && event.message === 'bye') {
 						$scope.hangup(true);
@@ -91,10 +91,10 @@ define(["Model/Domain/Host", "Core/Service/Log", "Model/Domain/EventManager"], f
 	 *
 	 * @param message
 	 */
-	PhoneController.prototype.receiveMessage = function(message) {
+	PhoneController.prototype.receiveMessage = function(name, message) {
 		this.$scope.chatmessages.push({
 			time: new Date(),
-			text: message
+			text: name + ': ' + message
 		});
 	};
 	

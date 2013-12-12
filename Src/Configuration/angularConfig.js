@@ -96,7 +96,9 @@ define([
 	/* filters */
 	app.filter('reverse', function() {
 	    return function(array) {
-	      return array.slice().reverse();
+	    	if (array) {
+	    		return array.slice().reverse();
+	    	}
 	    };
 	});
 	
