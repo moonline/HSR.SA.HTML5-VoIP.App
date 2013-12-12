@@ -94,31 +94,12 @@ define([
 		this.peerConnection.onicecandidate = this.sendIceCandidate.bind(this);
 		this.peerConnection.onaddstream = this.receiveStream.bind(this);
 
-
 		try {
-			this.dataChannel = this.peerConnection.createDataChannel('channel');
-			this.dataChannel.binaryType = 'blob';
-
-			this.dataChannel.onmessage = function(event) {
-				var message = JSON.parse(event.data);
-				EventManager.notify('dataChannelMessageReceive', message, Connection);
-				Log.log(Log.logTypes.Info, 'Connection', 'DataChannel message received: ' + message.message);
-			}.bind(this);
-
-			this.dataChannel.onopen = function(){
-				this.dataChannel.send(JSON.stringify({
-					"messageType": "system",
-					"message": 'caller: hello data channel'
-				}));
-			}.bind(this);
-			
-			this.dataChannel.onerror = function(error) {
-				Log.log(Log.logTypes.Error, 'Connection', 'DataChannel error: ' + error);
-			};
+			this.dataChannel = this.peerConnection.createDataChannel('channel', {reliable: false});
+			this.setupDataChannel(this.dataChannel);
 		} catch (e) {
 			Log.log(Log.logTypes.error, 'Connection', e);
 		}
-
 
 		this.peerConnection.createOffer(this.setLocalAndSendSDP.bind(this), function (error) {
 			Log.log(Log.logTypes.Error, 'Connection', error);
@@ -141,25 +122,9 @@ define([
 		this.peerConnection.onicecandidate = this.sendIceCandidate.bind(this);
 		this.peerConnection.onaddstream = this.receiveStream.bind(this);
 
-		this.peerConnection.ondatachannel = function(event){
+		this.peerConnection.ondatachannel = function(event) {
 			this.dataChannel = event.channel;
-
-			this.dataChannel.onmessage = function(event) {
-				var message = JSON.parse(event.data);
-				EventManager.notify('dataChannelMessageReceive', message, Connection);
-				Log.log(Log.logTypes.Info, 'Connection', 'DataChannel message received: ' + message.message);
-			}.bind(this);
-
-			this.dataChannel.onopen = function(){
-				this.dataChannel.send(JSON.stringify({
-					"messageType": "system",
-					"message": 'callee: hello data channel'
-				}));
-			}.bind(this);
-			
-			this.dataChannel.onerror = function(error) {
-				Log.log(Log.logTypes.Error, 'Connection', 'DataChannel error: ' + error);
-			};
+			this.setupDataChannel(this.dataChannel);
 		}.bind(this);
 
 		this.peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
@@ -174,7 +139,23 @@ define([
 			Log.log(Log.logTypes.Error, 'Connection', error);
 		});
 	};
-
+	
+	/**
+	 * @return dataChannel
+	 */
+	Connection.prototype.setupDataChannel = function(dataChannel) {
+		dataChannel.onmessage = function(event) {
+			var message = JSON.parse(event.data);
+			EventManager.notify('dataChannelMessageReceive', message, Connection);
+			Log.log(Log.logTypes.Info, 'Connection', 'DataChannel message received: ' + message.message);
+		}.bind(this);
+		
+		dataChannel.onerror = function(error) {
+			Log.log(Log.logTypes.Error, 'Connection', 'DataChannel error: ' + error);
+		};
+		
+		return dataChannel;
+	};
 
 	/**
 	 * @param sdpAnswer json answer containing a session description
