@@ -37,6 +37,10 @@ define(["Configuration", "Model/Domain/ContactbookManager"],
 		if(accountService.contactbookManager.contactbooks.length > 0) {
 			$scope.currentContactbook = accountService.contactbookManager.contactbooks[0];
 		}
+		
+		$scope.photoStyle = function(contact) {
+			return {'background-image': 'url("data:image/png;base64,' + contact.photo + '")'};
+		};
 
 
 		$scope.open = function(contactbook) {
