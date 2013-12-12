@@ -68,9 +68,9 @@ define(["Configuration", "Model/Domain/Channel/ChannelXHR", "Model/Domain/EventM
 	/**
 	 * call action
 	 */
-	PhoneService.prototype.call = function(host, channel, remoteVideoFrame, calleeId, userId, callback) {
+	PhoneService.prototype.call = function(host, channel, remoteVideoFrame, calleeId, userId, callback, dataChannelCallback) {
 		host.startLocalMedia(function() {
-			this.connection = new Connection(host.localstream, channel, remoteVideoFrame, calleeId, userId, callback, this.receiveCandidates);
+			this.connection = new Connection(host.localstream, channel, remoteVideoFrame, calleeId, userId, callback, dataChannelCallback, this.receiveCandidates);
 			this.connection.callerCreateOffer();
 		}.bind(this));
 		this.timeOutIfConnectionNotEstablished();
@@ -79,9 +79,9 @@ define(["Configuration", "Model/Domain/Channel/ChannelXHR", "Model/Domain/EventM
 	/**
 	 * receive a call
 	 */
-	PhoneService.prototype.receiveCall = function(host, channel, remoteVideoFrame, userId, callback) {
+	PhoneService.prototype.receiveCall = function(host, channel, remoteVideoFrame, userId, callback, dataChannelCallback) {
 		host.startLocalMedia(function() {
-			this.connection = new Connection(host.localstream, channel, remoteVideoFrame, null, userId, callback, this.receiveCandidates);
+			this.connection = new Connection(host.localstream, channel, remoteVideoFrame, null, userId, callback, dataChannelCallback, this.receiveCandidates);
 			this.connection.calleeCreateAnswer(this.callerMessage);
 		}.bind(this));
 		this.timeOutIfConnectionNotEstablished();

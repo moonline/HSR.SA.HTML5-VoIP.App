@@ -23,7 +23,7 @@ define([
 	 * @param receiveCandidates early received candidates
 	 * @constructor
 	 */
-	var Connection = function (localstream, channel, videoFrame, receiver, sender, streamReady, receiveCandidates) {
+	var Connection = function (localstream, channel, videoFrame, receiver, sender, streamReady, dataChannelCallback, receiveCandidates) {
 		this.localstream = localstream;
 		this.channel = channel;
 		this.videoFrame = videoFrame;
@@ -33,6 +33,7 @@ define([
 		this.peerConnection = null;
 		this.config = null;
 		this.streamReady = streamReady;
+		this.dataChannelCallback = dataChannelCallback;
 		this.receiveCandidates = receiveCandidates;
 	};
 
@@ -154,6 +155,10 @@ define([
 		dataChannel.onerror = function(error) {
 			Log.log(Log.logTypes.Error, 'Connection', 'DataChannel error: ' + error);
 		};
+		
+		if (this.dataChannelCallback) {
+			dataChannel.onopen = this.dataChannelCallback;
+		}
 		
 		return dataChannel;
 	};

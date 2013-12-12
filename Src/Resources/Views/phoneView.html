@@ -4,7 +4,7 @@
 			<video id="localVideo" autoplay muted></video>
 			<video id="remoteVideo" autoplay></video>
 		</div>
-		<div id="chat">
+		<div id="chat" data-ng-hide="!dataChannelReady">
 			<div class="chatMessages">
 				<p data-ng-repeat="message in chatmessages | reverse">
 					<span class="time">{{message.time | date:'HH:mm:ss'}}</span>
