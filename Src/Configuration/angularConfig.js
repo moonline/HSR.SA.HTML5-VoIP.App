@@ -93,5 +93,12 @@ define([
 	app.controller('PhoneController', PhoneController);
 	PhoneController.$inject = ['$scope', '$rootScope', '$location', '$routeParams', 'accountService', 'requireLogin', 'phoneService'];
 
+	/* filters */
+	app.filter('reverse', function() {
+	    return function(array) {
+	      return array.slice().reverse();
+	    };
+	});
+	
 	return app;
 });

@@ -6,7 +6,7 @@
 		</div>
 		<div id="chat">
 			<div class="chatMessages">
-				<p data-ng-repeat="message in chatmessages">
+				<p data-ng-repeat="message in chatmessages | reverse">
 					<span class="time">{{message.time | date:'HH:mm:ss'}}</span>
 					<span class="message">{{message.text}}</span>
 				</p>
