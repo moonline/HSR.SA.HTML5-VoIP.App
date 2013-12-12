@@ -121,6 +121,7 @@ define(["Model/Domain/Host", "Core/Service/Log", "Model/Domain/EventManager"], f
 			this.$scope.passedTime = display;
 			this.$scope.$apply();
 		}.bind(this), 1000);
+		this.$scope.dataChannelReady = true;
 	};
 	
 	PhoneController.prototype.stopTimer = function() {
