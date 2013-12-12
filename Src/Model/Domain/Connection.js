@@ -95,7 +95,8 @@ define([
 		this.peerConnection.onaddstream = this.receiveStream.bind(this);
 
 		try {
-			this.dataChannel = this.peerConnection.createDataChannel('channel', {reliable: false});
+			this.dataChannel = this.peerConnection.createDataChannel('channel',
+					{reliable: false}); // reliable doesn't work in Chrome as of Chrome 32 beta
 			this.setupDataChannel(this.dataChannel);
 		} catch (e) {
 			Log.log(Log.logTypes.error, 'Connection', e);
