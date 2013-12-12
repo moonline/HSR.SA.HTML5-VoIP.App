@@ -22,7 +22,7 @@ define(["Model/Domain/Host", "Core/Service/Log", "Model/Domain/EventManager"], f
 		}.bind(this);
 		
 		$scope.fullscreen = function() {
-			var element = document.getElementById('videoPanel');
+			var element = document.getElementById('contentPanel');
 			if (element.requestFullscreen) {
 				element.requestFullscreen();
 			} else if (element.mozRequestFullScreen) {

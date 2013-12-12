@@ -5,14 +5,14 @@
 			<video id="remoteVideo" autoplay></video>
 		</div>
 		<div id="chat" data-ng-hide="!dataChannelReady">
-			<div class="chatMessages">
+			<div class="chatMessages" data-ng-if="chatmessages.length > 0">
 				<p data-ng-repeat="message in chatmessages | reverse">
 					<span class="time">{{message.time | date:'HH:mm:ss'}}</span>
 					<span class="message">{{message.text}}</span>
 				</p>
 			</div>
 			<form data-ng-submit="sendMessage()">
-				<input data-ng-model="chatmessage" type="text" />
+				<input data-ng-model="chatmessage" type="text" autofocus />
 				<input class="button green" type="submit" value="send" />
 			</form>
 		</div>
