@@ -7,7 +7,7 @@ define(["Model/Domain/Addressbook", "Model/Domain/AddressbookEntry"], function(A
 		this.type = 'Model/Domain/Addressbook/AddressbookJson';
 		this.data = [];
 
-		this.dataSourceTypes = Addressbook.dataSourceTypes.file;
+		this.dataSourceType = Addressbook.dataSourceTypes.file;
 	};
 
 

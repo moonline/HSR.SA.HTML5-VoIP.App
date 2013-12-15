@@ -6,7 +6,7 @@ define(["Config/ContactbookConfiguration/Vcard", "Model/Domain/Addressbook", "Mo
 		this.implementInterface = 'Model/Interfaces/AddressbookInterface';
 		this.type = 'Model/Domain/Addressbook/AddressbookVcard';
 		this.data = [];
-		this.dataSourceTypes = Addressbook.dataSourceTypes.file;
+		this.dataSourceType = Addressbook.dataSourceTypes.directory;
 
 		this.fieldMapping = VcardConfig.fieldMapping;
 	};

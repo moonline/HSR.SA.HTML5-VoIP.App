@@ -12,7 +12,6 @@ define(function() {
 	 * @param object the object which implements the interface
 	 */
 	Interface.prototype.assertImplementedBy= function(object) {
-		var implementsInterface = true;
 		if(typeof(object.implementInterface) === 'undefined' || object.implementInterface !== this.name) {
 			throw new Error("Object does not declare interface implementation");
 		}

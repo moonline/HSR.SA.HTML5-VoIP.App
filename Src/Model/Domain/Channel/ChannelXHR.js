@@ -3,9 +3,15 @@ define(["Config/channelConfig","Core/Service/Log", "Model/Domain/Channel", "jQue
 
 
 	/**
-	 * @param account an channelAccount of a user
+	 * Represents a ChannelXHR
+	 * @constructor
+	 * @param account - An channelAccount of a user
 	 */
 	var ChannelXHR = function (account) {
+		/**
+		 * Channel interface implementation declaration
+		 * @type {string} The channel interface: 'Model/Interfaces/ChannelInterface'
+		 */
 		this.implementInterface = 'Model/Interfaces/ChannelInterface';
 		this.nick = account['fields']['userId'];
 		this.receiveInterval = ChannelConfig.channelXHR.receiveInterval;
@@ -17,7 +23,6 @@ define(["Config/channelConfig","Core/Service/Log", "Model/Domain/Channel", "jQue
 			server: ChannelConfig.channelXHR.serviceURL
 		};
 	};
-
 
 	ChannelXHR.prototype.receive = function (receiver) {
 		var response = '';
@@ -85,7 +90,8 @@ define(["Config/channelConfig","Core/Service/Log", "Model/Domain/Channel", "jQue
 
 
 	/**
-	 * open the channel connection
+	 * Start the channel: begin receiving messages, listen for server push or whatever
+	 * @return {void}
 	 */
 	ChannelXHR.prototype.start = function () {
 		this.state = Channel.states.connected;
@@ -96,7 +102,8 @@ define(["Config/channelConfig","Core/Service/Log", "Model/Domain/Channel", "jQue
 
 
 	/**
-	 * close the channel connection and remove all listeners
+	 * Stop the channel: close the channel connection and remove all listeners
+	 * @return {void}
 	 */
 	ChannelXHR.prototype.stop = function () {
 		this.state = Channel.states.disconnected;
@@ -105,7 +112,10 @@ define(["Config/channelConfig","Core/Service/Log", "Model/Domain/Channel", "jQue
 
 
 	/**
-	 * @param message a message like { "receiver": "frank", "message": "theMessage" }
+	 * Send a message over the channel
+	 *
+	 * @param {object} message - A message object like { "receiver": "frank", "message": "theMessage" }
+	 * @return {void}
 	 */
 	ChannelXHR.prototype.send = function (message) {
 		Log.log(Log.logTypes.Info, 'ChannelXHR', 'send message: ' + message.message + ' to ' + message.receiver);
@@ -114,9 +124,10 @@ define(["Config/channelConfig","Core/Service/Log", "Model/Domain/Channel", "jQue
 
 
 	/**
-	 * add a listener to receive messages if it's not registered jet
+	 * Add a listener to receive messages. Add the listener only if it's not yet registered.
 	 *
-	 * @param listener an object implementing a notify(message) method
+	 * @param {object} listener - An object implementing a notify(message) method
+	 * @return {boolean} listener was added or not
 	 */
 	ChannelXHR.prototype.addReceiveListener = function (listener) {
 		if (this.listeners.contains(listener) === false) {
@@ -127,7 +138,11 @@ define(["Config/channelConfig","Core/Service/Log", "Model/Domain/Channel", "jQue
 		}
 	};
 
-
+	/**
+	 * Remove a listener from the receivers list
+	 * @param listener
+	 * @return {void}
+	 */
 	ChannelXHR.prototype.removeReceiveListener = function (listener) {
 		var position = this.listeners.indexOf(listener);
 		if (position !== -1) {
