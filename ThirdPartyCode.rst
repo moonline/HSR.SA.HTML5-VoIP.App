@@ -5,7 +5,7 @@ Third Party Code
 
 Src/Core/Lib
 ------------
-- AdpaterJS
+- AdapterJS
 - AngularJS
 - JQuery
 - less
