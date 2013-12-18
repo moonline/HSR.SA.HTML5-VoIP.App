@@ -5,6 +5,7 @@
 		baseUrl: ".",
 		paths: {
 			"Configuration": "../Configuration/appConfiguration",
+			"SampleData": "../SampleData",
 			"Config/ContactbookConfiguration/Vcard": "../Configuration/vcardConfig",
 			"Config/channelConfig": "../Configuration/channelConfig",
 			"Handlebars": "Core/Lib/Handlebars/handlebars",

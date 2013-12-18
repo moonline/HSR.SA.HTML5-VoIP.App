@@ -90,7 +90,6 @@ define(["Config/ContactbookConfiguration/Vcard", "Model/Domain/Addressbook", "Mo
 			if (line != '' && line != "BEGIN:VCARD" && line != "END:VCARD" && line.indexOf(':') > 0 && line.charAt(0) !== ' ') {
 				for(var i=index+1; i<lines.length && lines[i].charAt(0) == ' ' && lines[i].indexOf(':') < 0; i++) {
 					line = line+lines[i].substring(1);
-					console.log('image with breaks detected');
 				}
 
 				var fieldParts = line.splitOnce(':');
