@@ -17,7 +17,6 @@ define(["Configuration", "Model/Domain/ContactbookManager"],
 		}
 		accountService.contactbookManager.refreshFromStorage();
 
-		// Todo: check if currentUser has a account for this channel
 		$scope.contactbooks = accountService.contactbookManager.contactbooks;
 		$scope.contactbooks.forEach(function(contactbook){
 			contactbook.data.forEach(function(entry){
