@@ -40,6 +40,8 @@ define(["Config/channelConfig","Core/Service/Log", "Model/Domain/Channel", "jQue
 
 	ChannelXHR.prototype.receiveMessage = function () {
 		var response = this.receive();
+
+		// server return '0' if there is no message
 		if (response != "0") {
 			Log.log(Log.logTypes.Info, 'ChannelXHR', 'receive message: ' + response);
 			this.notify(response);

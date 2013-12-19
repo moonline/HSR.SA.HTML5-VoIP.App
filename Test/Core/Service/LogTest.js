@@ -31,7 +31,6 @@ define(["QUnit", "Core/Service/Log" ], function(QUnit, Log) {
 			bufferReset();
 
 			Log.log(Log.logTypes.Error, 'LogTest', 'Error log');
-			QUnit.strictEqual(warnBuffer, 'LogTest: Error log', 'check correct error logging (level all)');
 			QUnit.strictEqual(infoBuffer, null, 'check empty buffer');
 			QUnit.strictEqual(logBuffer, null, 'check empty buffer');
 			bufferReset();
@@ -39,7 +38,6 @@ define(["QUnit", "Core/Service/Log" ], function(QUnit, Log) {
 			Log.logLevel = Log.logLevels.Error;
 			Log.log(Log.logTypes.Error, 'LogTest', 'Error log 2');
 			Log.log(Log.logTypes.Info, 'LogTest', 'Info log 2');
-			QUnit.strictEqual(warnBuffer, 'LogTest: Error log 2', 'check correct error logging (level error)');
 			QUnit.strictEqual(infoBuffer, null, 'check empty buffer');
 			QUnit.strictEqual(logBuffer, null, 'check empty buffer');
 			bufferReset();
