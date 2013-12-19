@@ -27,7 +27,6 @@
 		}
 	});
 
-
 	require(["angular", "../Src/Configuration/angularConfig"], function(angular, angularModule) {
 		'use strict';
 

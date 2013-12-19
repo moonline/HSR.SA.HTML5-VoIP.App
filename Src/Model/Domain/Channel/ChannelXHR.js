@@ -40,9 +40,7 @@ define(["Config/channelConfig","Core/Service/Log", "Model/Domain/Channel", "jQue
 
 	ChannelXHR.prototype.receiveMessage = function () {
 		var response = this.receive();
-
-		// server return '0' if there is no message
-		if (response != "0") {
+		if (response != "0") { // server sends "0" for no new message (to avoids conflicts with false or "")
 			Log.log(Log.logTypes.Info, 'ChannelXHR', 'receive message: ' + response);
 			this.notify(response);
 		}
@@ -84,7 +82,7 @@ define(["Config/channelConfig","Core/Service/Log", "Model/Domain/Channel", "jQue
 		var channelEmpty = false;
 		while (!channelEmpty) {
 			var response = this.receive();
-			if (response == "0") {
+			if (response == "0") { // server sends "0" for no new message (to avoids conflicts with false or "")
 				channelEmpty = true;
 			}
 		}
